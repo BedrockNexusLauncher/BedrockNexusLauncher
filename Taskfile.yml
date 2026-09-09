@@ -1,0 +1,85 @@
+version: "3"
+
+includes:
+  common: ./build/Taskfile.yml
+  windows: ./build/windows/Taskfile.yml
+  windows_inno: ./build/windows/Taskfile.inno.yml
+  darwin: ./build/darwin/Taskfile.yml
+  linux: ./build/linux/Taskfile.yml
+
+vars:
+  APP_NAME: "BedrockNexus"
+  BIN_DIR: "bin"
+  VITE_PORT: "{{.WAILS_VITE_PORT | default 1145}}"
+
+tasks:
+  doctor:
+    summary: Checks build toolchain and project prerequisites
+    cmds:
+      - task: common:doctor
+
+  clean:
+    summary: Removes generated build output
+    cmds:
+      - task: common:clean
+
+  build:
+    summary: Builds the application
+    cmds:
+      - task: "{{OS}}:build"
+
+  "build:dev":
+    summary: Builds a fast development executable
+    cmds:
+      - task: "{{OS}}:build"
+        vars:
+          PRODUCTION: "false"
+
+  "build:release":
+    summary: Builds an optimized production executable
+    cmds:
+      - task: "{{OS}}:build"
+        vars:
+          PRODUCTION: "true"
+
+  package:
+    summary: Packages a production build of the application
+    cmds:
+      - task: "{{OS}}:package"
+
+  "package:inno":
+    summary: Builds and packages an Inno Setup installer
+    cmds:
+      - task: windows_inno:package
+        vars:
+          ARCH:
+            ref: .ARCH
+
+  "package:msix":
+    summary: Builds and packages an MSIX installer
+    cmds:
+      - task: windows:create:msix:package
+        vars:
+          ARCH:
+            ref: .ARCH
+          CERT_PATH:
+            ref: .CERT_PATH
+          PUBLISHER:
+            ref: .PUBLISHER
+          USE_MSIX_TOOL:
+            ref: .USE_MSIX_TOOL
+
+  "verify":
+    summary: Validates frontend types and production build inputs
+    cmds:
+      - task: common:verify
+
+  run:
+    summary: Runs the application
+    cmds:
+      - task: "{{OS}}:run"
+
+  dev:
+    summary: Runs the application in development mode
+    cmds:
+      - wails3 dev -config ./build/config.yml -port {{.VITE_PORT}}

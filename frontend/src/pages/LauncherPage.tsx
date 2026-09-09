@@ -1,0 +1,1212 @@
+import { useEffect, useMemo } from "react";
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Input,
+  Chip,
+  Progress,
+  Spinner,
+} from "@heroui/react";
+import { useTranslation } from "react-i18next";
+
+import {
+  FaRocket,
+  FaChevronDown,
+  FaCog,
+  FaGlobe,
+  FaImage,
+  FaCogs,
+  FaList,
+  FaWindows,
+  FaFolderOpen,
+  FaDesktop,
+  FaCube,
+  FaArrowRight,
+  FaDownload,
+  FaExclamationTriangle,
+  FaLightbulb,
+} from "react-icons/fa";
+import { ModCard } from "@/components/ModdedCard";
+import { ContentDownloadCard } from "@/components/ContentDownloadCard";
+import { Window, Browser } from "@wailsio/runtime";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  UnifiedModal,
+  getUnifiedModalConfirmButtonProps,
+} from "@/components/UnifiedModal";
+import { PageContainer } from "@/components/PageContainer";
+import { LAYOUT } from "@/constants/layout";
+import { cn } from "@/utils/cn";
+import { COMPONENT_STYLES } from "@/constants/componentStyles";
+import { ROUTES } from "@/constants/routes";
+import { useLauncher } from "@/hooks/useLauncher";
+import { useModIntelligence } from "@/utils/ModIntelligenceContext";
+import { useLeviLamina } from "@/utils/LeviLaminaContext";
+
+const LAUNCH_TIP_KEYS = [
+  "version_selector",
+  "version_search",
+  "manage_versions",
+  "quick_actions_menu",
+  "launch_dependencies",
+  "mods_card",
+  "content_counts_card",
+  "incompatible_resource_packs",
+  "content_download_sources",
+  "settings_personalize",
+  "settings_storage_path",
+  "download_mirror",
+  "open_source",
+  "backup_worlds",
+] as const;
+
+// Shared "Ignition Deck" motion language — one enter curve / staggered
+// orchestration for the whole launcher surface. Mirrors --ease-enter and
+// --dur-* tokens in style.css; keep them in sync.
+const EASE_ENTER = [0.22, 1, 0.36, 1] as const;
+const PRESS_SPRING = { type: "spring", stiffness: 550, damping: 26 } as const;
+const heroEntrance = {
+  initial: { opacity: 0, y: -12 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.45, ease: EASE_ENTER },
+};
+const dashboardStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+};
+const dashboardRise = {
+  hidden: { opacity: 0, y: 16 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: EASE_ENTER },
+  },
+};
+
+export const LauncherPage = (args: any) => {
+  const { t } = useTranslation();
+  const warningConfirmButtonProps =
+    getUnifiedModalConfirmButtonProps("warning");
+  const { ensureInstanceHydrated, getInstanceSnapshot, snapshotRevision } =
+    useModIntelligence();
+  const { getLatestLLVersion, compareLLVersions } = useLeviLamina();
+
+  const {
+    // State
+    isAnimating,
+    setIsAnimating,
+    currentVersion,
+    displayName,
+    localVersionMap,
+    launchErrorCode,
+    contentCounts,
+    incompatibleShaderCount,
+    giTotal,
+    giDownloaded,
+    vcTotal,
+    vcDownloaded,
+    logoDataUrl,
+    versionQuery,
+    setVersionQuery,
+    logoByName,
+    isLoadingVersions,
+    registerAction,
+    tipIndex,
+
+    // Disclosures
+    launchFailedDisclosure,
+    gameInputInstallingDisclosure,
+    gameInputMissingDisclosure,
+    vcRuntimeInstallingDisclosure,
+    vcRuntimeMissingDisclosure,
+    gamingServicesMissingDisclosure,
+    installConfirmDisclosure,
+    vcRuntimeCompletingDisclosure,
+    mcLaunchLoadingDisclosure,
+    shortcutSuccessDisclosure,
+    registerInstallingDisclosure,
+    registerSuccessDisclosure,
+    registerFailedDisclosure,
+
+    // Navigation
+    navigate,
+
+    // Computed
+    buildVersionMenuItems,
+    ensureLogo,
+
+    // Tip timer
+    startTipTimer,
+    stopTipTimer,
+
+    // Handlers
+    doLaunch,
+    doCreateShortcut,
+    doOpenFolder,
+    doRegister,
+    handleVersionSelect,
+    handleGameInputInstall,
+    handleVcRuntimeInstall,
+    handleGamingServicesInstall,
+    handleIgnoreGamingServices,
+    handleInstallConfirmContinue,
+    handleInstallConfirmCheck,
+    handleInstallConfirmOpenChange,
+    handleRegisterSuccessOpenChange,
+    handleLaunchFailedForceRun,
+  } = useLauncher(args);
+  const currentVersionName = String(currentVersion || "").trim();
+  const currentVersionInfo = currentVersionName
+    ? localVersionMap.get(currentVersionName)
+    : undefined;
+
+  const launchTips = useMemo(
+    () => LAUNCH_TIP_KEYS.map((key) => String(t(`launcherpage.tip.${key}`))),
+    [t],
+  );
+  const currentLaunchTip = launchTips[tipIndex] ?? launchTips[0] ?? "";
+
+  useEffect(() => {
+    startTipTimer(launchTips.length);
+    return () => {
+      stopTipTimer();
+    };
+  }, [launchTips.length, startTipTimer, stopTipTimer]);
+
+  useEffect(() => {
+    if (!currentVersionName || !currentVersionInfo?.isLeviLaminaInstalled) {
+      return;
+    }
+    void ensureInstanceHydrated(currentVersionName, {
+      background: true,
+      reason: "launcher-hero-ll-chip",
+    });
+  }, [
+    currentVersionInfo?.isLeviLaminaInstalled,
+    currentVersionName,
+    ensureInstanceHydrated,
+  ]);
+
+  const worldsLabel = t("content.count.worlds") as string;
+  const resourceLabel = t("content.count.resource_packs") as string;
+  const behaviorLabel = t("content.count.behavior_packs") as string;
+  const launchErrorMessage = useMemo(() => {
+    const key = `errors.${launchErrorCode}`;
+    const translated = t(key) as unknown as string;
+    if (launchErrorCode && translated && translated !== key) return translated;
+
+    const fallback = t("errors.ERR_LAUNCH_GAME") as unknown as string;
+    if (fallback && fallback !== "errors.ERR_LAUNCH_GAME") return fallback;
+
+    return "Launch failed";
+  }, [launchErrorCode, t]);
+
+  const versionMenuItems = useMemo(
+    () => buildVersionMenuItems(t("common.empty") as string),
+    [buildVersionMenuItems, t],
+  );
+  const currentInstanceSnapshot = useMemo(
+    () => (currentVersionName ? getInstanceSnapshot(currentVersionName) : null),
+    [currentVersionName, getInstanceSnapshot, snapshotRevision],
+  );
+  const isCurrentVersionRegistered = Boolean(currentVersionInfo?.isRegistered);
+  const currentVersionHasLeviLamina = Boolean(
+    currentVersionInfo?.isLeviLaminaInstalled,
+  );
+  const currentGameVersion = String(currentVersionInfo?.version || "").trim();
+  const currentLeviLaminaVersion = String(
+    currentInstanceSnapshot?.llState?.installedVersion || "",
+  ).trim();
+  const latestLeviLaminaVersion = useMemo(
+    () =>
+      currentGameVersion
+        ? String(getLatestLLVersion(currentGameVersion) || "").trim()
+        : "",
+    [currentGameVersion, getLatestLLVersion],
+  );
+  const hasLeviLaminaUpdateAvailable = useMemo(() => {
+    if (
+      !currentVersionHasLeviLamina ||
+      !currentLeviLaminaVersion ||
+      !latestLeviLaminaVersion
+    ) {
+      return false;
+    }
+    const compared = compareLLVersions(
+      latestLeviLaminaVersion,
+      currentLeviLaminaVersion,
+    );
+    return Number.isFinite(compared) && compared > 0;
+  }, [
+    compareLLVersions,
+    currentLeviLaminaVersion,
+    currentVersionHasLeviLamina,
+    latestLeviLaminaVersion,
+  ]);
+
+  return (
+    <>
+      <PageContainer
+        className={cn("relative", isAnimating ? "overflow-hidden" : "")}
+        animate={false}
+      >
+        {/* Hero Launch Card */}
+        <motion.div
+          initial={heroEntrance.initial}
+          animate={heroEntrance.animate}
+          transition={heroEntrance.transition}
+        >
+          <Card
+            className={cn(
+              "relative overflow-hidden launcher-hero",
+              LAYOUT.GLASS_CARD.BASE,
+            )}
+          >
+            <div className="launcher-hero-aurora" aria-hidden="true" />
+            <CardBody className="p-6 relative z-[1] flex flex-col gap-6">
+              {/* Main Layout */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                {/* Left: Title & Info */}
+                <div className="flex flex-col gap-1 min-w-0">
+                  <div className="flex items-center gap-3">
+                    <motion.h1
+                      className="text-4xl sm:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-600 truncate pb-2"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.15, duration: 0.5, ease: EASE_ENTER }}
+                    >
+                      Minecraft
+                    </motion.h1>
+                    {isCurrentVersionRegistered && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8, x: -10 }}
+                        animate={{ opacity: 1, scale: 1, x: 0 }}
+                        transition={{
+                          delay: 0.5,
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 30,
+                        }}
+                      >
+                        <Chip
+                          variant="flat"
+                          color="primary"
+                          classNames={{
+                            base: "bg-primary-500/10 border border-primary-500/20 hidden sm:flex",
+                            content:
+                              "font-semibold text-primary-600 dark:text-primary-500",
+                          }}
+                        >
+                          {t("launcherpage.registered_tip")}
+                        </Chip>
+                      </motion.div>
+                    )}
+                    {currentVersionHasLeviLamina && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8, x: -10 }}
+                        animate={{ opacity: 1, scale: 1, x: 0 }}
+                        transition={{
+                          delay: 0.55,
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 30,
+                        }}
+                      >
+                        <Chip
+                          variant="flat"
+                          color={
+                            hasLeviLaminaUpdateAvailable ? "warning" : "primary"
+                          }
+                          classNames={{
+                            base: cn(
+                              "hidden sm:flex border",
+                              hasLeviLaminaUpdateAvailable
+                                ? "bg-warning-500/10 border-warning-500/20"
+                                : "bg-primary-500/10 border-primary-500/20",
+                            ),
+                            content: cn(
+                              "font-semibold",
+                              hasLeviLaminaUpdateAvailable
+                                ? "text-warning-600 dark:text-warning-400"
+                                : "text-primary-600 dark:text-primary-500",
+                            ),
+                          }}
+                        >
+                          {hasLeviLaminaUpdateAvailable
+                            ? `LeviLamina · ${t("launcherpage.levilamina_update_available")}`
+                            : "LeviLamina"}
+                        </Chip>
+                      </motion.div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg sm:text-xl font-medium text-default-500 dark:text-zinc-400">
+                      {t("launcherpage.edition")}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Right: Actions */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+                  {/* Version Selector */}
+                  <div className="flex items-center gap-3 p-1.5 rounded-2xl">
+                    <Dropdown
+                      placement="bottom-end"
+                      classNames={COMPONENT_STYLES.dropdown}
+                    >
+                      <DropdownTrigger>
+                        <Button
+                          variant="light"
+                          className="h-12 px-3 rounded-xl border border-default-200/60 bg-default-50/60 dark:border-white/10 dark:bg-white/5 data-[hover=true]:bg-default-200/60 dark:data-[hover=true]:bg-white/10 transition-colors"
+                        >
+                          <div className="flex items-center gap-3 text-start">
+                            <div className="w-8 h-8 rounded-lg bg-default-200/50 dark:bg-white/10 flex items-center justify-center overflow-hidden shadow-sm">
+                              {logoDataUrl ? (
+                                <img
+                                  src={logoDataUrl}
+                                  alt="logo"
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <span className="text-base font-bold text-default-500 dark:text-zinc-400">
+                                  M
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex flex-col hidden lg:flex">
+                              <span className="text-xs text-default-500 dark:text-zinc-400 font-medium">
+                                {t("launcherpage.currentVersion")}
+                              </span>
+                              <span className="text-sm font-bold text-default-900 dark:text-white leading-tight max-w-[120px] truncate">
+                                {displayName ||
+                                  t("launcherpage.currentVersion_none")}
+                              </span>
+                            </div>
+                            <span className="text-sm font-bold text-default-900 dark:text-white leading-tight max-w-[120px] truncate lg:hidden">
+                              {displayName ||
+                                t("launcherpage.currentVersion_none")}
+                            </span>
+                            <FaChevronDown
+                              className="text-default-400 dark:text-zinc-300 ms-1"
+                              size={12}
+                            />
+                          </div>
+                        </Button>
+                      </DropdownTrigger>
+                      <DropdownMenu
+                        aria-label="Version Selection"
+                        selectionMode="single"
+                        selectedKeys={
+                          new Set(currentVersion ? [currentVersion] : [])
+                        }
+                        className="max-h-[400px] overflow-y-auto no-scrollbar min-w-[300px]"
+                        bottomContent={
+                          isLoadingVersions ? (
+                            <div className="p-2 flex justify-center items-center gap-2 text-default-400 text-xs border-t border-default-100 dark:border-white/5">
+                              <Spinner size="sm" color="primary" />
+                              <span>{t("common.loading")}</span>
+                            </div>
+                          ) : null
+                        }
+                        topContent={
+                          <div className="p-3 border-b border-default-100 dark:border-default-50/10">
+                            <Input
+                              size="sm"
+                              placeholder={t("launcherpage.search_versions")}
+                              value={versionQuery}
+                              onValueChange={setVersionQuery}
+                              startContent={
+                                <FaList className="text-default-400" />
+                              }
+                              classNames={COMPONENT_STYLES.input}
+                            />
+                            <Button
+                              fullWidth
+                              size="sm"
+                              variant="flat"
+                              className="mt-2"
+                              onPress={() => navigate(ROUTES.instances)}
+                            >
+                              {t("launcherpage.manage_versions")}
+                            </Button>
+                          </div>
+                        }
+                        items={versionMenuItems}
+                        onSelectionChange={handleVersionSelect}
+                      >
+                        {(item: any) => (
+                          <DropdownItem
+                            key={item.key}
+                            textValue={item.name}
+                            description={item.version}
+                            startContent={
+                              <div className="w-8 h-8 shrink-0 rounded-lg bg-default-100 dark:bg-white/10 flex items-center justify-center overflow-hidden">
+                                {(() => {
+                                  const u =
+                                    item.logo || logoByName.get(item.name);
+                                  if (!u) ensureLogo(item.name);
+                                  return u ? (
+                                    <img
+                                      src={u}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  ) : (
+                                    <span className="text-sm font-bold text-default-500 dark:text-zinc-400">
+                                      M
+                                    </span>
+                                  );
+                                })()}
+                              </div>
+                            }
+                          >
+                            <div className="flex justify-between items-center gap-2">
+                              <span className="font-semibold">{item.name}</span>
+                              <div className="flex items-center gap-1">
+                                {item.isLeviLaminaInstalled && (
+                                  <Chip
+                                    size="sm"
+                                    variant="flat"
+                                    color="primary"
+                                    classNames={{
+                                      base: "bg-primary-500/10 border border-primary-500/20 h-5 px-1",
+                                      content:
+                                        "text-primary-600 dark:text-primary-500 font-bold text-[10px]",
+                                    }}
+                                  >
+                                    LeviLamina
+                                  </Chip>
+                                )}
+                                {item.isRegistered && (
+                                  <Chip
+                                    size="sm"
+                                    variant="flat"
+                                    color="primary"
+                                    classNames={{
+                                      base: "bg-primary-500/10 border border-primary-500/20 h-5 px-1",
+                                      content:
+                                        "text-primary-600 dark:text-primary-500 font-bold text-[10px]",
+                                    }}
+                                  >
+                                    {t("launcherpage.registered_tip")}
+                                  </Chip>
+                                )}
+                              </div>
+                            </div>
+                          </DropdownItem>
+                        )}
+                      </DropdownMenu>
+                    </Dropdown>
+
+                    <Dropdown classNames={COMPONENT_STYLES.dropdown}>
+                      <DropdownTrigger>
+                        <Button
+                          isIconOnly
+                          variant="light"
+                          radius="full"
+                          size="sm"
+                          className="data-[hover=true]:bg-default-200/50 dark:data-[hover=true]:bg-white/5"
+                        >
+                          <FaCogs
+                            size={18}
+                            className="text-default-500 dark:text-zinc-400"
+                          />
+                        </Button>
+                      </DropdownTrigger>
+                      <DropdownMenu aria-label="Version Actions">
+                        <DropdownItem
+                          key="settings"
+                          startContent={<FaCog />}
+                          onPress={() => {
+                            if (currentVersion) {
+                              navigate(ROUTES.instanceSettings, {
+                                state: {
+                                  name: currentVersion,
+                                  returnTo: ROUTES.home,
+                                },
+                              });
+                            } else {
+                              navigate(ROUTES.instances);
+                            }
+                          }}
+                        >
+                          {t("launcherpage.go_version_settings")}
+                        </DropdownItem>
+                        <DropdownItem
+                          key="shortcut"
+                          startContent={<FaDesktop />}
+                          isDisabled={!currentVersion}
+                          onPress={doCreateShortcut}
+                        >
+                          {t("launcherpage.shortcut.create_button")}
+                        </DropdownItem>
+                        <DropdownItem
+                          key="folder"
+                          startContent={<FaFolderOpen />}
+                          isDisabled={!currentVersion}
+                          onPress={doOpenFolder}
+                        >
+                          {t("launcherpage.open_exe_dir")}
+                        </DropdownItem>
+                        <DropdownItem
+                          key="register"
+                          startContent={<FaWindows />}
+                          isDisabled={!currentVersion}
+                          onPress={doRegister}
+                        >
+                          {isCurrentVersionRegistered
+                            ? t("versions.edit.unregister_button")
+                            : t("launcherpage.register_system_button")}
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </div>
+                  {/* Launch Button */}
+                  <motion.div
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                    transition={PRESS_SPRING}
+                  >
+                    <Button
+                      size="lg"
+                      className="launch-btn h-14 px-8 text-lg font-bold text-white rounded-2xl w-full sm:w-auto bg-linear-to-r from-primary-600 to-primary-400 dark:from-primary-500 dark:to-primary-400 shadow-lg shadow-primary-500/30 data-[hover=true]:shadow-xl data-[hover=true]:shadow-primary-500/40 data-[hover=true]:brightness-110 transition-[box-shadow,filter]"
+                      startContent={<FaRocket className="mb-0.5" />}
+                      onPress={doLaunch}
+                      isLoading={mcLaunchLoadingDisclosure.isOpen}
+                    >
+                      {t("launcherpage.launch_button")}
+                    </Button>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Tips (Bottom) */}
+              <div className="w-full rounded-full px-4 py-2 flex items-center gap-2 bg-default-100/40 dark:bg-white/[0.03] border border-default-200/40 dark:border-white/5">
+                <span className="p-1 rounded-md bg-primary-500/10 text-primary-600 dark:text-primary-400 shrink-0">
+                  <FaLightbulb size={13} aria-hidden="true" />
+                </span>
+                <div className="flex-1 overflow-hidden h-[20px] relative">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={tipIndex}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.25, ease: EASE_ENTER }}
+                      className="text-sm text-default-500 dark:text-zinc-400 font-medium truncate absolute inset-0"
+                    >
+                      {currentLaunchTip}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-4 items-stretch"
+          variants={dashboardStagger}
+          initial="hidden"
+          animate="show"
+        >
+          {/* Mod Card */}
+          <motion.div variants={dashboardRise} className="md:col-span-1">
+            <ModCard
+              localVersionMap={localVersionMap}
+              currentVersion={currentVersion}
+            />
+          </motion.div>
+
+          {/* Content Management */}
+          <motion.div variants={dashboardRise} className="md:col-span-1">
+            <Card
+              className={cn(
+                "h-full group",
+                LAYOUT.GLASS_CARD.BASE,
+                LAYOUT.CARD_HOVER,
+                "rounded-3xl",
+              )}
+            >
+              <CardHeader className="px-5 py-3 border-b border-default-100 dark:border-white/5 flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-pink-500/10 text-pink-600 dark:text-pink-400">
+                    <FaCube size={16} />
+                  </div>
+                  <h3 className="text-base font-bold text-default-800 dark:text-zinc-100">
+                    {t("launcherpage.content_manage")}
+                  </h3>
+                </div>
+                <Button
+                  size="sm"
+                  variant="light"
+                  className="text-xs text-default-500 dark:text-zinc-400 data-[hover=true]:text-default-800 dark:data-[hover=true]:text-zinc-200"
+                  endContent={
+                    <FaArrowRight size={10} className="rtl:-scale-x-100" />
+                  }
+                  onPress={() => navigate("/content")}
+                >
+                  {t("common.view_all")}
+                </Button>
+              </CardHeader>
+              <CardBody className="p-3 gap-2 relative">
+                {incompatibleShaderCount > 0 && (
+                  <div
+                    className="group/hint flex items-center justify-between p-2 rounded-xl bg-warning-500/10 hover:bg-warning-500/20 text-warning-600 dark:text-warning-400 cursor-pointer transition-colors"
+                    onClick={() =>
+                      navigate("/content/resourcePacks", {
+                        state: { showIncompatible: true },
+                      })
+                    }
+                  >
+                    <div className="flex items-center gap-3">
+                      <FaExclamationTriangle size={16} />
+                      <span className="font-medium text-sm">
+                        {t("contentpage.only_show_updates")}
+                      </span>
+                    </div>
+                    <span className="font-bold text-sm tabular-nums">
+                      {incompatibleShaderCount}
+                    </span>
+                  </div>
+                )}
+                {[
+                  {
+                    label: worldsLabel,
+                    count: contentCounts.worlds,
+                    icon: FaGlobe,
+                    path: "/content/worlds",
+                    color: "text-blue-500",
+                  },
+                  {
+                    label: resourceLabel,
+                    count: contentCounts.resourcePacks,
+                    icon: FaImage,
+                    path: "/content/resourcePacks",
+                    color: "text-purple-500",
+                  },
+                  {
+                    label: behaviorLabel,
+                    count: contentCounts.behaviorPacks,
+                    icon: FaCogs,
+                    path: "/content/behaviorPacks",
+                    color: "text-orange-500",
+                  },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="group/item flex items-center justify-between p-2 rounded-xl hover:bg-default-200/50 dark:hover:bg-zinc-700/50 cursor-pointer transition-colors duration-200"
+                    onClick={() => navigate(item.path)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`p-1.5 rounded-lg bg-default-100 dark:bg-default-50/20 ${item.color} bg-opacity-20`}
+                      >
+                        <item.icon size={16} />
+                      </div>
+                      <span className="font-medium text-sm text-default-600 dark:text-zinc-200 truncate max-w-[100px] lg:max-w-none">
+                        {item.label}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-base font-bold tabular-nums text-default-800 dark:text-zinc-200">
+                        {item.count}
+                      </span>
+                      <FaChevronDown
+                        className="text-default-300 dark:text-zinc-500 -rotate-90"
+                        size={10}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </CardBody>
+            </Card>
+          </motion.div>
+
+          {/* Content Download */}
+          <motion.div
+            variants={dashboardRise}
+            className="md:col-span-1"
+            onAnimationComplete={() => setIsAnimating(false)}
+          >
+            <ContentDownloadCard />
+          </motion.div>
+        </motion.div>
+
+        {/* --- Modals --- */}
+
+        {/* Launch Failed */}
+        <UnifiedModal
+          isOpen={launchFailedDisclosure.isOpen}
+          onOpenChange={launchFailedDisclosure.onOpenChange}
+          type="error"
+          title={t("launcherpage.launch.failed.title")}
+          footer={
+            <>
+              {launchErrorCode === "ERR_GAME_ALREADY_RUNNING" && (
+                <Button
+                  color="warning"
+                  radius="full"
+                  className="text-white font-bold"
+                  onPress={handleLaunchFailedForceRun}
+                >
+                  {t("launcherpage.launch.force_run_button")}
+                </Button>
+              )}
+              <Button
+                color="danger"
+                variant="solid"
+                radius="full"
+                className="font-bold shadow-lg shadow-danger-500/20"
+                onPress={launchFailedDisclosure.onClose}
+              >
+                {t("launcherpage.launch.failed.close_button")}
+              </Button>
+            </>
+          }
+        >
+          <div className="flex flex-col items-center gap-3 text-center px-2">
+            <p className="text-lg font-semibold text-default-800 dark:text-zinc-100">
+              {launchErrorMessage}
+            </p>
+            <p className="text-sm leading-6 text-default-500 dark:text-zinc-400 max-w-[520px]">
+              {t("launcherpage.launch.failed.content") as unknown as string}
+            </p>
+            {launchErrorCode && (
+              <Chip
+                size="sm"
+                variant="flat"
+                color="default"
+                className="font-mono tracking-wide"
+              >
+                {launchErrorCode}
+              </Chip>
+            )}
+          </div>
+        </UnifiedModal>
+
+        {/* GameInput Installing */}
+        <UnifiedModal
+          isOpen={gameInputInstallingDisclosure.isOpen}
+          onOpenChange={gameInputInstallingDisclosure.onOpenChange}
+          type="success"
+          title={t("launcherpage.gameinput.installing.title")}
+          hideCloseButton
+          icon={<FaDownload className="w-6 h-6" />}
+        >
+          <>
+            <p className="text-default-600 dark:text-zinc-300 font-medium">
+              {t("launcherpage.gameinput.installing.body")}
+            </p>
+            <div className="mt-4">
+              {giTotal > 0 ? (
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-between text-small font-bold text-default-500 dark:text-zinc-400">
+                    <span>
+                      {Math.min(
+                        100,
+                        Math.floor((giDownloaded / giTotal) * 100),
+                      )}
+                      %
+                    </span>
+                    <span className="font-mono">
+                      {(giDownloaded / 1024 / 1024).toFixed(1)} /{" "}
+                      {(giTotal / 1024 / 1024).toFixed(1)} MB
+                    </span>
+                  </div>
+                  <Progress
+                    aria-label="Downloading"
+                    value={(giDownloaded / giTotal) * 100}
+                    color="primary"
+                    size="md"
+                    classNames={{
+                      indicator: "bg-primary-500 hover:bg-primary-500",
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 text-default-500 dark:text-zinc-400">
+                  <Spinner size="sm" color="primary" />
+                  <span>
+                    {t("launcherpage.gameinput.installing.preparing")}
+                  </span>
+                </div>
+              )}
+            </div>
+          </>
+        </UnifiedModal>
+
+        {/* GameInput Missing */}
+        <UnifiedModal
+          isOpen={gameInputMissingDisclosure.isOpen}
+          onOpenChange={gameInputMissingDisclosure.onOpenChange}
+          type="warning"
+          title={t("launcherpage.gameinput.missing.title")}
+          footer={
+            <>
+              <Button
+                color="danger"
+                variant="light"
+                radius="full"
+                onPress={() => Window.Close()}
+              >
+                {t("common.quit_launcher")}
+              </Button>
+              <Button
+                color="warning"
+                radius="full"
+                className="text-white font-bold"
+                onPress={handleGameInputInstall}
+              >
+                {t("launcherpage.gameinput.missing.install_now")}
+              </Button>
+            </>
+          }
+        >
+          <p className="text-default-600 dark:text-zinc-300 font-medium">
+            {t("launcherpage.gameinput.missing.body")}
+          </p>
+        </UnifiedModal>
+
+        {/* VCRuntime Installing */}
+        <UnifiedModal
+          isOpen={vcRuntimeInstallingDisclosure.isOpen}
+          onOpenChange={vcRuntimeInstallingDisclosure.onOpenChange}
+          type="success"
+          title={t("launcherpage.vcruntime.installing.title")}
+          hideCloseButton
+          icon={<FaDownload className="w-6 h-6" />}
+        >
+          <>
+            <p className="text-default-600 dark:text-zinc-300 font-medium">
+              {t("launcherpage.vcruntime.installing.body")}
+            </p>
+            <div className="mt-4">
+              {vcTotal > 0 ? (
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-between text-small font-bold text-default-500 dark:text-zinc-400">
+                    <span>
+                      {Math.min(
+                        100,
+                        Math.floor((vcDownloaded / vcTotal) * 100),
+                      )}
+                      %
+                    </span>
+                    <span className="font-mono">
+                      {(vcDownloaded / 1024 / 1024).toFixed(1)} /{" "}
+                      {(vcTotal / 1024 / 1024).toFixed(1)} MB
+                    </span>
+                  </div>
+                  <Progress
+                    aria-label="Downloading"
+                    value={(vcDownloaded / vcTotal) * 100}
+                    color="primary"
+                    size="md"
+                    classNames={{
+                      indicator: "bg-primary-500 hover:bg-primary-500",
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 text-default-500 dark:text-zinc-400">
+                  <Spinner size="sm" color="primary" />
+                  <span>
+                    {t("launcherpage.vcruntime.installing.preparing")}
+                  </span>
+                </div>
+              )}
+            </div>
+          </>
+        </UnifiedModal>
+
+        {/* VCRuntime Missing */}
+        <UnifiedModal
+          isOpen={vcRuntimeMissingDisclosure.isOpen}
+          onOpenChange={vcRuntimeMissingDisclosure.onOpenChange}
+          type="warning"
+          title={t("launcherpage.vcruntime.missing.title")}
+          footer={
+            <>
+              <Button
+                color="danger"
+                variant="light"
+                radius="full"
+                onPress={() => Window.Close()}
+              >
+                {t("common.quit_launcher")}
+              </Button>
+              <Button
+                color="warning"
+                radius="full"
+                className="text-white font-bold"
+                onPress={handleVcRuntimeInstall}
+              >
+                {t("launcherpage.vcruntime.missing.install_now")}
+              </Button>
+            </>
+          }
+        >
+          <p className="text-default-600 dark:text-zinc-300 font-medium">
+            {t("launcherpage.vcruntime.missing.body")}
+          </p>
+        </UnifiedModal>
+
+        {/* Gaming Services Missing */}
+        <UnifiedModal
+          isOpen={gamingServicesMissingDisclosure.isOpen}
+          onOpenChange={gamingServicesMissingDisclosure.onOpenChange}
+          type="warning"
+          title={t("launcherpage.gs.missing.title")}
+          icon={<FaWindows className="w-6 h-6" />}
+          footer={
+            <>
+              <Button
+                color="danger"
+                variant="light"
+                radius="full"
+                onPress={() => Window.Close()}
+              >
+                {t("common.quit_launcher")}
+              </Button>
+              <Button
+                color="default"
+                variant="flat"
+                radius="full"
+                onPress={handleIgnoreGamingServices}
+              >
+                {t("launcherpage.gs.missing.ignore_forever")}
+              </Button>
+              <Button
+                {...warningConfirmButtonProps}
+                radius="full"
+                onPress={() => handleGamingServicesInstall(Browser.OpenURL)}
+              >
+                {t("launcherpage.gs.missing.open_store")}
+              </Button>
+            </>
+          }
+        >
+          <p className="text-default-600 dark:text-zinc-300 font-medium">
+            {t("launcherpage.gs.missing.body")}
+          </p>
+        </UnifiedModal>
+
+        {/* Install Confirm (GameInput / GamingServices) */}
+        <UnifiedModal
+          isOpen={installConfirmDisclosure.isOpen}
+          onOpenChange={handleInstallConfirmOpenChange}
+          type="success"
+          title={t("launcherpage.install_confirm.title")}
+          icon={<FaDownload className="w-6 h-6" />}
+          footer={
+            <>
+              <Button
+                color="default"
+                variant="light"
+                radius="full"
+                onPress={handleInstallConfirmContinue}
+              >
+                {t("launcherpage.install_confirm.continue")}
+              </Button>
+              <Button
+                color="primary"
+                radius="full"
+                className="bg-primary-500 hover:bg-primary-500 text-white font-bold shadow-lg shadow-primary-900/20"
+                onPress={handleInstallConfirmCheck}
+              >
+                {t("launcherpage.install_confirm.done_and_check")}
+              </Button>
+            </>
+          }
+        >
+          <p className="text-default-600 dark:text-zinc-300 font-medium">
+            {t("launcherpage.install_confirm.body")}
+          </p>
+        </UnifiedModal>
+
+        {/* VCRuntime Completing */}
+        <UnifiedModal
+          isOpen={vcRuntimeCompletingDisclosure.isOpen}
+          onOpenChange={vcRuntimeCompletingDisclosure.onOpenChange}
+          type="success"
+          title={t("launcherpage.vcruntime.completing.title")}
+          icon={<FaCogs className="w-6 h-6" />}
+        >
+          <p className="text-default-600 dark:text-zinc-300 font-medium">
+            {t("launcherpage.vcruntime.completing.body")}
+          </p>
+        </UnifiedModal>
+
+        {/* MC Launch Loading */}
+        <UnifiedModal
+          isOpen={mcLaunchLoadingDisclosure.isOpen}
+          onOpenChange={mcLaunchLoadingDisclosure.onOpenChange}
+          type="success"
+          title={t("launcherpage.mclaunch.loading.title")}
+          hideCloseButton
+          footer={
+            <Button
+              color="primary"
+              radius="full"
+              className="bg-primary-500 hover:bg-primary-500 text-white font-bold shadow-lg shadow-primary-900/20"
+              onPress={mcLaunchLoadingDisclosure.onClose}
+            >
+              {t("common.close")}
+            </Button>
+          }
+        >
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center gap-4">
+              <Spinner size="lg" color="primary" />
+              <div className="flex flex-col gap-1">
+                <motion.p
+                  className="text-default-600 dark:text-zinc-300 font-medium"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.25, delay: 0.1 }}
+                >
+                  {t("launcherpage.mclaunch.loading.body")}
+                </motion.p>
+                <div className="min-h-[24px] text-sm text-default-400">
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={`tip-${tipIndex}`}
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {currentLaunchTip}
+                    </motion.span>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+            <Progress
+              size="sm"
+              isIndeterminate
+              aria-label="Loading"
+              classNames={{ indicator: "bg-primary-500 hover:bg-primary-500" }}
+            />
+          </div>
+        </UnifiedModal>
+
+        {/* Shortcut Success */}
+        <UnifiedModal
+          isOpen={shortcutSuccessDisclosure.isOpen}
+          onOpenChange={shortcutSuccessDisclosure.onOpenChange}
+          type="success"
+          title={t("launcherpage.shortcut.success.title")}
+          footer={
+            <Button
+              color="primary"
+              radius="full"
+              className="bg-primary-500 hover:bg-primary-500 text-white font-bold shadow-lg shadow-primary-900/20"
+              onPress={shortcutSuccessDisclosure.onClose}
+            >
+              {t("common.close")}
+            </Button>
+          }
+        >
+          <p className="text-default-600 dark:text-zinc-300 font-medium">
+            {t("launcherpage.shortcut.success.body")}
+          </p>
+        </UnifiedModal>
+
+        {/* Register Installing */}
+        <UnifiedModal
+          isOpen={registerInstallingDisclosure.isOpen}
+          onOpenChange={registerInstallingDisclosure.onOpenChange}
+          type={registerAction === "unregister" ? "warning" : "success"}
+          title={
+            registerAction === "unregister"
+              ? t("versions.edit.unregister_progress.title")
+              : t("launcherpage.register.installing.title")
+          }
+          icon={
+            registerAction === "unregister" ? (
+              <FaExclamationTriangle className="w-6 h-6" />
+            ) : (
+              <FaDownload className="w-6 h-6" />
+            )
+          }
+        >
+          <>
+            <p className="text-default-600 dark:text-zinc-300 font-medium mb-4">
+              {registerAction === "unregister"
+                ? t("versions.edit.unregister_progress.body")
+                : t("launcherpage.register.installing.body")}
+            </p>
+            <Progress
+              size="sm"
+              isIndeterminate
+              aria-label={
+                registerAction === "unregister"
+                  ? "Unregistering"
+                  : "Registering"
+              }
+              classNames={{
+                indicator:
+                  registerAction === "unregister"
+                    ? "bg-warning-500 hover:bg-warning-500"
+                    : "bg-primary-500 hover:bg-primary-500",
+              }}
+            />
+          </>
+        </UnifiedModal>
+
+        {/* Register Success */}
+        <UnifiedModal
+          isOpen={registerSuccessDisclosure.isOpen}
+          onOpenChange={handleRegisterSuccessOpenChange}
+          type="success"
+          title={t("launcherpage.register.success.title")}
+          footer={
+            <Button
+              color="primary"
+              radius="full"
+              className="bg-primary-500 hover:bg-primary-500 text-white font-bold shadow-lg shadow-primary-900/20"
+              onPress={registerSuccessDisclosure.onClose}
+            >
+              {t("common.close")}
+            </Button>
+          }
+        >
+          <p className="text-default-600 dark:text-zinc-300 font-medium">
+            {t("launcherpage.register.success.body")}
+          </p>
+        </UnifiedModal>
+
+        {/* Register Failed */}
+        <UnifiedModal
+          isOpen={registerFailedDisclosure.isOpen}
+          onOpenChange={registerFailedDisclosure.onOpenChange}
+          type="error"
+          title={t("launcherpage.register.failed.title")}
+          confirmText={t("common.close")}
+          onConfirm={registerFailedDisclosure.onClose}
+        >
+          <div className="p-4 rounded-2xl bg-danger-50 dark:bg-danger-500/10 border border-danger-100 dark:border-danger-500/20 text-danger-600 dark:text-danger-400">
+            <p className="font-medium text-center">
+              {(() => {
+                const key = `errors.${launchErrorCode}`;
+                const translated = t(key) as unknown as string;
+                if (launchErrorCode && translated && translated !== key)
+                  return translated;
+                return t(
+                  "launcherpage.register.failed.body",
+                ) as unknown as string;
+              })()}
+            </p>
+          </div>
+        </UnifiedModal>
+
+      </PageContainer>
+    </>
+  );
+};

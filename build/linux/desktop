@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=Bedrock Nexus
+Comment=A Modern Minecraft Bedrock Edition Launcher
+# The Exec line includes %u to pass the URL to the application
+Exec=/usr/local/bin/BedrockNexus %u
+Terminal=false
+Type=Application
+Icon=BedrockNexus
+Categories=Utility;
+StartupWMClass=BedrockNexus
+
+ 

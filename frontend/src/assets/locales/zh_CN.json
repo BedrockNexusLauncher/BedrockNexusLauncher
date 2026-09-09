@@ -1,0 +1,1385 @@
+{
+  "app": {
+    "settings": "设置"
+  },
+  "nav": {
+    "versions": "实例列表",
+    "more": "更多",
+    "about": "关于",
+    "back": "返回",
+    "forward": "前进",
+    "mcpedl": "MCPEDL"
+  },
+  "theme": {
+    "toggle": "切换主题"
+  },
+  "launcherpage": {
+    "launch_button": "启动",
+    "content_manage": "内容管理",
+    "go_version_settings": "实例设置",
+    "manage_versions": "实例列表",
+    "search_versions": "搜索实例或名称",
+    "open_exe_dir": "打开游戏安装目录",
+    "register_system_button": "注册到系统",
+    "registered_tip": "已注册",
+    "levilamina_update_available": "可更新",
+    "register": {
+      "installing": {
+        "title": "正在注册到系统",
+        "body": "正在进行系统注册，请稍候…"
+      },
+      "success": {
+        "title": "注册完成",
+        "body": "已成功注册到系统，您可以通过系统应用列表启动。"
+      },
+      "failed": {
+        "title": "注册失败",
+        "body": "注册过程中发生错误，请重试或检查环境。"
+      }
+    },
+    "delete": {
+      "complete": {
+        "title": "删除完成",
+        "content": "所选实例已成功删除！",
+        "close_button": "关闭"
+      },
+      "confirm": {
+        "title": "确认删除",
+        "content": "您确定要删除此实例吗？此操作无法撤销。"
+      }
+    },
+    "launch": {
+      "failed": {
+        "title": "启动错误",
+        "content": "请检查实例文件与依赖环境是否完整，并确认没有安装不兼容的模组、资源包或行为包后重试。",
+        "close_button": "关闭"
+      },
+      "force_run_button": "强制启动"
+    },
+    "currentVersion": "当前实例",
+    "vcruntime": {
+      "completing": {
+        "title": "正在补全缺失的 DLL",
+        "body": "正在下载并补全 vcruntime140_1.dll，请稍候…"
+      },
+      "installing": {
+        "title": "正在安装 Visual C++ 运行库",
+        "body": "正在下载并安装 Microsoft Visual C++ 运行库，请稍候…",
+        "preparing": "正在准备下载..."
+      },
+      "missing": {
+        "title": "缺少 Visual C++ 运行库",
+        "body": "运行游戏需要 Microsoft Visual C++ 2015-2022 Redistributable (x64) 运行库。是否现在下载安装？",
+        "install_now": "立即安装"
+      }
+    },
+    "mclaunch": {
+      "loading": {
+        "title": "正在启动 Minecraft",
+        "body": "正在等待游戏窗口出现，请稍候…"
+      }
+    },
+    "shortcut": {
+      "create_button": "创建桌面快捷方式",
+      "success": {
+        "title": "快捷方式已创建",
+        "body": "已在桌面创建该实例的快捷方式。"
+      }
+    },
+    "gameinput": {
+      "installing": {
+        "title": "正在安装 GameInput",
+        "body": "正在下载并启动安装程序，请根据系统提示完成安装。",
+        "preparing": "正在准备下载..."
+      },
+      "missing": {
+        "title": "缺少 GameInput 组件",
+        "body": "运行游戏需要 Microsoft GameInput 组件。是否现在下载安装？",
+        "install_now": "立即安装"
+      }
+    },
+    "gs": {
+      "missing": {
+        "title": "缺少 Microsoft Gaming Services",
+        "body": "未检测到 Microsoft Gaming Services。该组件是 Minecraft 运行所必须的依赖项。",
+        "open_store": "打开商店进行安装",
+        "ignore_forever": "忽略并不再提醒"
+      }
+    },
+    "install_confirm": {
+      "title": "是否已完成安装？",
+      "body": "安装完成后请点击“已完成，重新检测”。如果尚未完成，请继续安装。",
+      "continue": "继续安装",
+      "done_and_check": "已完成，重新检测"
+    },
+    "currentVersion_none": "无",
+    "version_select": {
+      "title": "选择实例",
+      "unknown": "未知"
+    },
+    "tip": {
+      "version_selector": "使用版本下拉菜单可快速切换当前实例。",
+      "version_search": "在下拉列表中选择前，可先按实例名或游戏版本搜索。",
+      "manage_versions": "点击下拉面板里的“实例列表”，即可安装、导入或整理实例。",
+      "quick_actions_menu": "启动按钮旁的菜单提供实例设置、桌面快捷方式、游戏目录和系统注册等操作。",
+      "launch_dependencies": "若缺少 GameInput、VC++ Runtime 或 Gaming Services，Bedrock Nexus 会在启动前引导你完成安装。",
+      "mods_card": "Mods 卡片会显示当前实例已启用的模组，并可一键进入完整 Mods 页面。",
+      "content_counts_card": "内容管理卡片会显示世界、资源包和行为包数量，点击对应行可直接进入页面。",
+      "incompatible_resource_packs": "检测到不兼容资源包时，可点击警告行直接查看需要处理的项目。",
+      "content_download_sources": "下载卡片可直接进入 CurseForge 和 lip，方便在启动器内获取内容。",
+      "settings_personalize": "可在设置中调整主题、配色、背景等外观选项，让启动器更符合你的使用习惯。",
+      "settings_storage_path": "你可以在设置中修改存储路径；迁移或保存内容前，请先确认目标目录可写。",
+      "download_mirror": "如果下载速度较慢，可在设置中切换镜像源或检查相关网络选项。",
+      "open_source": "Bedrock Nexus 是开源项目；遇到启动器问题或有改进建议时，可前往 GitHub 提交反馈。",
+      "backup_worlds": "在尝试新的资源包、行为包或模组前，建议先备份重要世界。"
+    },
+    "edition": "Bedrock Edition",
+    "select_version_first": "请先选择一个版本 — 你可以在版本列表中选择。"
+  },
+  "updating": {
+    "title": "正在更新 Bedrock Nexus",
+    "body": "正在请求管理员权限并执行更新。更新期间请勿关闭窗口。",
+    "failed_title": "更新失败",
+    "phase": {
+      "download": "下载更新包",
+      "install": "安装更新"
+    },
+    "status": {
+      "checking": "正在检查更新",
+      "verifying": "正在校验安装包完整性",
+      "elevating": "正在请求管理员权限",
+      "restarting": "正在重新启动启动器"
+    },
+    "errors": {
+      "generic": "更新时发生未知错误，请稍后重试。",
+      "update_admin_required": "继续更新需要管理员权限。",
+      "update_asset_missing": "所需的更新包缺失或命名不符合要求。",
+      "update_release_unavailable": "暂时无法获取更新元数据。",
+      "update_verify_failed": "更新包校验失败。",
+      "update_download_failed": "下载更新包失败。",
+      "update_install_failed": "安装更新包失败。",
+      "update_restart_failed": "更新完成后未能自动重新启动启动器。"
+    }
+  },
+  "moddedcard": {
+    "title": "模组",
+    "content": {
+      "none": "未找到模组"
+    },
+    "manage": "管理模组"
+  },
+  "download_manager": {
+    "title": "下载管理",
+    "description": "查看和管理当前的下载任务",
+    "no_downloads": "当前没有活动的下载任务",
+    "unknown_file": "未知文件",
+    "actions": {
+      "retry": "重试",
+      "delete": "删除"
+    }
+  },
+  "downloadpage": {
+    "error": {
+      "already_downloading": "该文件正在下载中"
+    },
+    "changelog": {
+      "title": "最新更新日志"
+    },
+    "status": {
+      "downloaded": "已下载",
+      "not_downloaded": "未下载",
+      "checking": "检查中…"
+    },
+    "table": {
+      "aria_label": "版本表格",
+      "empty": "暂无数据",
+      "header": {
+        "version": "版本",
+        "type": "类型",
+        "status": "状态",
+        "loader": "加载器",
+        "actions": "操作"
+      },
+      "type": {
+        "release": "正式版",
+        "preview": "预览版"
+      }
+    },
+    "topcontent": {
+      "types": "类型",
+      "types_all": "全部",
+      "status": "状态",
+      "status_all": "全部",
+      "status_downloaded": "已下载",
+      "status_not_downloaded": "未下载",
+      "loader": "加载器",
+      "input": {
+        "placeholder": "按版本搜索..."
+      }
+    },
+    "actions": {
+      "delete_installer": "删除下载包"
+    },
+    "bottomcontent": {
+      "total": "共 {{count}} 个版本"
+    },
+    "install_folder": {
+      "confirm_title": "安装实例",
+      "name_label": "实例名称",
+      "placeholder_name": "请输入实例名称",
+      "enable_isolation": "实例隔离",
+      "enable_isolation_desc": "将游戏数据（如世界、设置、缓存等）重定向到 versions/【名称】/ 目录下，而不是存放在 AppData 中。",
+      "inherit_label": "继承来源",
+      "inherit_hint": "从已隔离实例复制数据，类型需与当前一致",
+      "inherit_none": "不继承",
+      "inherit_gdk": "从 GDK 目录继承"
+    },
+    "mirror": {
+      "no_recommended": "暂无推荐镜像",
+      "download_started": "开始下载...",
+      "title": "选择下载镜像",
+      "target": "下载目标",
+      "testing": "测速中…",
+      "unselected": "未选择",
+      "copy_link": "复制链接",
+      "recommended": "推荐镜像",
+      "auto_testing": "自动测速中…",
+      "others": "其它镜像",
+      "no_mirrors": "当前版本无可用镜像。",
+      "filename_fallback": "(文件)",
+      "retest": "重新测速",
+      "download_selected": "下载所选镜像",
+      "install_button": "安装",
+      "install_selected": "安装所选镜像"
+    },
+    "progress": {
+      "unknown_error": "未知错误"
+    },
+    "download": {
+      "success_body": "文件已下载："
+    },
+    "delete": {
+      "title": "确认删除下载包",
+      "body": "将删除安装包：",
+      "warning": "此操作不可恢复。",
+      "success_body": "已删除安装包："
+    },
+    "install": {
+      "levilamina_label": "安装 LeviLamina",
+      "levilamina_desc": "自动安装 LeviLamina 加载器",
+      "version_label": "版本",
+      "ll_version_label": "LeviLamina 版本",
+      "ll_version_placeholder": "请选择 LeviLamina 版本",
+      "hint": "请稍候，此过程可能需要较长时间…",
+      "estimated_size": "已写入大小（估算）",
+      "target": "安装目标",
+      "success_title": "安装完成",
+      "success": "版本已成功安装",
+      "progress": "安装进度",
+      "custom_installer": {
+        "label": "选择本地安装包 (.msixvc)",
+        "hint": "默认使用安装器目录下已下载的文件"
+      },
+      "levilamina_unsupported": "该游戏版本不支持 LeviLamina",
+      "title": "安装"
+    },
+    "customappx": {
+      "button": "自定义",
+      "modal": {
+        "1": {
+          "header": "版本信息",
+          "body": {
+            "select": {
+              "item1": "正式版",
+              "item2": "预览版"
+            }
+          },
+          "footer": {
+            "install_button": "安装"
+          }
+        }
+      }
+    }
+  },
+  "onboarding": {
+    "title": "首次启动引导",
+    "subtitle": "请先设置内容路径与语言",
+    "skip": "跳过",
+    "finish": "完成",
+    "unsaved": {
+      "title": "未保存修改",
+      "body": "您更改了内容路径但尚未保存。是否保存后完成引导？",
+      "cancel": "取消",
+      "save": "保存并完成"
+    }
+  },
+  "settings": {
+    "layout": {
+      "title_navbar": "使用顶部导航栏",
+      "desc_navbar": "开启后使用顶部导航栏代替默认的垂直侧边栏"
+    },
+    "tabs": {
+      "general": "基础设置",
+      "personalization": "个性化",
+      "components": "第三方组件",
+      "others": "其他设置",
+      "updates": "软件更新",
+      "help": "报告问题"
+    },
+    "unsaved": {
+      "title": "未保存修改",
+      "body": "您更改了内容路径但尚未保存。是否保存后离开？",
+      "cancel": "取消",
+      "save": "保存并离开"
+    },
+    "lang": {
+      "changed": "语言已更改"
+    },
+    "discord_rpc": {
+      "title": "Discord 游戏状态",
+      "desc": "在 Discord 上显示您的游戏状态"
+    },
+    "beta_updates": {
+      "title": "接收测试版更新",
+      "desc": "开启后将接收测试版（Prerelease）推送"
+    },
+    "experimental": {
+      "title": "实验性功能",
+      "desc": "可在这里提前试用尚未完全稳定的能力；这些功能可能随时调整、失效或被移除。",
+      "instance_backup": {
+        "title": "实例备份（实验性）",
+        "desc": "开启后可在实例设置中使用备份与恢复功能；该能力仍处于实验阶段。",
+        "warning": {
+          "title": "确认启用实例备份实验性功能",
+          "body_1": "该功能目前仅面向开发与测试人员开放，不建议普通用户在正式数据环境中使用。",
+          "body_2": "实例备份的格式、包含范围与恢复兼容性后续都可能发生变化，现阶段不保证未来版本持续兼容。",
+          "body_3": "请确认你已理解相关风险，并在完整阅读 10 秒后再决定是否启用。",
+          "confirm": "我已知晓风险并启用"
+        }
+      },
+      "mcpedl": {
+        "title": "MCPEDL 目录（实验性）",
+        "desc": "在导航中添加 MCPEDL 搜索页面，用于查找和下载 Bedrock 插件。不稳定：MCPEDL 变更后可能失效。"
+      },
+      "lip_bedrinth": {
+        "title": "LIP Bedrinth 回退（实验性）",
+        "desc": "当 LIP 包索引不可用时，改用 Bedrinth API。通过此方式加载的条目没有版本兼容性数据。"
+      }
+    },
+    "reset": {
+      "confirm": {
+        "title": "恢复默认路径？",
+        "body": "这将把内容路径重置为默认位置。确定要继续吗？"
+      }
+    },
+    "lip": {
+      "title": "lip",
+      "install_button": "安装",
+      "check_button": "检查",
+      "cache_clean_button": "清理缓存",
+      "cache_cleaning": "正在清理缓存...",
+      "cache_clean_success": "lip 缓存清理完成",
+      "installing": "正在安装 lip...",
+      "latest_label": "最新",
+      "outdated_label": "可更新",
+      "missing_label": "缺失",
+      "status": {
+        "checking": "正在检查 lip 状态...",
+        "checking_runtime": "正在检查 .NET 10 运行时...",
+        "preparing": "正在准备下载...",
+        "installing_runtime": "正在安装 .NET 10 运行时...",
+        "downloading": "正在下载 lip 压缩包...",
+        "extracting": "正在解压 lipd.exe...",
+        "writing": "正在写入 lipd.exe...",
+        "verifying": "正在验证安装...",
+        "up_to_date": "当前版本已是最新",
+        "outdated": "发现新版本，可前往设置更新",
+        "missing": "尚未安装 lip",
+        "check_failed": "检查 lip 状态失败：{{error}}",
+        "done": "lip 安装完成"
+      },
+      "error": {
+        "lip_fetch_release": "获取 lip 包元数据失败",
+        "lip_release_asset_not_found": "最新 lip 元数据中未找到 Windows x64 安装包",
+        "lip_download_dotnet_installer": "下载 .NET 10 安装脚本失败",
+        "lip_install_dotnet_runtime": "安装 .NET 10 运行时失败",
+        "lip_verify_dotnet_runtime": "验证 .NET 10 运行时失败",
+        "lip_download_archive": "下载 lip .tgz 压缩包失败",
+        "lip_open_archive": "打开 lip .tgz 压缩包失败",
+        "lip_extract_binary": "提取 win32-x64/lipd.exe 失败",
+        "lip_create_target_dir": "创建 lip 安装目录失败",
+        "lip_replace_file": "替换 lipd.exe 失败",
+        "lip_verify_install": "验证已安装的 lip 版本失败",
+        "lip_install_failed": "安装 lip 失败"
+      },
+      "version_label": "当前版本：{{currentVersion}} / 最新版本：{{latestVersion}}",
+      "startup_prompt": {
+        "title": "发现 lip 更新",
+        "description": "检测到 lip 有新版本（{{currentVersion}} -> {{latestVersion}}）。Bedrock Nexus 不会自动更新，请前往“设置 > 组件”手动更新。",
+        "later_button": "稍后",
+        "ignore_button": "忽略此版本",
+        "open_settings_button": "前往设置",
+        "current_version": "当前版本：{{currentVersion}}",
+        "latest_version": "最新版本：{{latestVersion}}"
+      },
+      "unknown_version": "未知",
+      "update_button": "更新"
+    },
+    "resource_rules": {
+      "title": "启动器运行数据",
+      "check_button": "检查更新",
+      "update_button": "更新",
+      "latest_label": "最新",
+      "outdated_label": "需更新",
+      "missing_label": "未安装",
+      "status": {
+        "checking": "正在校验 SHA256...",
+        "up_to_date": "SHA256 与远端一致",
+        "outdated": "SHA256 与远端不一致",
+        "missing": "未找到本地文件",
+        "check_failed": "检查失败：{{error}}"
+      }
+    },
+    "header": {
+      "title": "设置",
+      "content": "配置启动器常用选项"
+    },
+    "body": {
+      "version": {
+        "name": "当前版本",
+        "hasnew": "有新的版本更新！",
+        "button": "检查更新",
+        "ignore": "屏蔽该版本"
+      },
+      "paths": {
+        "title": "内容路径",
+        "subtitle": "管理游戏数据存储位置",
+        "base_root": "根目录",
+        "apply": "应用",
+        "reset": "恢复默认",
+        "installer": "安装器目录",
+        "versions": "实例目录",
+        "unsaved": "更改未保存",
+        "not_writable": "目录不可写入"
+      },
+      "language": {
+        "name": "语言",
+        "button": "更改"
+      }
+    },
+    "modal": {
+      "2": {
+        "footer": {
+          "download_button": "更新"
+        }
+      }
+    },
+    "appearance": {
+      "global_config": "全局配置",
+      "mode_config": "模式特定配置",
+      "edit_mode_desc": "个性化设置（颜色、透明度等）将按日间/夜间模式独立保存。切换右侧标签页以配置不同模式。",
+      "theme_mode": "外观模式",
+      "theme_mode_desc": "选择应用的主题模式",
+      "theme_system": "跟随系统",
+      "theme_light": "日间模式",
+      "theme_dark": "夜间模式",
+      "theme_schedule": "手动设置时间",
+      "theme_auto": "日出日落",
+      "theme_start_time": "夜间模式开始时间",
+      "theme_end_time": "夜间模式结束时间",
+      "theme_schedule_desc": "在指定时间段内自动切换到夜间模式",
+      "theme_auto_desc": "根据当地日出日落时间自动切换主题",
+      "theme_system_desc": "跟随 Windows 系统设置",
+      "theme_color": "主题色",
+      "theme_color_desc": "应用的主要强调颜色",
+      "theme_standard": "预设颜色",
+      "theme_generated": "更多颜色",
+      "hue": "色相",
+      "custom_color": "自定义颜色",
+      "background_image": "背景图片",
+      "background_image_desc": "选择一个文件夹，从中挑选图片作为背景",
+      "background_play_order": "播放顺序",
+      "background_play_random": "随机",
+      "background_play_sequential": "顺序",
+      "background_fit_mode": "自适应方式",
+      "background_fit_smart": "智能",
+      "background_fit_center": "居中",
+      "background_fit_fit": "适应",
+      "background_fit_stretch": "拉伸",
+      "background_fit_tile": "平铺",
+      "background_fit_top_left": "居于左上",
+      "background_fit_top_right": "居于右上",
+      "no_image_selected": "未选择文件夹",
+      "select_image": "选择文件夹",
+      "clear_image": "清除文件夹",
+      "background_blur": "背景模糊",
+      "background_brightness": "背景亮度",
+      "background_opacity": "背景不透明度",
+      "background_base_mode": "底色模式",
+      "background_base_mode_desc": "在背景图片下方添加一层纯色遮罩，以增强对比度",
+      "background_base_none": "无",
+      "background_base_theme": "跟随主题色",
+      "background_base_color": "自定义颜色",
+      "background_base_color_pick": "底色颜色",
+      "background_base_opacity": "底色不透明度",
+      "disable_animations": "禁用动画",
+      "disable_animations_desc": "关闭界面过渡动画以提升性能",
+      "themed_strokes": "主题描边",
+      "themed_strokes_desc": "使用所选主题色为界面边框和轮廓着色",
+      "calculating": "正在计算...",
+      "sunrise_time": "今日日出",
+      "sunset_time": "今日日落",
+      "sun_fetch_failed": "获取日出日落时间失败"
+    },
+    "process": {
+      "title": "进程管理",
+      "desc": "管理运行中的 Minecraft 进程",
+      "scan": "扫描进程",
+      "kill_all": "结束所有进程",
+      "kill": "结束",
+      "no_process": "未发现运行中的 Minecraft 进程"
+    },
+    "patch": {
+      "title": "启动器补丁",
+      "desc": "应用启动器内置的补丁脚本",
+      "auto_run": "启动时自动运行",
+      "auto_run_desc": "启用后，每次启动 Bedrock Nexus 都会应用补丁脚本（需要管理员批准）。禁用后，后续启动将跳过该脚本。",
+      "run_button": "立即运行补丁",
+      "run_desc": "手动应用内置的补丁脚本，Windows 将请求管理员权限。",
+      "running": "正在运行...",
+      "success": "补丁应用成功",
+      "failed": "运行补丁失败",
+      "register_mode": "打补丁前注册的版本",
+      "register_mode_desc": "如果 Minecraft 未在系统中注册，将在运行补丁脚本前自动注册所选版本，以便补丁能够定位游戏。",
+      "register_mode_latest_release": "最新的正式版",
+      "register_mode_latest_preview": "最新的预览版",
+      "register_mode_last_launched": "上次启动的版本",
+      "register_mode_off": "从不自动注册"
+    }
+  },
+  "downloadmodal": {
+    "download_button": "下载",
+    "installing": {
+      "title": "正在安装"
+    },
+    "open_folder": "打开目录"
+  },
+  "about": {
+    "description": "Bedrock Nexus - 一款现代、免费且开源的 Minecraft 基岩版启动器，适用于 Windows",
+    "authors": "启动器制作者",
+    "author": "制作者",
+    "source": "源代码与开源",
+    "contribute": "参与贡献",
+    "contribute.desc": "欢迎通过提交 Issue 或 Pull Request 的方式参与贡献，共同完善 Bedrock Nexus。",
+    "github_repo": "GitHub · Bedrock Nexus",
+    "license.tip": "许可证与详细信息请参见仓库中的 LICENSE 文件。",
+    "issue": "Issue",
+    "star_fork": "Star / Fork",
+    "creator_name": "Aster",
+    "creator_desc": "由 Aster 设计、开发并维护，致力于打造快速、简洁、可靠的启动器。",
+    "launcher": "关于启动器",
+    "launcher.desc": "Bedrock Nexus 是一款适用于 Windows 的现代开源 Minecraft 基岩版桌面启动器。您可以并排安装和管理 Release 与 Preview 版本，整理资源包、世界和模组，并一键启动任何实例，一切都在快速、简洁且一体化的界面中完成。"
+  },
+  "common": {
+    "retry": "重试",
+    "completed": "已完成",
+    "downloading": "下载中",
+    "ok": "确定",
+    "continue": "继续",
+    "cancel": "取消",
+    "cancelled": "已取消",
+    "error": "错误",
+    "refresh": "刷新",
+    "open": "打开",
+    "select_mode": "选择模式",
+    "select_all": "全选",
+    "selected_count": "已选 {{count}} 项",
+    "preview": "预览版",
+    "release": "正式版",
+    "back": "返回",
+    "loading": "加载中",
+    "yes": "是",
+    "no": "否",
+    "close": "关闭",
+    "quit_launcher": "退出启动器",
+    "confirm": "确定",
+    "success": "操作成功",
+    "delete": "删除",
+    "search": "搜索",
+    "search_placeholder": "搜索...",
+    "empty": "暂无数据",
+    "browse": "选择...",
+    "processing": "正在处理...",
+    "done": "完成",
+    "wait": "请稍候...",
+    "updating": "更新中",
+    "expand": "展开",
+    "collapse": "收起",
+    "save": "保存",
+    "add": "添加",
+    "save_failed": "保存失败",
+    "load_failed": "加载失败",
+    "view_all": "查看全部",
+    "confirm_delete": "确认删除",
+    "no_results": "无搜索结果",
+    "hide": "隐藏",
+    "edit": "编辑",
+    "backup": "备份",
+    "date": "日期",
+    "version": "版本",
+    "details": "详情",
+    "disable": "禁用",
+    "enable": "启用",
+    "open_folder": "打开文件夹",
+    "remove": "移除",
+    "tip": "提示",
+    "feature_unavailable": "该功能暂时不可用",
+    "unknown": "未知"
+  },
+  "useravatar": {
+    "no_login_retry": "未检测到 Xbox 登录（点击重试）",
+    "xbox_live": "Xbox Live",
+    "refresh_session_aria": "刷新 Xbox 会话",
+    "xuid": "XUID: {{xuid}}",
+    "stats": {
+      "minutes_played": "游戏时间",
+      "blocks_broken": "打破的方块",
+      "mobs_defeated": "已击败的生物",
+      "distance_travelled": "行动距离",
+      "time_format": "{{days}}天 {{hours}} 小时 {{minutes}} 分"
+    }
+  },
+  "content": {
+    "count": {
+      "worlds": "世界",
+      "resource_packs": "资源包",
+      "behavior_packs": "行为包"
+    }
+  },
+  "contentpage": {
+    "current_version": "当前实例",
+    "none": "无",
+    "isolation": "实例隔离",
+    "worlds": "世界",
+    "worlds_list": "存档列表",
+    "select_player": "选择玩家",
+    "no_players": "暂无玩家",
+    "backup_success": "备份成功",
+    "backup_failed": "备份失败",
+    "resource_packs": "资源包",
+    "no_resource_packs": "暂无资源包",
+    "behavior_packs": "行为包",
+    "no_behavior_packs": "暂无行为包",
+    "skin_packs": "皮肤包",
+    "no_skin_packs": "暂无皮肤包",
+    "shader_chip": "着色器",
+    "only_show_updates": "与当前版本不兼容的着色器",
+    "update_material_bin": "更新 .material.bin",
+    "update_material_bin_desc": "需要更新以便兼容当前版本",
+    "update_material_bin_modal_title": "更新 .material.bin",
+    "update_material_bin_modal_content": "此操作将更新着色器包中的 .material.bin 文件头部，以便 Minecraft 可以正确加载它。",
+    "update_material_bin_risk_title": "风险提示：",
+    "update_material_bin_risk_content": "更新后的材质包可能在旧版本 Minecraft 中无法正常工作。建议您先备份存档或导出资源包。",
+    "update_material_bin_success": "材质更新完成",
+    "update_material_bin_failed": "材质更新失败",
+    "update_material_bin_stat_updated": "已更新: {{count}}",
+    "update_material_bin_stat_failed": "失败: {{count}}",
+    "servers": "服务器",
+    "error_resolve_paths": "无法解析内容路径。",
+    "open_users_dir": "打开存储目录",
+    "players_aria": "玩家列表",
+    "sort_time": "时间",
+    "sort_asc": "从上到下",
+    "sort_desc": "从下到上",
+    "drop_hint": "拖入 .mcworld/.mcpack/.mcaddon 以导入",
+    "import_button": "导入",
+    "transfer_resources_button": "资源转移",
+    "transfer_resources_title": "转移资源到隔离实例",
+    "transfer_resources_body_overview": "将转移当前实例中的全部资源包、行为包、皮肤包和世界到目标实例。请选择目标实例。",
+    "transfer_resources_body_simple": "请选择要转移到的目标实例。",
+    "transfer_no_targets": "暂无可用的隔离实例",
+    "transfer_target_placeholder": "请选择目标实例",
+    "transfer_progress_title": "正在转移资源...",
+    "transfer_progress_body": "正在将资源转移到选中的实例，请稍候。",
+    "require_player_for_world_import": "导入世界 (.mcworld) 前请先选择玩家",
+    "no_player_selected": "未选择玩家",
+    "world_leveldat_editor": "世界 level.dat 编辑",
+    "version": "版本号",
+    "add_field": "新增字段",
+    "field_name": "名称",
+    "initial_value": "初始值",
+    "select_player_title": "选择玩家",
+    "select_player_for_import": "请选择要导入到的玩家",
+    "no_items": "没有找到项目",
+    "delete_pack_confirm": "确定要删除 {{name}} 吗？",
+    "delete_warning": "此操作无法撤销！",
+    "delete_selected_confirm": "确定要删除选中的 {{count}} 个项目吗？",
+    "deleted_name": "已删除 {{name}}",
+    "deleted_count": "已删除 {{count}} 个项目",
+    "delete_world_confirm": "确定要删除存档 {{name}} 吗？",
+    "basic_info": "基本信息",
+    "level_name": "存档名称",
+    "screenshots": "屏幕截图",
+    "no_screenshots": "暂无截图",
+    "delete_screenshot_confirm": "确定要删除截图 {{name}} 吗？",
+    "preview_screenshot": "查看大图",
+    "screenshot_viewer_hint": "大图预览",
+    "screenshot_viewer_nav_hint": "可使用 ← / → 键或两侧按钮切换截图"
+  },
+  "skinpack": {
+    "studio": "皮肤包工作室",
+    "create_title": "创建皮肤包",
+    "edit_title": "编辑皮肤包",
+    "beta": "测试版",
+    "description": "添加 64x32、64x64 或 128x128 的 PNG 皮肤，然后将皮肤包安装到选定的实例。",
+    "pack_name": "皮肤包名称",
+    "skin_name": "皮肤名称",
+    "model": "模型",
+    "classic": "经典（Steve）",
+    "slim": "纤细（Alex）",
+    "height": "身高",
+    "height_normal": "正常",
+    "height_short": "矮",
+    "height_tall": "高",
+    "add_skins": "添加 PNG 皮肤",
+    "choose_replacement": "选择替换用 PNG",
+    "replace": "替换",
+    "remove": "删除皮肤",
+    "no_skins": "尚未选择皮肤。",
+    "build_install": "创建并安装",
+    "save_install": "保存并安装",
+    "edit_tooltip": "编辑皮肤包",
+    "default_name": "自定义皮肤包",
+    "not_editable": "此皮肤包没有可编辑的皮肤",
+    "open_failed": "无法打开皮肤包",
+    "installed": "皮肤包已安装",
+    "operation_failed": "皮肤包操作失败"
+  },
+  "versions": {
+    "info": {
+      "name": "名称"
+    },
+    "edit": {
+      "tabs": {
+        "general": "基础设置",
+        "launch": "启动选项",
+        "features": "功能",
+        "manage": "管理",
+        "loader": "加载器"
+      },
+      "title": "实例设置",
+      "mc_version": "游戏版本",
+      "new_name": "新名称",
+      "placeholder": "输入新名称",
+      "hint": "仅修改文件夹名称，不影响游戏版本与类型。",
+      "enable_isolation": "启用实例隔离",
+      "enable_console": "启用控制台",
+      "enable_render_dragon": "启用渲染龙光影加载",
+      "enable_ctrl_r_reload_resources": "Ctrl+R热重载资源",
+      "enable_editor_mode": "启用编辑器模式",
+      "launch_args": "启动参数",
+      "launch_args_placeholder": "启动参数 (例如: -Editor true)",
+      "launch_args_hint": "设置游戏启动参数。",
+      "env_vars": "环境变量",
+      "env_vars_placeholder": "环境变量 (KEY=VALUE)，每行一个",
+      "env_vars_hint": "设置启动时的环境变量。",
+      "delete_hint": "永久从您的设备中删除该实例，包括世界、配置及所有安装内容。请谨慎操作，删除后无法恢复。",
+      "danger_title": "危险操作",
+      "danger_hint": "以下操作会影响当前实例的系统注册或本地文件，请确认后再继续。",
+      "backup": {
+        "title": "实例备份",
+        "hint": "为当前实例创建备份文件，可在调整设置、安装 mods 或导入新内容前先保留一份副本",
+        "section_body": "可选择备份游戏数据和 mods；启动器程序本体不会包含在备份中",
+        "experimental_badge": "实验性",
+        "experimental_disabled": "前往 {{settingsPath}} 启用后，才能使用实例备份与恢复。",
+        "button": "备份实例",
+        "dialog_title": "选择要备份的内容",
+        "dialog_body": "请选择要包含在本次备份中的内容",
+        "path_label": "目录",
+        "size_label": "预计大小",
+        "shared_tag": "共享数据",
+        "missing_tag": "未找到",
+        "empty_tag": "目录为空",
+        "shared_warning": "当前实例未启用隔离，若勾选游戏数据，将同时备份当前使用的共享游戏数据目录",
+        "no_scope_selected": "请至少选择一项要备份的内容",
+        "confirm": "开始备份",
+        "progress_title": "正在备份实例",
+        "progress_body": "正在打包所选范围，请稍候…",
+        "success_title": "实例备份完成",
+        "success_body": "备份文件已生成",
+        "archive_label": "备份文件",
+        "location_label": "保存位置",
+        "open_dir": "打开目录",
+        "lip_summary": "已识别 {{count}} 个由 lip 管理的模组包：{{summary}}",
+        "mode": {
+          "safe": {
+            "label": "安全模式"
+          },
+          "full": {
+            "label": "全量模式",
+            "warning": "全量备份会包含 Users 目录以外的内容，可能带入账号缓存、隐私数据或其他不适合共享的文件。"
+          }
+        },
+        "restore": {
+          "button": "恢复备份",
+          "file_picker_title": "选择实例备份压缩包",
+          "dialog_title": "确认恢复实例备份",
+          "dialog_body": "请选择要从备份中恢复的内容。若检测到与当前实例冲突的内容，会在恢复前列出供你逐项选择。",
+          "confirm": "开始恢复",
+          "scope_section_title": "恢复范围",
+          "created_at": "创建时间",
+          "lip_summary": "检测到 {{count}} 个 lip 模组包，恢复时会尝试自动补装。",
+          "conflict_loading": "正在扫描恢复冲突，请稍候…",
+          "conflict_summary": "发现 {{count}} 处与当前实例冲突的内容，请逐项选择保留备份版本还是当前版本。",
+          "conflict_empty": "当前所选范围没有发现冲突，可以直接恢复。",
+          "conflict_choice_placeholder": "请选择冲突处理方式",
+          "conflict_choice_backup": "使用备份版本",
+          "conflict_choice_current": "保留当前版本",
+          "conflict_choice_pending": "待选择",
+          "conflict_group_count": "{{count}} 项冲突",
+          "conflict_group_unresolved": "{{count}} 项待选择",
+          "conflict_group_resolved": "已完成选择",
+          "conflict_group_apply_backup": "本组全选备份",
+          "conflict_group_apply_current": "本组全选当前",
+          "conflict_unresolved": "请先为每一项冲突选择处理方式。",
+          "conflict_details_toggle": "查看路径与详细差异",
+          "conflict_item_fallback": "未命名内容",
+          "identity_key_label": "冲突身份",
+          "backup_side_label": "备份版本",
+          "current_side_label": "当前版本",
+          "backup_path_label": "备份路径",
+          "current_path_label": "当前路径",
+          "conflict_category": {
+            "mods": "模组",
+            "skin_packs": "皮肤包",
+            "behavior_packs": "行为包",
+            "resource_packs": "资源包",
+            "worlds": "世界",
+            "dev_behavior_packs": "开发行为包",
+            "dev_resource_packs": "开发资源包",
+            "templates": "世界模板",
+            "files": "其他文件",
+            "other": "其他内容"
+          },
+          "identity_kind": {
+            "pack_uuid": "内容包",
+            "world_folder": "世界文件夹",
+            "mod_folder": "Mod 文件夹",
+            "file_path": "文件路径"
+          },
+          "conflict_type": {
+            "file": "文件",
+            "dir": "目录"
+          },
+          "diff_field": {
+            "folder": "目录名",
+            "uuid": "UUID",
+            "name": "名称",
+            "version": "版本",
+            "min_engine_version": "最低引擎版本",
+            "level_name": "世界名称",
+            "entry": "入口",
+            "type": "类型"
+          },
+          "progress_title": "正在恢复实例备份",
+          "progress_body": "正在应用备份内容，请稍候…",
+          "progress_preparing": "正在准备恢复内容…",
+          "progress_extracting": "正在解压备份内容…",
+          "progress_scope": "正在恢复 {{scope}}…",
+          "progress_finalizing": "正在整理恢复结果…",
+          "progress_step": "步骤 {{current}} / {{total}}",
+          "success_title": "实例恢复完成",
+          "partial_title": "实例恢复部分完成",
+          "failed_title": "实例恢复失败",
+          "success_body": "所选内容已恢复完成。",
+          "partial_body": "部分内容已恢复，但仍有项目需要手动处理。",
+          "failed_body": "未能完成本次恢复，请检查下方结果。",
+          "status": {
+            "success": "成功",
+            "partial": "部分完成",
+            "failed": "失败"
+          }
+        }
+      },
+      "unregister_button": "取消注册",
+      "unregister_hint": "取消该实例在系统中的注册，使其不再显示于系统应用列表。此操作不会删除文件。",
+      "unregister_progress": {
+        "title": "正在取消注册",
+        "body": "正在执行系统取消注册，请稍候…"
+      },
+      "unregister_success": {
+        "title": "取消注册成功",
+        "body": "已成功取消注册，现在可以删除该实例了。"
+      },
+      "loader": {
+        "ll_not_installed": "未安装",
+        "ll_select_version": "LeviLamina 版本",
+        "ll_select_placeholder": "请选择 LeviLamina 版本",
+        "ll_select_guidance": "请选择你要安装、升级、降级或重装的 LeviLamina 版本。",
+        "ll_remove_confirm_title": "确认移除 LeviLamina",
+        "ll_remove_confirm_body": "将从当前实例中移除 LeviLamina。",
+        "ll_remove_confirm_warning": "此操作不可撤销。"
+      }
+    },
+    "logo": {
+      "title": "自定义图标（要求正方形）",
+      "change": "点击更换",
+      "clear": "清除",
+      "hint": "将保存到实例文件夹的 LargeLogo.png。点击图标更换。"
+    },
+    "unsaved": {
+      "body": "您更改了实例设置但尚未保存。是否保存后离开？"
+    },
+    "sort": {
+      "name": "名称 (A-Z)",
+      "name_za": "名称 (Z-A)",
+      "version": "版本 (新到旧)",
+      "version_old_new": "版本 (旧到新)"
+    },
+    "tab": {
+      "all": "全部",
+      "preview": "预览版",
+      "release": "正式版"
+    }
+  },
+  "mirror": {
+    "target": "目标实例"
+  },
+  "errors": {
+    "ERR_GAME_ALREADY_RUNNING": "检测到当前实例 Minecraft 已在运行，请先关闭再启动或者切换其他实例",
+    "ERR_TARGET_DIR_NOT_SPECIFIED": "未指定目标目录",
+    "ERR_CREATE_TARGET_DIR": "无法创建目标目录",
+    "ERR_NOT_FOUND_GAME_DIR": "未找到游戏目录",
+    "ERR_NOT_FOUND_EXE": "未找到可执行文件",
+    "ERR_WRITE_TARGET": "写入目标配置失败",
+    "ERR_LAUNCH_GAME": "游戏未能正常启动",
+    "ERR_GAME_CRASH_DURING_LAUNCH": "启动过程中游戏崩溃",
+    "ERR_WAIT_KERNEL_TIMEOUT": "等待内核准备超时",
+    "ERR_COPY_WALK": "遍历文件失败",
+    "ERR_COPY_FAILED": "复制失败",
+    "ERR_NAME_REQUIRED": "名称不能为空",
+    "ERR_NAME_TOO_LONG": "名称过长",
+    "ERR_NAME_TRAILING_DOT_SPACE": "名称不能以空格或点结尾",
+    "ERR_NAME_INVALID_CHAR": "名称包含非法字符: <>:\"/\\|?*",
+    "ERR_NAME_CONTROL_CHAR": "名称包含控制字符",
+    "ERR_NAME_RESERVED": "名称为 Windows 保留名",
+    "ERR_ICON_DECODE": "图标解析失败",
+    "ERR_ICON_NOT_SQUARE": "图标必须是正方形",
+    "ERR_ACCESS_VERSIONS_DIR": "无法访问版本目录",
+    "ERR_ACCESS_INSTALLERS_DIR": "无法访问安装包目录",
+    "ERR_READ_VERSIONS_DIR": "无法读取版本目录",
+    "ERR_LL_VERSION_UNSUPPORTED": "所选 LeviLamina 版本不受当前游戏版本支持",
+    "ERR_NAME_EXISTS": "名称已存在",
+    "ERR_INVALID_NAME": "无效的名称",
+    "ERR_NOT_FOUND_OLD": "未找到原目录",
+    "ERR_RENAME_FAILED": "重命名失败，可能被占用或无权限",
+    "ERR_MSIXVC_NOT_SPECIFIED": "未指定安装包",
+    "ERR_MSIXVC_NOT_FOUND": "安装包不存在",
+    "ERR_APPX_UNINSTALL_FAILED": "卸载已安装游戏失败",
+    "ERR_APPX_INSTALL_FAILED": "安装失败，请重试。",
+    "ERR_MC_NOT_AUTHORIZED": "请确认您拥有正版 {{typeLabel}} Minecraft 授权，确保拥有该产品的微软账户登录或购买后重试",
+    "ERR_INHERIT_SOURCE_NOT_FOUND": "未找到继承来源版本",
+    "ERR_INHERIT_TARGET_NOT_FOUND": "未找到目标版本",
+    "ERR_INHERIT_TYPE_MISMATCH": "类型不匹配，无法继承",
+    "ERR_INHERIT_COPY_FAILED": "复制继承数据失败",
+    "ERR_NO_GAME_DATA": "当前来源没有任何游戏数据",
+    "ERR_DELETE_FAILED": "删除失败，可能被占用或无权限",
+    "ERR_VCRUNTIME_MISSING": "缺少运行库，安装失败。请确保已安装 Microsoft Visual C++ 运行库或重试",
+    "ERR_SHORTCUT_CREATE_FAILED": "创建桌面快捷方式失败",
+    "ERR_UNREGISTER_FAILED": "取消注册失败",
+    "ERR_NOT_REGISTERED_THIS_VERSION": "该版本未注册到系统",
+    "ERR_DEV_MODE_REQUIRED": "系统未开启开发者模式，且自动开启失败。请手动开启开发者模式后重试。",
+    "ERR_LIP_PACKAGE_REQUIRED_BY_DEPENDENTS": "此包被其他已安装 mod 依赖，当前无法卸载",
+    "ERR_LIP_PACKAGE_DEMOTED_TO_DEPENDENCY": "该包仍被其他已安装 mod 依赖，无法完全卸载；已自动转为依赖安装模式。",
+    "ERR_LIP_NOT_INSTALLED": "lip 未安装，请前往“设置 > 组件”手动安装或更新。",
+    "ERR_INSTANCE_BACKUP_INSTANCE_NOT_FOUND": "未找到要备份的实例",
+    "ERR_INSTANCE_BACKUP_NO_SCOPE": "请至少选择一个备份范围",
+    "ERR_INSTANCE_BACKUP_INVALID_SCOPE": "包含无效的备份范围",
+    "ERR_INSTANCE_BACKUP_INVALID_SCOPE_MODE": "备份范围模式无效",
+    "ERR_INSTANCE_BACKUP_GAME_DATA_NOT_FOUND": "未找到 Minecraft Bedrock 数据目录",
+    "ERR_INSTANCE_BACKUP_CREATE_DIR": "创建实例备份目录失败",
+    "ERR_INSTANCE_BACKUP_CREATE_ARCHIVE": "创建实例备份压缩包失败",
+    "ERR_INSTANCE_BACKUP_READ_SOURCE": "读取备份源目录失败",
+    "ERR_INSTANCE_BACKUP_WRITE_ARCHIVE": "写入实例备份压缩包失败",
+    "ERR_INSTANCE_BACKUP_ARCHIVE_OPEN": "无法打开实例备份压缩包",
+    "ERR_INSTANCE_BACKUP_INVALID_ARCHIVE": "实例备份压缩包格式无效",
+    "ERR_INSTANCE_BACKUP_MODS_STATE_UNAVAILABLE": "当前无法可靠识别 mods / lip 状态，请刷新实例状态后重试备份。",
+    "ERR_INSTANCE_BACKUP_RESTORE_EXTRACT_ARCHIVE": "解压实例备份失败",
+    "ERR_INSTANCE_BACKUP_RESTORE_WRITE_TARGET": "恢复实例备份内容失败",
+    "ERR_INSTANCE_BACKUP_RESTORE_CONFLICT_UNRESOLVED": "仍有恢复冲突未处理，请先完成选择。",
+    "ERR_INSTANCE_BACKUP_RESTORE_INVALID_CONFLICT_RESOLUTION": "恢复冲突处理方式无效，请重新检查选择。",
+    "ERR_INSTANCE_BACKUP_RESTORE_FULL_REQUIRES_EMPTY_TARGET": "全量 Minecraft Bedrock 备份只能恢复到空目标目录",
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_INSTALL_FAILED": "部分 lip 模组包安装失败",
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_MISSING": "部分 lip 模组包未能恢复",
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "部分 lip 模组包版本与备份不一致",
+    "ERR_LL_NOT_SUPPORTED": "LeviLamina is not supported for this game version",
+    "ERR_FETCH_LL_DB": "Failed to fetch LeviLamina version database",
+    "ERR_INVALID_VERSION_FORMAT": "Invalid game version format",
+    "ERR_LIP_INSTALL_FAILED": "Failed to install LeviLamina via lip",
+    "ERR_LIP_PACKAGE_INVALID_IDENTIFIER": "Invalid lip package identifier",
+    "ERR_LIP_PACKAGE_VERSION_REQUIRED": "lip package version is required",
+    "ERR_LIP_PACKAGE_INSTALL_FAILED": "Failed to install lip package",
+    "ERR_LIP_PACKAGE_UNINSTALL_FAILED": "Failed to uninstall lip package",
+    "ERR_LIP_PACKAGE_QUERY_FAILED": "Failed to query lip package state",
+    "ERR_LIP_CACHE_CLEAN_FAILED": "清理 lip 缓存失败",
+    "ERR_LL_MANAGED_IN_VERSION_SETTINGS": "LeviLamina can only be managed in Version Settings"
+  },
+  "filemanager": {
+    "sort": {
+      "name": "名称"
+    }
+  },
+  "file": {
+    "types": {
+      "folder": "文件夹",
+      "executable": "可执行文件",
+      "library": "库文件",
+      "archive": "压缩包",
+      "image": "图片",
+      "text": "文本",
+      "json": "JSON",
+      "jar": "JAR 包",
+      "mcpack": "MCPack",
+      "mcaddon": "MCAddon",
+      "file": "文件"
+    }
+  },
+  "mods": {
+    "import_button": "导入 .zip/.dll",
+    "importing_title": "正在导入...",
+    "importing_body": "请稍候，正在处理所选文件。",
+    "summary_title_done": "导入完成",
+    "summary_title_partial": "导入完成（部分失败）",
+    "summary_success": "成功",
+    "summary_failed": "失败",
+    "details_title": "模组详情",
+    "field_name": "名称",
+    "field_version": "版本",
+    "field_type": "类型",
+    "field_entry": "入口",
+    "field_author": "作者",
+    "confirm_delete_body": "确定要删除此{{type}}吗？此操作不可撤销。",
+    "dll_modal_title": "导入 DLL 模组",
+    "dll_name": "模组名称",
+    "dll_type": "类型",
+    "dll_version": "版本",
+    "err_invalid_name": "无效的版本名或模块名",
+    "err_access_versions_dir": "无法访问版本目录",
+    "err_create_target_dir": "创建目标目录失败",
+    "err_open_zip": "无法打开ZIP文件",
+    "err_manifest_not_found": "未找到 manifest.json",
+    "err_invalid_package": "无效的包结构",
+    "err_duplicate_folder": "同名模块文件夹已存在",
+    "err_read_zip_entry": "读取压缩包条目失败",
+    "err_write_file": "写入文件失败",
+    "err_unknown": "未知错误",
+    "overwrite_modal_title": "检测到重复",
+    "overwrite_modal_body": "同名模块文件夹已存在，是否覆盖（更新）？",
+    "toggle_label": "启用模组",
+    "toggle_on": "已启用",
+    "toggle_off": "已关闭",
+    "toggle_desc_on": "模组已启用，启动游戏时会加载。",
+    "toggle_desc_off": "模组已关闭，启动游戏时不会加载。",
+    "only_enabled": "仅显示已启用的模组",
+    "drop_hint": "拖入 .zip 或 .dll 以导入模组",
+    "err_lip_install_failed_suggestion": "安装失败，建议重新安装Minecraft",
+    "rc_warning": {
+      "title": "实验性版本警告",
+      "body_1": "检测到您即将安装的 LeviLamina 版本 ({{version}}) 为候选发布版 (RC)。",
+      "body_2": "这是一个实验性版本，可能存在不稳定因素，仅建议开发者或高级用户使用。",
+      "body_3": "是否继续安装？"
+    },
+    "action_uninstall": "卸载",
+    "action_update": "更新",
+    "batch_uninstall_body": "你将要卸载 {{count}} 个模组，是否继续？",
+    "batch_uninstall_title": "批量卸载模组",
+    "batch_update_body": "已选择 {{selected}} 个模组，其中 {{updatable}} 个可从 lip 更新，是否继续？",
+    "batch_update_title": "批量更新模组",
+    "err_ll_managed_in_version_settings": "LeviLamina 只能在版本设置中管理",
+    "no_update_source": "无 lip 更新源",
+    "update_available": "更新到 {{version}}",
+    "update_latest": "已是最新",
+    "action_result_title_done": "操作完成",
+    "action_result_title_partial": "操作完成（部分失败）",
+    "action_result_title_failed": "操作失败",
+    "tab_all": "全部",
+    "tab_normal": "普通模组",
+    "tab_lip": "lip 模组",
+    "lip_children_summary": "包含：{{children}}（+{{count}}）",
+    "lip_open_package": "打开包详情",
+    "action_promote_install": "转为主动安装",
+    "action_promote_install_success": "{{name}} 已转为主动安装",
+    "action_promote_install_failed_no_version": "未找到该包的已安装版本",
+    "lip_sync_loading": "本地模组已加载，正在补全 lip 信息...",
+    "lip_sync_error": "lip 信息暂时不可用，当前仅显示本地模组。"
+  },
+  "terms": {
+    "title": "Bedrock Nexus 用户协议",
+    "body": "欢迎使用 Bedrock Nexus\n\n使用本软件即表示您同意：\n• 此为非官方 Minecraft 启动器\n• 您需拥有合法授权的 Minecraft 副本，否则自动进入试玩版\n• 禁止任何形式的盗版或作弊行为\n• 模组/资源包使用风险自负\n• 与 Mojang/Microsoft 无关联\n\n继续使用视为接受条款",
+    "agree": "同意并继续",
+    "decline": "不同意，退出"
+  },
+  "contentdownload": {
+    "title": "内容下载"
+  },
+  "curseforge": {
+    "title": "CurseForge",
+    "search_placeholder": "搜索游戏资源...",
+    "search": "搜索",
+    "minecraft_version": "Minecraft 版本",
+    "select_version": "选择版本",
+    "all_versions": "全部版本",
+    "load_error": "加载数据失败，请重试",
+    "search_error": "搜索失败，请重试",
+    "class": "类型",
+    "select_class": "选择类型",
+    "all_classes": "全部类型",
+    "category": "分类",
+    "select_category": "选择分类",
+    "sort_by": "排序",
+    "select_sort": "选择排序",
+    "no_results": "未找到结果",
+    "by_author": "作者：{{author}}",
+    "no_description": "暂无简介。",
+    "downloads": "下载量",
+    "updated": "更新时间",
+    "created": "创建时间",
+    "size": "大小",
+    "game_version": "Minecraft 版本",
+    "mod_not_found": "未找到游戏资源",
+    "go_back": "返回",
+    "by": "作者",
+    "updated_date": "更新于 {{date}}",
+    "download_count": "{{count}} 次下载",
+    "install_action": "安装",
+    "website": "官网",
+    "source": "源码",
+    "issues": "反馈",
+    "share": "分享",
+    "no_download_url": "无下载链接",
+    "no_files_found": "未找到文件",
+    "sort": {
+      "featured": "精选",
+      "popularity": "热度",
+      "last_updated": "最近更新",
+      "creation_date": "创建日期",
+      "total_downloads": "总下载量"
+    },
+    "install": {
+      "downloading_title": "下载内容",
+      "select_version_title": "选择游戏实例",
+      "select_player_title": "选择玩家",
+      "importing_title": "正在导入",
+      "success_title": "成功",
+      "error_title": "错误",
+      "downloading_body": "正在下载文件...",
+      "select_version_body": "请选择要导入到的游戏实例：",
+      "local_installation": "本地实例",
+      "select_version_placeholder": "选择实例",
+      "registered": "已注册",
+      "select_player_body": "此内容需要选择玩家：",
+      "player_label": "玩家",
+      "select_player_placeholder": "选择玩家",
+      "importing_body": "正在导入内容...",
+      "success_msg": "导入成功",
+      "success_desc": "内容已成功导入到选定的实例。",
+      "failed_msg": "导入失败",
+      "next": "下一步",
+      "close": "关闭"
+    },
+    "loading_description": "正在加载描述...",
+    "mod_details_aria_label": "模组详情",
+    "mod_files": {
+      "columns": {
+        "actions": "操作",
+        "downloads": "下载量",
+        "name": "名称",
+        "size": "大小",
+        "type": "类型",
+        "uploaded": "上传时间"
+      },
+      "table_aria_label": "模组文件表格",
+      "title": "全部文件"
+    },
+    "mod_tabs": {
+      "description": "描述",
+      "files": "文件"
+    }
+  },
+  "lip": {
+    "search_placeholder": "搜索包...",
+    "sort_by": "排序",
+    "select_sort": "选择排序",
+    "order_by": "顺序",
+    "select_order": "选择顺序",
+    "no_description": "暂无简介",
+    "task_console": {
+      "title_install": "安装中",
+      "title_upgrade": "升级中",
+      "title_downgrade": "降级中",
+      "title_reinstall": "重装中",
+      "title_update": "更新中",
+      "title_uninstall": "卸载中",
+      "title_generic": "lip 任务",
+      "status_running": "运行中",
+      "status_success": "成功",
+      "status_failed": "失败",
+      "target_label": "目标实例",
+      "progress_label": "进度",
+      "log_title": "日志输出",
+      "no_output": "暂无输出",
+      "waiting_start": "等待 lipd 输出...",
+      "copy_logs": "复制日志",
+      "copy_success": "日志已复制",
+      "close": "关闭",
+      "stage_install_pkg": "安装目标包",
+      "stage_fallback_delete": "包管理卸载不可用，回退为目录删除"
+    },
+    "by_author_inline": "| 作者 {{author}}",
+    "files": {
+      "action": "操作",
+      "action_failed": "操作失败：{{error}}",
+      "checking_ll_state": "正在检查 LeviLamina 状态...",
+      "dependencies": "依赖",
+      "dependencies_count": "{{count}} 个依赖",
+      "game_versions_label": "游戏版本",
+      "game_versions_unavailable": "游戏版本映射不可用",
+      "game_versions_unrestricted": "无游戏版本限制",
+      "install": "安装",
+      "upgrade": "升级",
+      "downgrade": "降级",
+      "redirect": "转跳",
+      "installing_version_label": "安装包版本",
+      "variant_label": "Variant",
+      "variant_hint_keep_default": "一般情况下无需改动",
+      "variant_placeholder": "选择要安装的 variant",
+      "variant_default": "默认",
+      "instance_game_version_label": "游戏版本",
+      "ll_installed_incompatible_hint": "已安装的 LeviLamina 版本 {{installedVersion}} 与此包不兼容，请先手动调整 LeviLamina。",
+      "mapping_unavailable_blocked_hint": "当前无法校验 LeviLamina 与游戏版本映射，已阻止此安装以避免错误安装。",
+      "ll_missing_redirect_hint": "该实例尚未安装 LeviLamina。点击转跳后将打开实例设置的加载器页面，请先手动安装 LeviLamina。",
+      "ll_missing_redirect_to_loader": "未检测到 LeviLamina，正在跳转到实例设置的加载器页面。",
+      "ll_requirement": "LL 依赖",
+      "select_instance_title": "选择目标实例",
+      "select_version_incompatible_hint": "版本 {{version}} 与游戏版本 {{gameVersion}} 不兼容。",
+      "tab_label": "文件",
+      "table_aria_label": "包文件表格",
+      "install_success": "安装成功",
+      "upgrade_success": "升级成功",
+      "downgrade_success": "降级成功",
+      "reinstall_success": "重装成功",
+      "current_installed_version_label": "当前已安装版本",
+      "checking_current_installed_version": "正在检查当前已安装版本...",
+      "reinstall": "重装"
+    },
+    "guide": {
+      "open_button": "开发者指南",
+      "title": "LIP 开发者指南",
+      "description": "如果你希望自己的模组出现在 Bedrock Nexus 的 LIP 页面中，请按照 LIP 的 package_manifest 规范发布。",
+      "manifest_hint": "这个弹窗只提供面向开发者的快速说明。字段命名、必填项、示例与校验细则请以官方文档为准。",
+      "variant_hint": "仅当 variant 的 label 包含 client 时，才会被启动器收录。默认情况下请使用 \"label\": \"client\"；子扩展请使用 \"label\": \"client_xxxx\" 或 \"label\": \"client\\xxxx\"。",
+      "docs_button": "查看完整规范",
+      "close_button": "关闭"
+    },
+    "guard": {
+      "title": "未检测到 lipd",
+      "description": "当前尚未安装 lipd。要继续使用 lip 相关页面或安装 LeviLamina，请先前往“设置 > 第三方组件”完成安装。"
+    },
+    "game_all_versions": "所有游戏版本",
+    "game_version_label": "游戏版本",
+    "game_version_placeholder": "选择游戏版本",
+    "mapping_unavailable_hint": "LeviLamina 游戏版本映射暂不可用，已禁用版本相关筛选以避免错误匹配。",
+    "ll_all_versions": "所有 LeviLamina 版本",
+    "ll_version_label": "LeviLamina 版本",
+    "ll_version_placeholder": "选择 LeviLamina 版本",
+    "order_options": {
+      "asc": "递增",
+      "desc": "递减"
+    },
+    "package_details_aria_label": "包详情",
+    "sort_options": {
+      "hotness": "热门",
+      "name": "名称",
+      "updated": "最近更新"
+    },
+    "title": "lip 内容",
+    "package": {
+      "confirm_install_title": "确认安装",
+      "confirm_install_body": "确定要为实例 {{instance}} {{action}} {{package}} {{version}} 吗？"
+    },
+    "bedrinth_fallback_hint": "正在显示 Bedrinth 回退（实验性）的结果 — 这些条目无法使用版本兼容性筛选。"
+  },
+  "server": {
+    "offline": "离线 / 无法连接",
+    "players": "在线玩家",
+    "delay": "延迟",
+    "online": "在线",
+    "version": "版本"
+  },
+  "installpage": {
+    "error": {
+      "dll_dependency_missing": "缺少 VC++ 运行库",
+      "name_required": "名称不能为空",
+      "msixvc_not_specified": "未指定安装包",
+      "lip_not_installed": "lip 未安装，请前往“设置 > 组件”手动安装或更新。",
+      "unknown": "未知错误",
+      "nh_err_unknown": "未知错误",
+      "nh_err_exception": "未捕获异常或未知错误",
+      "nh_err_invalid_params": "参数无效",
+      "nh_err_key_not_found": "游戏安装包校验失败，请删除安装包后重试",
+      "nh_err_unauthorized_caller": "请确保启动器 exe 名称未被修改（BedrockNexus.exe）",
+      "nh_err_pipe_open_failed": "进度管道打开失败",
+      "nh_err_input_not_found": "输入文件未找到",
+      "nh_err_output_dir_invalid": "输出目录无效",
+      "nh_err_parse_failed": "包解析失败",
+      "nh_err_extract_failed": "解压失败"
+    }
+  },
+  "elevation": {
+    "title": "管理员权限",
+    "description": "Bedrock Nexus 需要管理员权限才能应用启动补丁脚本，以确保模组和补丁正常工作。",
+    "accept": "以管理员身份运行",
+    "decline": "不以管理员身份继续",
+    "retry": "重试",
+    "restarting": "正在以管理员身份重新启动…",
+    "failed": "提权请求被取消或失败。您可以重试，或在不使用管理员权限的情况下继续。",
+    "note": "您也可以稍后在设置中手动运行补丁。"
+  },
+  "reportProblem": {
+    "button": "报告问题",
+    "settings_title": "报告问题",
+    "settings_desc": "发现 Bug 或功能异常？向 GitHub Issue 跟踪器提交带有诊断信息的结构化报告。",
+    "title": "报告问题",
+    "description_label": "发生了什么？",
+    "description_placeholder": "请描述问题、你执行的操作以及期望的结果……",
+    "include_diagnostics": "附加诊断信息（应用版本、操作系统、最近的启动日志）",
+    "diagnostics_preview": "将附加到报告中的诊断信息",
+    "copy": "复制",
+    "copied": "诊断信息已复制到剪贴板",
+    "copy_failed": "复制失败——请手动选择并复制文本",
+    "loading": "正在收集诊断信息……",
+    "search_issues": "搜索现有 Issue",
+    "open_issue": "前往 GitHub 继续",
+    "open_tracker": "打开 Issue 跟踪器",
+    "privacy_note": "任何内容都不会自动发送。报告会在 GitHub 上打开，由你自己查看并提交。",
+    "too_long_note": "日志过长，无法自动填入表单——请使用“复制”并粘贴到 GitHub 的 Logs 字段中。",
+    "error": "无法收集诊断信息。你仍然可以提交报告。",
+    "default_title": "Bug 报告",
+    "import_failure_prefill": "以下项目的导入操作失败："
+  },
+  "mcpedl": {
+    "title": "MCPEDL",
+    "desc": "在 MCPEDL 社区目录中搜索 Bedrock 插件、地图和材质包。",
+    "search_placeholder": "搜索 MCPEDL…",
+    "search": "搜索",
+    "experimental_badge": "实验性",
+    "experimental_note": "实验性集成：文件通过下载管理器下载，并像普通 .mcpack/.mcaddon 文件一样导入。",
+    "no_results": "没有结果",
+    "load_failed": "加载失败",
+    "load_more": "加载更多",
+    "files": "文件 ({{count}})",
+    "download": "下载",
+    "open_page": "打开页面",
+    "download_started": "下载已开始"
+  }
+}

@@ -1,0 +1,245 @@
+package versionlaunch
+
+import (
+	"context"
+	"log"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
+	"syscall"
+	"unsafe"
+
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/apppath"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/config"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/discord"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/launch"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/peeditor"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/utils"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/vcruntime"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/versions"
+	"github.com/wailsapp/wails/v3/pkg/application"
+	"golang.org/x/sys/windows"
+)
+
+type Launcher struct {
+}
+
+func New(enablePreloader bool) *Launcher {
+	return &Launcher{}
+}
+
+func isPathInside(root string, target string) bool {
+	absRoot, err1 := filepath.Abs(strings.TrimSpace(root))
+	absTarget, err2 := filepath.Abs(strings.TrimSpace(target))
+	if err1 != nil || err2 != nil {
+		return false
+	}
+	lowRoot := strings.ToLower(filepath.Clean(absRoot))
+	lowTarget := strings.ToLower(filepath.Clean(absTarget))
+	if lowTarget == lowRoot {
+		return true
+	}
+	return strings.HasPrefix(lowTarget, lowRoot+string(os.PathSeparator))
+}
+
+func resolveVersionDir(name string) (string, string) {
+	vdir, err := apppath.VersionsDir()
+	if err != nil || strings.TrimSpace(vdir) == "" {
+		return "", "ERR_ACCESS_VERSIONS_DIR"
+	}
+	n := strings.TrimSpace(name)
+	if n == "" {
+		return "", "ERR_INVALID_NAME"
+	}
+	if filepath.IsAbs(n) {
+		return "", "ERR_PATH_ESCAPE"
+	}
+	if strings.ContainsAny(n, `/\`) {
+		return "", "ERR_PATH_ESCAPE"
+	}
+	cleaned := filepath.Clean(n)
+	if cleaned == "." || cleaned == ".." {
+		return "", "ERR_PATH_ESCAPE"
+	}
+	if verr := versions.ValidateFolderName(n); verr != "" {
+		return "", "ERR_INVALID_NAME"
+	}
+	dir := filepath.Join(vdir, n)
+	if !isPathInside(vdir, dir) {
+		return "", "ERR_PATH_ESCAPE"
+	}
+	return dir, ""
+}
+
+func ValidateLaunchName(name string) string {
+	_, errCode := resolveVersionDir(name)
+	return errCode
+}
+
+func (l *Launcher) Launch(ctx context.Context, name string, checkRunning bool) string {
+	dir, errCode := resolveVersionDir(name)
+	if errCode != "" {
+		return errCode
+	}
+	exe := filepath.Join(dir, "Minecraft.Windows.exe")
+	if !utils.FileExists(exe) {
+		return "ERR_NOT_FOUND_EXE"
+	}
+	// آخرین نسخه اجرا شده را برای حالت last_launched ثبت خودکارِ پچ ذخیره می‌کند
+	config.SetLastLaunchedVersion(strings.TrimSpace(name))
+	application.Get().Event.Emit(launch.EventMcLaunchStart, struct{}{})
+	_ = vcruntime.EnsureForVersion(ctx, dir)
+
+	var args []string
+	var envs []string
+	toRun := exe
+	var gameVer string
+	var enableConsole bool
+	if m, err := versions.ReadMeta(dir); err == nil {
+		if m.EnvVars != "" {
+			for _, line := range strings.Split(m.EnvVars, "\n") {
+				if trimmed := strings.TrimSpace(line); trimmed != "" {
+					envs = append(envs, trimmed)
+				}
+			}
+		}
+		if m.LaunchArgs != "" {
+			args = append(args, parseCommandLineArgs(m.LaunchArgs)...)
+		}
+		enableConsole = m.EnableConsole
+		preparedExe, err := peeditor.PrepareExecutableForLaunch(ctx, dir, m.EnableConsole)
+		if err != nil {
+			log.Printf("Failed to prepare executable: %v", err)
+		} else if strings.TrimSpace(preparedExe) != "" {
+			toRun = preparedExe
+		}
+		if m.Registered {
+			if checkRunning && isProcessRunningAtPath(exe) {
+				return "ERR_GAME_ALREADY_RUNNING"
+			}
+			isPreview := strings.EqualFold(strings.TrimSpace(m.Type), "preview")
+			protocol := "minecraft://"
+			if isPreview {
+				protocol = "minecraft-preview://"
+			}
+			url := protocol
+			if m.EnableEditorMode {
+				url = protocol + "creator/?Editor=true"
+			}
+
+			cmd := exec.Command("cmd", "/c", "start", "", url)
+			if len(envs) > 0 {
+				cmd.Env = append(os.Environ(), envs...)
+			}
+			if err := cmd.Start(); err != nil {
+				log.Printf("Launch protocol failed for %s: %v", name, err)
+				return "ERR_LAUNCH_GAME"
+			}
+			gameVer = strings.TrimSpace(m.GameVersion)
+			discord.SetPlayingVersion(gameVer)
+			go launch.MonitorGameProcess(ctx, dir, 0)
+			return ""
+		}
+		if m.EnableEditorMode {
+			args = []string{"-Editor", "true"}
+		}
+		gameVer = strings.TrimSpace(m.GameVersion)
+	}
+
+	if checkRunning {
+		if isProcessRunningAtPath(toRun) {
+			return "ERR_GAME_ALREADY_RUNNING"
+		}
+	}
+	cmd := exec.Command(toRun, args...)
+	if len(envs) > 0 {
+		cmd.Env = append(os.Environ(), envs...)
+	}
+	cmd.Dir = filepath.Dir(toRun)
+	if enableConsole {
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			HideWindow:       false,
+			NoInheritHandles: true,
+		}
+	}
+	if err := cmd.Start(); err != nil {
+		log.Printf("Launch executable failed for %s: %v", name, err)
+		return "ERR_LAUNCH_GAME"
+	}
+	discord.SetPlayingVersion(gameVer)
+	launchPID := 0
+	if cmd.Process != nil {
+		launchPID = cmd.Process.Pid
+	}
+	go launch.MonitorGameProcess(ctx, dir, launchPID)
+	return ""
+}
+
+func parseCommandLineArgs(input string) []string {
+	var args []string
+	var current strings.Builder
+	inQuote := false
+
+	for _, r := range input {
+		switch r {
+		case '"':
+			inQuote = !inQuote
+		case ' ', '\t', '\n', '\r':
+			if inQuote {
+				current.WriteRune(r)
+			} else if current.Len() > 0 {
+				args = append(args, current.String())
+				current.Reset()
+			}
+		default:
+			current.WriteRune(r)
+		}
+	}
+	if current.Len() > 0 {
+		args = append(args, current.String())
+	}
+	return args
+}
+
+func isProcessRunningAtPath(exePath string) bool {
+	normalizedTarget := strings.ToLower(filepath.Clean(strings.TrimSpace(exePath)))
+	if normalizedTarget == "" {
+		return false
+	}
+	snap, err := windows.CreateToolhelp32Snapshot(windows.TH32CS_SNAPPROCESS, 0)
+	if err != nil {
+		return false
+	}
+	defer windows.CloseHandle(snap)
+
+	var pe windows.ProcessEntry32
+	pe.Size = uint32(unsafe.Sizeof(pe))
+	if err := windows.Process32First(snap, &pe); err != nil {
+		return false
+	}
+	for {
+		pid := pe.ProcessID
+		h, err := windows.OpenProcess(windows.PROCESS_QUERY_LIMITED_INFORMATION, false, pid)
+		if err == nil {
+			buf := make([]uint16, 1024)
+			size := uint32(len(buf))
+			if e := windows.QueryFullProcessImageName(h, 0, &buf[0], &size); e == nil && size > 0 {
+				processPath := windows.UTF16ToString(buf[:size])
+				_ = windows.CloseHandle(h)
+				normalizedProcessPath := strings.ToLower(filepath.Clean(strings.TrimSpace(processPath)))
+				normalizedProcessPath = strings.TrimPrefix(normalizedProcessPath, `\\?\`)
+				normalizedProcessPath = strings.TrimPrefix(normalizedProcessPath, `\??\`)
+				if normalizedProcessPath == normalizedTarget {
+					return true
+				}
+			} else {
+				_ = windows.CloseHandle(h)
+			}
+		}
+		if err := windows.Process32Next(snap, &pe); err != nil {
+			break
+		}
+	}
+	return false
+}

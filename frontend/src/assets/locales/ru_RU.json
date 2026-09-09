@@ -1,0 +1,1385 @@
+{
+  "app": {
+    "settings": "Настройки"
+  },
+  "nav": {
+    "versions": "Версии",
+    "more": "Ещё",
+    "about": "О лаунчере",
+    "back": "Назад",
+    "forward": "Вперед",
+    "mcpedl": "MCPEDL"
+  },
+  "theme": {
+    "toggle": "Переключить тему"
+  },
+  "launcherpage": {
+    "launch_button": "Запуск",
+    "content_manage": "Управление контентом",
+    "go_version_settings": "Настройки инстанса",
+    "manage_versions": "Инстансы",
+    "search_versions": "Искать инстансы или названия",
+    "open_exe_dir": "Открыть папку установки игры",
+    "register_system_button": "Зарегистрировать в системе",
+    "registered_tip": "Зарегистрирован",
+    "levilamina_update_available": "Доступно обновление",
+    "register": {
+      "installing": {
+        "title": "Регистрация в системе",
+        "body": "Регистрация в системе. Пожалуйста подождите…"
+      },
+      "success": {
+        "title": "Регистрация успешно завершена",
+        "body": "Версия была зарегистрирована. Вы можете запустить версию из списка"
+      },
+      "failed": {
+        "title": "Регистрация не удалась",
+        "body": "Во время регистрации произошла ошибка. Попробуйте ещё раз или проверьте параметры"
+      }
+    },
+    "delete": {
+      "complete": {
+        "title": "Удалено",
+        "content": "Выбранный экземпляр успешно удален!",
+        "close_button": "Закрыть"
+      },
+      "confirm": {
+        "title": "Подтвердить удаление",
+        "content": "Вы уверены что хотите удалить эту версию? Это действие не может быть отменено!"
+      }
+    },
+    "launch": {
+      "failed": {
+        "title": "Ошибка запуска",
+        "content": "Проверьте файлы экземпляра и необходимые зависимости, а также убедитесь, что нет несовместимых модов/аддонов/ресурс-паков, затем попробуйте снова.",
+        "close_button": "Закрыть"
+      },
+      "force_run_button": "Принудительный запуск"
+    },
+    "currentVersion": "Текущий экземпляр",
+    "vcruntime": {
+      "completing": {
+        "title": "Установка отсутствующего DLL",
+        "body": "Загрузка и установка vcruntime140_1.dll, пожалуйста подождите…"
+      },
+      "installing": {
+        "title": "Установка Visual C++ Runtime",
+        "body": "Скачивание и установка Microsoft Visual C++ Runtime, пожалуйста, подождите...",
+        "preparing": "Подготовка к загрузке..."
+      },
+      "missing": {
+        "title": "Отсутствует Visual C++ Runtime",
+        "body": "Для запуска игры требуется Microsoft Visual C++ 2015-2022 Redistributable (x64). Установить сейчас?",
+        "install_now": "Установить сейчас"
+      }
+    },
+    "mclaunch": {
+      "loading": {
+        "title": "Запуск Minecraft",
+        "body": "Создание окна игры, подождите…"
+      }
+    },
+    "shortcut": {
+      "create_button": "Создать ярлык экземпляра на рабочем столе",
+      "success": {
+        "title": "Ярлык создан",
+        "body": "Ярлык для этой версии успешно создан на рабочем столе"
+      }
+    },
+    "gameinput": {
+      "installing": {
+        "title": "Установка GameInput",
+        "body": "Загрузка и запуск установщика. Следуйте системным подсказкам для завершения.",
+        "preparing": "Подготовка к загрузке..."
+      },
+      "missing": {
+        "title": "Отсутствует компонент GameInput",
+        "body": "Для запуска игры требуется Microsoft GameInput. Установить сейчас?",
+        "install_now": "Установить сейчас"
+      }
+    },
+    "gs": {
+      "missing": {
+        "title": "Отсутствуют Microsoft Gaming Services",
+        "body": "Microsoft Gaming Services не обнаружены. Эта зависимость обязательна для Minecraft.",
+        "open_store": "Открыть Магазин для установки",
+        "ignore_forever": "Игнорировать и больше не напоминать"
+      }
+    },
+    "install_confirm": {
+      "title": "Установка завершена?",
+      "body": "После завершения установки нажмите «Готово, проверить заново». В противном случае продолжите установку.",
+      "continue": "Продолжить установку",
+      "done_and_check": "Готово, проверить заново"
+    },
+    "currentVersion_none": "Нет",
+    "version_select": {
+      "title": "Выбор инстанса",
+      "unknown": "Неизвестно"
+    },
+    "tip": {
+      "version_selector": "Используйте выпадающий список версий, чтобы быстро переключать текущий экземпляр.",
+      "version_search": "Перед выбором можно выполнить поиск по имени экземпляра или версии игры.",
+      "manage_versions": "Откройте «Список экземпляров» в выпадающей панели, чтобы устанавливать, импортировать и упорядочивать экземпляры.",
+      "quick_actions_menu": "Меню рядом с кнопкой запуска открывает настройки экземпляра, ярлык на рабочем столе, папку игры и регистрацию в системе.",
+      "launch_dependencies": "Если отсутствуют GameInput, VC++ Runtime или Gaming Services, Bedrock Nexus предложит установить их перед запуском.",
+      "mods_card": "Карточка Mods показывает включённые моды текущего экземпляра и в один клик открывает полную страницу Mods.",
+      "content_counts_card": "Карточка управления контентом показывает количество миров, resource packs и behavior packs, а каждая строка открывает нужную страницу.",
+      "incompatible_resource_packs": "Если найдены несовместимые resource packs, нажмите на строку предупреждения, чтобы сразу открыть их список.",
+      "content_download_sources": "Карточка загрузок даёт прямой доступ к CurseForge и lip, чтобы искать контент прямо в лаунчере.",
+      "settings_personalize": "В настройках можно изменить тему, цвета, фон и другие параметры внешнего вида под свой стиль работы.",
+      "settings_storage_path": "Пути хранения можно изменить в настройках; перед переносом или сохранением убедитесь, что целевая папка доступна для записи.",
+      "download_mirror": "Если загрузка идёт медленно, попробуйте сменить зеркало или проверить сетевые параметры в настройках.",
+      "open_source": "Bedrock Nexus — проект с открытым исходным кодом; о проблемах лаунчера и идеях по улучшению можно сообщать через GitHub.",
+      "backup_worlds": "Перед тестированием новых resource packs, behavior packs или модов рекомендуется сделать резервную копию важных миров."
+    },
+    "edition": "Bedrock Edition",
+    "select_version_first": "Сначала выберите версию — это можно сделать в списке версий."
+  },
+  "moddedcard": {
+    "title": "Моды",
+    "content": {
+      "none": "Моды не найдены"
+    },
+    "manage": "Управление модами"
+  },
+  "download_manager": {
+    "title": "Менеджер загрузок",
+    "description": "Просмотр и управление текущими задачами загрузки",
+    "no_downloads": "Нет активных задач загрузки",
+    "unknown_file": "Неизвестный файл",
+    "actions": {
+      "retry": "Повторить",
+      "delete": "Удалить"
+    }
+  },
+  "updating": {
+    "title": "Обновление Bedrock Nexus",
+    "body": "Запрашиваются права администратора и выполняется обновление. Не закрывайте это окно во время обновления.",
+    "failed_title": "Обновление не удалось",
+    "phase": {
+      "download": "Загрузка пакета обновления",
+      "install": "Установка обновления"
+    },
+    "status": {
+      "checking": "Проверка обновлений",
+      "verifying": "Проверка целостности пакета",
+      "elevating": "Запрос прав администратора",
+      "restarting": "Перезапуск лаунчера"
+    },
+    "errors": {
+      "generic": "Во время обновления произошла неизвестная ошибка. Повторите попытку позже.",
+      "update_admin_required": "Для продолжения обновления нужны права администратора.",
+      "update_asset_missing": "Необходимый пакет обновления отсутствует или назван неверно.",
+      "update_release_unavailable": "Метаданные обновления сейчас недоступны.",
+      "update_verify_failed": "Не удалось проверить пакет обновления.",
+      "update_download_failed": "Не удалось загрузить пакет обновления.",
+      "update_install_failed": "Не удалось установить пакет обновления.",
+      "update_restart_failed": "Не удалось автоматически перезапустить лаунчер после обновления."
+    }
+  },
+  "downloadpage": {
+    "error": {
+      "already_downloading": "Этот файл уже загружается"
+    },
+    "changelog": {
+      "title": "Последний журнал изменений"
+    },
+    "status": {
+      "downloaded": "Загружено",
+      "not_downloaded": "Не загружено",
+      "checking": "Проверка…"
+    },
+    "table": {
+      "aria_label": "Таблица версий",
+      "empty": "Нет данных",
+      "header": {
+        "version": "ВЕРСИЯ",
+        "type": "ТИП",
+        "status": "СТАТУС",
+        "loader": "ЗАГРУЗЧИК",
+        "actions": "ДЕЙСТВИЯ"
+      },
+      "type": {
+        "release": "Релиз",
+        "preview": "Предрелиз"
+      }
+    },
+    "topcontent": {
+      "types": "Типы",
+      "types_all": "Все",
+      "status": "Статус",
+      "status_all": "Все",
+      "status_downloaded": "Загружено",
+      "status_not_downloaded": "Не загружено",
+      "loader": "Загрузчик",
+      "input": {
+        "placeholder": "Поиск по версии..."
+      }
+    },
+    "actions": {
+      "delete_installer": "Удалить установщик"
+    },
+    "bottomcontent": {
+      "total": "Всего версий: {{count}}"
+    },
+    "install_folder": {
+      "confirm_title": "Установить инстанс",
+      "name_label": "Имя инстанса",
+      "placeholder_name": "Введите имя версии",
+      "enable_isolation": "Изоляция версии",
+      "enable_isolation_desc": "Перенаправляет данные игры (миры, настройки, кэши и т.д.) в папку versions/<имя>/ вместо AppData.",
+      "inherit_label": "Наследовать от",
+      "inherit_hint": "Скопировать данные из изолированной версии того же типа",
+      "inherit_none": "Без наследования",
+      "inherit_gdk": "Наследовать из каталога GDK"
+    },
+    "mirror": {
+      "no_recommended": "Нет рекомендуемого зеркала",
+      "download_started": "Загрузка началась...",
+      "title": "Выбор зеркала загрузки",
+      "target": "Цель",
+      "testing": "Тестирование…",
+      "unselected": "Не выбрано",
+      "copy_link": "Скопировать ссылку",
+      "recommended": "Рекомендуемое зеркало",
+      "auto_testing": "Автоматическое тестирование…",
+      "others": "Другие зеркала",
+      "no_mirrors": "Для этой версии зеркала недоступны.",
+      "filename_fallback": "(файл)",
+      "retest": "Повторить тест",
+      "download_selected": "Загрузить выбранное",
+      "install_button": "Установить",
+      "install_selected": "Установить выбранное"
+    },
+    "progress": {
+      "unknown_error": "Неизвестная ошибка"
+    },
+    "download": {
+      "success_body": "Файл загружен: "
+    },
+    "delete": {
+      "title": "Подтверждение удаления",
+      "body": "Будет удалён установщик: ",
+      "warning": "Это действие нельзя отменить.",
+      "success_body": "Установщик удалён: "
+    },
+    "install": {
+      "levilamina_label": "Установить LeviLamina",
+      "levilamina_desc": "Автоматически установить загрузчик LeviLamina",
+      "version_label": "Версия",
+      "ll_version_label": "Версия LeviLamina",
+      "ll_version_placeholder": "Выберите версию LeviLamina",
+      "hint": "Пожалуйста, подождите, процесс может занять некоторое время…",
+      "estimated_size": "Записываемый объём (приблизительно)",
+      "target": "Цель установки",
+      "success_title": "Установка завершена",
+      "success": "Установка успешно завершена.",
+      "progress": "Прогресс установки",
+      "custom_installer": {
+        "label": "Выбрать локальный установщик (.msixvc)",
+        "hint": "По умолчанию используются файлы из папки installers"
+      },
+      "levilamina_unsupported": "LeviLamina не поддерживается для этой версии игры",
+      "title": "Установить"
+    },
+    "customappx": {
+      "button": "Пользовательский",
+      "modal": {
+        "1": {
+          "header": "Информация о версии",
+          "body": {
+            "select": {
+              "item1": "Релиз",
+              "item2": "Предрелиз"
+            }
+          },
+          "footer": {
+            "install_button": "Установить"
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "layout": {
+      "title_navbar": "Использовать верхнюю панель навигации",
+      "desc_navbar": "Включите, чтобы использовать верхнюю панель навигации вместо стандартной вертикальной боковой панели"
+    },
+    "tabs": {
+      "general": "Основные настройки",
+      "personalization": "Персонализация",
+      "components": "Сторонние компоненты",
+      "others": "Другие",
+      "updates": "Обновления",
+      "help": "Сообщить о проблеме"
+    },
+    "unsaved": {
+      "title": "Есть несохранённые изменения",
+      "body": "Вы изменили путь к контенту, но не сохранили его. Сохранить и выйти?",
+      "cancel": "Отмена",
+      "save": "Сохранить и выйти"
+    },
+    "lang": {
+      "changed": "Язык изменён"
+    },
+    "discord_rpc": {
+      "title": "Discord Rich Presence",
+      "desc": "Показывать статус игры в Discord"
+    },
+    "beta_updates": {
+      "title": "Получать бета-обновления",
+      "desc": "Включить получение предварительных версий (prerelease)"
+    },
+    "experimental": {
+      "title": "Experimental Features",
+      "desc": "Try unfinished capabilities here. These features may change, break, or disappear without notice.",
+      "instance_backup": {
+        "title": "Instance backup (Experimental)",
+        "desc": "Enable backup and restore actions in instance settings. This feature is still experimental.",
+        "warning": {
+          "title": "Enable experimental instance backup?",
+          "body_1": "This feature is intended for developers and testers only. Do not use production data casually.",
+          "body_2": "Backup format, included scope, and restore compatibility may change in future builds, and forward compatibility is not guaranteed.",
+          "body_3": "Please make sure you understand the risks, and decide whether to enable it only after reading this warning in full for 10 seconds.",
+          "confirm": "I understand the risks"
+        }
+      },
+      "mcpedl": {
+        "title": "Каталог MCPEDL (Экспериментально)",
+        "desc": "Добавляет страницу поиска MCPEDL в навигацию для поиска и загрузки аддонов Bedrock. Нестабильно: может сломаться при изменениях MCPEDL."
+      },
+      "lip_bedrinth": {
+        "title": "Резерв Bedrinth для LIP (Экспериментально)",
+        "desc": "Если индекс пакетов LIP недоступен, используется API Bedrinth. У загруженных таким образом элементов нет данных о совместимости версий."
+      }
+    },
+    "reset": {
+      "confirm": {
+        "title": "Восстановить путь по умолчанию?",
+        "body": "Это сбросит путь к контенту на стандартный. Вы уверены?"
+      }
+    },
+    "lip": {
+      "title": "lip",
+      "install_button": "Установить",
+      "check_button": "Проверить",
+      "cache_clean_button": "Очистить кэш",
+      "cache_cleaning": "Очистка кэша...",
+      "cache_clean_success": "Кэш lip очищен",
+      "installing": "Установка lip...",
+      "latest_label": "Актуально",
+      "outdated_label": "Доступно обновление",
+      "missing_label": "Не установлен",
+      "status": {
+        "checking": "Проверка состояния lip...",
+        "checking_runtime": "Проверка среды выполнения .NET 10...",
+        "preparing": "Подготовка загрузки...",
+        "installing_runtime": "Установка среды выполнения .NET 10...",
+        "downloading": "Загрузка архива lip...",
+        "extracting": "Распаковка lipd.exe...",
+        "writing": "Запись lipd.exe...",
+        "verifying": "Проверка установки...",
+        "up_to_date": "Установлена последняя версия",
+        "outdated": "Доступна новая версия",
+        "missing": "lip не установлен",
+        "check_failed": "Не удалось проверить состояние lip: {{error}}",
+        "done": "Установка lip завершена"
+      },
+      "error": {
+        "lip_fetch_release": "Не удалось получить метаданные пакета lip",
+        "lip_release_asset_not_found": "В последних метаданных lip не найден пакет Windows x64",
+        "lip_download_dotnet_installer": "Не удалось загрузить установочный скрипт .NET 10",
+        "lip_install_dotnet_runtime": "Не удалось установить среду выполнения .NET 10",
+        "lip_verify_dotnet_runtime": "Не удалось проверить среду выполнения .NET 10",
+        "lip_download_archive": "Не удалось загрузить пакет lip в формате .tgz",
+        "lip_open_archive": "Не удалось открыть пакет lip в формате .tgz",
+        "lip_extract_binary": "Не удалось извлечь win32-x64/lipd.exe",
+        "lip_create_target_dir": "Не удалось создать каталог установки lip",
+        "lip_replace_file": "Не удалось заменить lipd.exe",
+        "lip_verify_install": "Не удалось проверить установленную версию lip",
+        "lip_install_failed": "Не удалось установить lip"
+      },
+      "version_label": "Текущая: {{currentVersion}} / Последняя: {{latestVersion}}",
+      "startup_prompt": {
+        "title": "Доступно обновление lip",
+        "description": "Доступна новая версия lip ({{currentVersion}} -> {{latestVersion}}). Bedrock Nexus не обновляет её автоматически. Откройте «Настройки > Компоненты» и обновите вручную.",
+        "later_button": "Позже",
+        "ignore_button": "Игнорировать эту версию",
+        "open_settings_button": "Открыть настройки",
+        "current_version": "Текущая версия: {{currentVersion}}",
+        "latest_version": "Последняя версия: {{latestVersion}}"
+      },
+      "unknown_version": "Неизвестно",
+      "update_button": "Обновить"
+    },
+    "resource_rules": {
+      "title": "Данные работы лаунчера",
+      "check_button": "Проверить обновление",
+      "update_button": "Обновить",
+      "latest_label": "Актуально",
+      "outdated_label": "Требуется обновление",
+      "missing_label": "Не установлено",
+      "status": {
+        "checking": "Проверка SHA256...",
+        "up_to_date": "SHA256 совпадает с удалённой версией",
+        "outdated": "SHA256 не совпадает с удалённой версией",
+        "missing": "Локальный файл не найден",
+        "check_failed": "Проверка не удалась: {{error}}"
+      }
+    },
+    "header": {
+      "title": "Настройки",
+      "content": "Настройка общих параметров лаунчера"
+    },
+    "body": {
+      "version": {
+        "name": "Текущая версия",
+        "hasnew": "Доступна новая версия! ",
+        "button": "Проверить обновления",
+        "ignore": "Игнорировать эту версию"
+      },
+      "paths": {
+        "title": "Пути к контенту",
+        "subtitle": "Управление местом хранения данных игры",
+        "base_root": "Базовая папка",
+        "apply": "Применить",
+        "reset": "Сбросить",
+        "installer": "Установщики",
+        "versions": "Версии",
+        "unsaved": "Изменения не сохранены",
+        "not_writable": "Нет прав на запись"
+      },
+      "language": {
+        "name": "Язык",
+        "button": "Изменить"
+      }
+    },
+    "modal": {
+      "2": {
+        "footer": {
+          "download_button": "Обновить"
+        }
+      }
+    },
+    "appearance": {
+      "global_config": "Глобальная конфигурация",
+      "mode_config": "Конфигурация для режима",
+      "edit_mode_desc": "Настройки персонализации (цвета, непрозрачность и т. д.) сохраняются независимо для светлого и темного режимов. Переключайте вкладки справа, чтобы настроить каждый режим.",
+      "theme_light": "Светлая тема",
+      "theme_dark": "Темная тема",
+      "theme_color": "Цвет темы",
+      "theme_color_desc": "Основной акцентный цвет приложения",
+      "theme_standard": "Стандартные цвета",
+      "theme_generated": "Больше цветов",
+      "hue": "Оттенок",
+      "custom_color": "Пользовательский цвет",
+      "background_image": "Фоновое изображение",
+      "background_image_desc": "Установите персонализированный фон для текущего режима",
+      "no_image_selected": "Изображение не выбрано",
+      "select_image": "Выбрать изображение",
+      "clear_image": "Очистить изображение",
+      "background_blur": "Размытие фона",
+      "background_brightness": "Яркость фона",
+      "background_opacity": "Непрозрачность фона",
+      "background_base_mode": "Режим основы",
+      "background_base_mode_desc": "Добавьте слой сплошного цвета под фоновое изображение для повышения контрастности",
+      "background_base_none": "Нет",
+      "background_base_theme": "Цвет темы",
+      "background_base_color": "Пользовательский цвет основы",
+      "background_base_color_pick": "Цвет основы",
+      "background_base_opacity": "Непрозрачность основы",
+      "background_fit_mode": "Режим заполнения",
+      "background_fit_smart": "Умное заполнение",
+      "background_fit_center": "По центру",
+      "background_fit_fit": "Вписать",
+      "background_fit_stretch": "Растянуть",
+      "background_fit_tile": "Замостить",
+      "background_fit_top_left": "Сверху слева",
+      "background_fit_top_right": "Сверху справа",
+      "background_play_order": "Порядок воспроизведения",
+      "background_play_sequential": "Последовательно",
+      "background_play_random": "Случайно",
+      "disable_animations": "Отключить анимацию",
+      "disable_animations_desc": "Отключите анимацию переходов интерфейса для повышения производительности",
+      "themed_strokes": "Обводки в цвет темы",
+      "themed_strokes_desc": "Окрашивать рамки и контуры интерфейса выбранным цветом темы",
+      "calculating": "Вычисление...",
+      "sunrise_time": "Восход сегодня",
+      "sunset_time": "Закат сегодня",
+      "sun_fetch_failed": "Не удалось получить время восхода/заката",
+      "theme_mode": "Режим темы",
+      "theme_mode_desc": "Выберите режим темы приложения (светлый, темный, по расписанию или восход/закат)",
+      "theme_system": "Как в системе",
+      "theme_system_desc": "Использовать системные настройки Windows",
+      "theme_schedule": "Расписание",
+      "theme_auto": "Восход/Закат",
+      "theme_start_time": "Время начала ночного режима",
+      "theme_end_time": "Время окончания ночного режима",
+      "theme_schedule_desc": "Автоматическое переключение в ночной режим в указанный период",
+      "theme_auto_desc": "Автоматическое переключение тем в зависимости от местного времени восхода и заката"
+    },
+    "process": {
+      "title": "Управление процессами",
+      "desc": "Управление запущенными процессами Minecraft",
+      "scan": "Сканировать процессы",
+      "kill_all": "Завершить все процессы",
+      "kill": "Завершить",
+      "no_process": "Запущенные процессы Minecraft не найдены"
+    },
+    "patch": {
+      "title": "Патч лаунчера",
+      "desc": "Применить встроенный скрипт патча лаунчера",
+      "auto_run": "Запускать автоматически при старте",
+      "auto_run_desc": "Если включено, скрипт патча применяется при каждом запуске Bedrock Nexus (требуется согласие администратора). Если отключено, скрипт пропускается при последующих запусках.",
+      "run_button": "Запустить патч сейчас",
+      "run_desc": "Применить встроенный скрипт патча вручную. Windows запросит права администратора.",
+      "running": "Выполнение...",
+      "success": "Патч успешно применён",
+      "failed": "Не удалось запустить патч",
+      "register_mode": "Версия для регистрации перед патчем",
+      "register_mode_desc": "Если Minecraft не зарегистрирован в системе, выбранная версия автоматически регистрируется перед запуском скриптов патча, чтобы патч мог найти игру.",
+      "register_mode_latest_release": "Последняя версия Release",
+      "register_mode_latest_preview": "Последняя версия Preview",
+      "register_mode_last_launched": "Последняя запущенная версия",
+      "register_mode_off": "Никогда не регистрировать автоматически"
+    }
+  },
+  "downloadmodal": {
+    "download_button": "Скачать",
+    "installing": {
+      "title": "Установка"
+    },
+    "open_folder": "Открыть папку"
+  },
+  "about": {
+    "description": "Bedrock Nexus - современный бесплатный лаунчер с открытым исходным кодом для Minecraft Bedrock Edition на Windows",
+    "authors": "Создатель лаунчера",
+    "author": "Создатель",
+    "source": "Исходный код и открытое ПО",
+    "contribute": "Внести вклад",
+    "contribute.desc": "Приветствуются Issues и Pull Requests для улучшения Bedrock Nexus.",
+    "github_repo": "GitHub · Bedrock Nexus",
+    "license.tip": "Подробности лицензии смотрите в файле LICENSE репозитория.",
+    "issue": "Баг/предложение",
+    "star_fork": "Star / Fork",
+    "creator_name": "Aster",
+    "creator_desc": "Спроектирован, разработан и поддерживается Aster, с любовью к быстрым и надёжным лаунчерам.",
+    "launcher": "О лаунчере",
+    "launcher.desc": "Это современный десктопный лаунчер с открытым исходным кодом для Minecraft Bedrock Edition на Windows."
+  },
+  "common": {
+    "retry": "Повторить",
+    "completed": "Завершено",
+    "downloading": "Загрузка",
+    "ok": "ОК",
+    "continue": "Продолжить",
+    "cancel": "Отмена",
+    "error": "Ошибка",
+    "cancelled": "Отменено",
+    "refresh": "Обновить",
+    "quit_launcher": "Выйти из лаунчера",
+    "confirm": "Подтвердить",
+    "success": "Успешно",
+    "delete": "Удалить",
+    "search": "Поиск",
+    "search_placeholder": "Поиск...",
+    "open": "Открыть",
+    "select_mode": "Режим выбора",
+    "select_all": "Выбрать все",
+    "selected_count": "Выбрано: {{count}}",
+    "preview": "Предрелиз",
+    "release": "Релиз",
+    "back": "Назад",
+    "loading": "Загрузка",
+    "yes": "Да",
+    "no": "Нет",
+    "close": "Закрыть",
+    "empty": "Нет данных",
+    "browse": "Обзор...",
+    "processing": "Обработка...",
+    "done": "Готово",
+    "wait": "Пожалуйста, подождите...",
+    "updating": "Обновление",
+    "expand": "Развернуть",
+    "collapse": "Свернуть",
+    "edit": "Редактировать",
+    "backup": "Резервное копирование",
+    "save": "Сохранить",
+    "add": "Добавить",
+    "save_failed": "Не удалось сохранить",
+    "load_failed": "Не удалось загрузить",
+    "no_results": "Ничего не найдено",
+    "view_all": "Посмотреть все",
+    "confirm_delete": "Подтверждение удаления",
+    "hide": "Скрыть",
+    "date": "Дата",
+    "version": "Версия",
+    "details": "Подробнее",
+    "disable": "Отключить",
+    "enable": "Включить",
+    "open_folder": "Открыть папку",
+    "remove": "Удалить",
+    "tip": "Подсказка",
+    "feature_unavailable": "Эта функция временно недоступна",
+    "unknown": "Неизвестно"
+  },
+  "useravatar": {
+    "no_login_retry": "Вход Xbox не обнаружен (нажмите, чтобы повторить)",
+    "xbox_live": "Xbox Live",
+    "refresh_session_aria": "Обновить сеанс Xbox",
+    "xuid": "XUID: {{xuid}}",
+    "stats": {
+      "minutes_played": "Время в игре",
+      "blocks_broken": "Разрушено блоков",
+      "mobs_defeated": "Убито мобов",
+      "distance_travelled": "Пройденное расстояние",
+      "time_format": "{{days}}д {{hours}}ч {{minutes}}м"
+    }
+  },
+  "content": {
+    "count": {
+      "worlds": "Миры",
+      "resource_packs": "Ресурспаки",
+      "behavior_packs": "Поведенческие паки"
+    }
+  },
+  "contentpage": {
+    "current_version": "Текущий экземпляр",
+    "none": "Нет",
+    "isolation": "Изоляция",
+    "worlds": "Миры",
+    "worlds_list": "Список миров",
+    "select_player": "Выберите игрока",
+    "no_players": "Игроки не найдены",
+    "backup_success": "Резервная копия создана",
+    "backup_failed": "Ошибка резервного копирования",
+    "resource_packs": "Ресурспаки",
+    "no_resource_packs": "Ресурспаки не найдены",
+    "behavior_packs": "Поведенческие паки",
+    "no_behavior_packs": "Поведенческие паки не найдены",
+    "skin_packs": "Наборы скинов",
+    "no_skin_packs": "Наборы скинов не найдены",
+    "servers": "Серверы",
+    "error_resolve_paths": "Не удалось определить пути к контенту.",
+    "open_users_dir": "Открыть папку хранения",
+    "players_aria": "Игроки",
+    "sort_time": "Время",
+    "sort_asc": "По возрастанию",
+    "sort_desc": "По убыванию",
+    "no_items": "Элементы не найдены",
+    "drop_hint": "Перетащите .mcworld/.mcpack/.mcaddon для импорта",
+    "import_button": "Импорт",
+    "require_player_for_world_import": "Для импорта мира (.mcworld) сначала выберите игрока",
+    "no_player_selected": "Игрок не выбран",
+    "world_leveldat_editor": "Редактор level.dat мира",
+    "version": "Версия",
+    "add_field": "Добавить поле",
+    "field_name": "Имя",
+    "initial_value": "Начальное значение",
+    "select_player_title": "Выберите игрока",
+    "select_player_for_import": "Пожалуйста, выберите игрока для импорта",
+    "delete_pack_confirm": "Вы уверены, что хотите удалить {{name}}?",
+    "delete_warning": "Это действие нельзя отменить!",
+    "delete_selected_confirm": "Вы уверены, что хотите удалить выбранные элементы ({{count}})?",
+    "deleted_name": "Удалено: {{name}}",
+    "deleted_count": "Удалено элементов: {{count}}",
+    "delete_world_confirm": "Вы уверены, что хотите удалить мир {{name}}?",
+    "basic_info": "Основная информация",
+    "level_name": "Название мира",
+    "shader_chip": "Шейдеры",
+    "only_show_updates": "Несовместимые шейдеры",
+    "update_material_bin": "Обновить .material.bin",
+    "update_material_bin_desc": "Требуется обновление для совместимости",
+    "update_material_bin_modal_title": "Обновить .material.bin",
+    "update_material_bin_modal_content": "Это действие обновит заголовок .material.bin в пакете шейдеров, чтобы Minecraft мог загрузить его корректно.",
+    "update_material_bin_risk_title": "Предупреждение о рисках:",
+    "update_material_bin_risk_content": "Обновленный пакет ресурсов может работать некорректно в старых версиях Minecraft. Рекомендуется сначала создать резервную копию ваших миров или экспортировать пакет ресурсов.",
+    "update_material_bin_success": "Обновление материалов завершено",
+    "update_material_bin_failed": "Ошибка обновления материалов",
+    "update_material_bin_stat_updated": "Обновлено: {{count}}",
+    "update_material_bin_stat_failed": "Ошибка: {{count}}",
+    "screenshots": "Скриншоты",
+    "no_screenshots": "Нет скриншотов",
+    "delete_screenshot_confirm": "Вы уверены, что хотите удалить скриншот {{name}}?",
+    "preview_screenshot": "Открыть крупно",
+    "screenshot_viewer_hint": "Крупный просмотр",
+    "screenshot_viewer_nav_hint": "Переключайте скриншоты клавишами ← / → или боковыми кнопками",
+    "transfer_resources_button": "Перенос ресурсов",
+    "transfer_resources_title": "Перенос ресурсов в изолированные экземпляры",
+    "transfer_resources_body_overview": "Будут перенесены все пакеты ресурсов, пакеты поведения, пакеты скинов и миры из текущего экземпляра в целевой экземпляр. Выберите целевой экземпляр.",
+    "transfer_resources_body_simple": "Выберите целевой экземпляр для переноса.",
+    "transfer_no_targets": "Нет доступных изолированных экземпляров",
+    "transfer_target_placeholder": "Выберите целевой экземпляр",
+    "transfer_progress_title": "Перенос ресурсов...",
+    "transfer_progress_body": "Пожалуйста, подождите, пока ресурсы переносятся в выбранные экземпляры."
+  },
+  "mirror": {
+    "target": "Целевой экземпляр"
+  },
+  "skinpack": {
+    "studio": "Студия наборов скинов",
+    "create_title": "Создать набор скинов",
+    "edit_title": "Изменить набор скинов",
+    "beta": "Бета",
+    "description": "Добавьте PNG-скины 64x32, 64x64 или 128x128 и установите набор в выбранный экземпляр.",
+    "pack_name": "Название набора",
+    "skin_name": "Название скина",
+    "model": "Модель",
+    "classic": "Классический (Steve)",
+    "slim": "Тонкий (Alex)",
+    "height": "Рост",
+    "height_normal": "Обычный",
+    "height_short": "Низкий",
+    "height_tall": "Высокий",
+    "add_skins": "Добавить PNG-скины",
+    "choose_replacement": "Выбрать PNG для замены",
+    "replace": "Заменить",
+    "remove": "Удалить скин",
+    "no_skins": "Скины ещё не выбраны.",
+    "build_install": "Создать и установить",
+    "save_install": "Сохранить и установить",
+    "edit_tooltip": "Изменить набор скинов",
+    "default_name": "Пользовательский набор скинов",
+    "not_editable": "В этом наборе нет редактируемых скинов",
+    "open_failed": "Не удалось открыть набор скинов",
+    "installed": "Набор скинов установлен",
+    "operation_failed": "Не удалось выполнить операцию с набором скинов"
+  },
+  "versions": {
+    "info": {
+      "name": "Имя"
+    },
+    "edit": {
+      "tabs": {
+        "general": "Общие",
+        "launch": "Запуск",
+        "features": "Функции",
+        "manage": "Управление",
+        "loader": "Загрузчик"
+      },
+      "title": "Настройки инстанса",
+      "mc_version": "Версия игры",
+      "new_name": "Новое имя",
+      "placeholder": "Введите новое имя",
+      "hint": "Переименовывается только папка. Версия и тип игры не меняются.",
+      "enable_isolation": "Включить изоляцию",
+      "enable_console": "Включить консоль",
+      "enable_render_dragon": "Загрузить шейдеры RenderDragon",
+      "enable_ctrl_r_reload_resources": "Ctrl+R: перезагрузка ресурсов",
+      "enable_editor_mode": "Включить режим редактора",
+      "launch_args": "Аргументы запуска",
+      "launch_args_placeholder": "Аргументы запуска (например: -Editor true)",
+      "launch_args_hint": "Установить аргументы запуска игры.",
+      "env_vars": "Переменные среды",
+      "env_vars_placeholder": "Переменные среды (KEY=VALUE), по одной в строке",
+      "env_vars_hint": "Установить переменные среды при запуске.",
+      "delete_hint": "Нажмите, чтобы открыть подтверждение удаления — защита от случайного удаления.",
+      "danger_title": "Опасные действия",
+      "danger_hint": "Эти действия влияют на системную регистрацию экземпляра или локальные файлы. Перед продолжением проверьте последствия.",
+      "backup": {
+        "title": "Резервная копия экземпляра",
+        "hint": "Создайте резервную копию этого экземпляра перед изменением настроек, установкой mods или любыми экспериментами",
+        "section_body": "Можно выбрать игровые данные и mods, которые нужно сохранить вместе; сам лаунчер в архив не входит",
+        "experimental_badge": "Experimental",
+        "experimental_disabled": "Enable this in {{settingsPath}} before using instance backup and restore.",
+        "button": "Создать резервную копию",
+        "dialog_title": "Выберите, что сохранить",
+        "dialog_body": "Отметьте, что нужно включить в эту резервную копию",
+        "path_label": "Расположение",
+        "size_label": "Примерный размер",
+        "shared_tag": "Общий контент",
+        "missing_tag": "Не найдено",
+        "empty_tag": "Сейчас пусто",
+        "shared_warning": "Этот экземпляр использует те же игровые данные, что и системная установка по умолчанию; если включить игровые данные, этот общий контент тоже попадёт в резервную копию",
+        "no_scope_selected": "Выберите хотя бы один элемент для резервного копирования",
+        "confirm": "Начать резервное копирование",
+        "progress_title": "Создание резервной копии экземпляра",
+        "progress_body": "Упаковываем выбранные области. Пожалуйста, подождите...",
+        "success_title": "Резервная копия экземпляра создана",
+        "success_body": "Файл резервной копии готов",
+        "archive_label": "Файл резервной копии",
+        "location_label": "Сохранено в",
+        "open_dir": "Открыть папку",
+        "lip_summary": "Обнаружено {{count}} пакетов, управляемых через lip: {{summary}}",
+        "mode": {
+          "safe": {
+            "label": "Безопасный режим"
+          },
+          "full": {
+            "label": "Полный режим",
+            "warning": "Полная резервная копия включает содержимое вне белого списка Users и может содержать кэш аккаунта, приватные данные и другие файлы, которые не стоит распространять."
+          }
+        },
+        "restore": {
+          "button": "Восстановить из резервной копии",
+          "file_picker_title": "Выберите архив резервной копии экземпляра",
+          "dialog_title": "Подтвердите восстановление экземпляра",
+          "dialog_body": "Выберите, что нужно восстановить из этой резервной копии. Если будут обнаружены конфликты, перед восстановлением появится список, где можно выбрать решение для каждого пункта.",
+          "confirm": "Начать восстановление",
+          "scope_section_title": "Области восстановления",
+          "created_at": "Дата создания",
+          "lip_summary": "Обнаружено {{count}} пакетов под управлением lip. При восстановлении будет предпринята попытка установить их автоматически.",
+          "conflict_loading": "Идёт поиск конфликтов восстановления. Пожалуйста, подождите...",
+          "conflict_summary": "Найдено {{count}} конфликтов с текущим экземпляром. Для каждого пункта выберите, оставить версию из резервной копии или текущую версию.",
+          "conflict_empty": "Для выбранных областей конфликтов не найдено. Восстановление можно запускать сразу.",
+          "conflict_choice_placeholder": "Выберите способ разрешения конфликта",
+          "conflict_choice_backup": "Использовать версию из резервной копии",
+          "conflict_choice_current": "Оставить текущую версию",
+          "conflict_choice_pending": "Нужно выбрать",
+          "conflict_group_count": "{{count}} конфликтов",
+          "conflict_group_unresolved": "{{count}} без решения",
+          "conflict_group_resolved": "Выбор завершён",
+          "conflict_group_apply_backup": "Для группы выбрать резервную копию",
+          "conflict_group_apply_current": "Для группы оставить текущее",
+          "conflict_unresolved": "Перед восстановлением нужно выбрать способ разрешения для каждого конфликта.",
+          "conflict_details_toggle": "Показать пути и подробные различия",
+          "conflict_item_fallback": "Безымянное содержимое",
+          "identity_key_label": "Идентификатор конфликта",
+          "backup_side_label": "Версия из резервной копии",
+          "current_side_label": "Текущая версия",
+          "backup_path_label": "Путь в резервной копии",
+          "current_path_label": "Текущий путь",
+          "conflict_category": {
+            "mods": "Моды",
+            "skin_packs": "Паки скинов",
+            "behavior_packs": "Паки поведения",
+            "resource_packs": "Паки ресурсов",
+            "worlds": "Миры",
+            "dev_behavior_packs": "Паки поведения для разработки",
+            "dev_resource_packs": "Паки ресурсов для разработки",
+            "templates": "Шаблоны миров",
+            "files": "Прочие файлы",
+            "other": "Прочее содержимое"
+          },
+          "identity_kind": {
+            "pack_uuid": "Пак контента",
+            "world_folder": "Папка мира",
+            "mod_folder": "Папка мода",
+            "file_path": "Путь к файлу"
+          },
+          "conflict_type": {
+            "file": "Файл",
+            "dir": "Папка"
+          },
+          "diff_field": {
+            "folder": "Имя папки",
+            "uuid": "UUID",
+            "name": "Название",
+            "version": "Версия",
+            "min_engine_version": "Минимальная версия движка",
+            "level_name": "Название мира",
+            "entry": "Точка входа",
+            "type": "Тип"
+          },
+          "progress_title": "Восстановление резервной копии экземпляра",
+          "progress_body": "Применяем содержимое резервной копии. Пожалуйста, подождите...",
+          "progress_preparing": "Подготавливаем содержимое для восстановления...",
+          "progress_extracting": "Распаковываем содержимое резервной копии...",
+          "progress_scope": "Восстанавливаем {{scope}}...",
+          "progress_finalizing": "Формируем итог восстановления...",
+          "progress_step": "Шаг {{current}} / {{total}}",
+          "success_title": "Восстановление экземпляра завершено",
+          "partial_title": "Восстановление экземпляра выполнено частично",
+          "failed_title": "Не удалось восстановить экземпляр",
+          "success_body": "Выбранное содержимое успешно восстановлено.",
+          "partial_body": "Часть содержимого восстановлена, но некоторые элементы всё ещё требуют ручной обработки.",
+          "failed_body": "Это восстановление не удалось завершить. Проверьте результаты ниже.",
+          "status": {
+            "success": "Успешно",
+            "partial": "Частично",
+            "failed": "Ошибка"
+          }
+        }
+      },
+      "unregister_button": "Отменить регистрацию",
+      "unregister_hint": "Эта версия зарегистрирована в системе. Доступна только отмена регистрации, после чего можно будет переименовать или удалить.",
+      "unregister_progress": {
+        "title": "Отмена регистрации",
+        "body": "Выполняется отмена регистрации в системе. Пожалуйста, подождите…"
+      },
+      "unregister_success": {
+        "title": "Отмена регистрации выполнена",
+        "body": "Успешно отменена регистрация. Теперь можно удалить эту версию."
+      },
+      "loader": {
+        "ll_not_installed": "Не установлено",
+        "ll_select_version": "Версия LeviLamina",
+        "ll_select_placeholder": "Выберите версию LeviLamina",
+        "ll_select_guidance": "Выберите версию LeviLamina, которую нужно установить, обновить, понизить или переустановить.",
+        "ll_remove_confirm_title": "Подтвердите удаление LeviLamina",
+        "ll_remove_confirm_body": "LeviLamina будет удалена из этого инстанса.",
+        "ll_remove_confirm_warning": "Это действие нельзя отменить."
+      }
+    },
+    "logo": {
+      "title": "Пользовательская иконка (обязательно квадрат)",
+      "change": "Нажмите для изменения",
+      "clear": "Очистить",
+      "hint": "Сохраняется как LargeLogo.png в папке версии. Кликните по иконке для изменения."
+    },
+    "unsaved": {
+      "body": "У вас есть несохраненные изменения в настройках версии. Вы хотите сохранить их перед выходом?"
+    },
+    "sort": {
+      "name": "Имя (A-Z)",
+      "name_za": "Имя (Z-A)",
+      "version": "Версия (Новые)",
+      "version_old_new": "Версия (Старые)"
+    },
+    "tab": {
+      "all": "Все",
+      "preview": "Предварительные",
+      "release": "Релизы"
+    }
+  },
+  "errors": {
+    "ERR_GAME_ALREADY_RUNNING": "Обнаружено, что текущая версия Minecraft уже запущена. Закройте её перед запуском или выберите другую версию.",
+    "ERR_TARGET_DIR_NOT_SPECIFIED": "Целевая папка не указана",
+    "ERR_CREATE_TARGET_DIR": "Не удалось создать целевую папку",
+    "ERR_NOT_FOUND_GAME_DIR": "Папка с контентом игры не найдена",
+    "ERR_NOT_FOUND_EXE": "Исполняемый файл не найден",
+    "ERR_WRITE_TARGET": "Не удалось записать конфигурацию",
+    "ERR_LAUNCH_GAME": "Не удалось корректно запустить игру",
+    "ERR_GAME_CRASH_DURING_LAUNCH": "Игра крашнулась во время запуска",
+    "ERR_WAIT_KERNEL_TIMEOUT": "Тайм-аут подготовки ядра",
+    "ERR_COPY_WALK": "Ошибка обхода файлов",
+    "ERR_COPY_FAILED": "Ошибка копирования",
+    "ERR_NAME_REQUIRED": "Имя обязательно",
+    "ERR_NAME_TOO_LONG": "Слишком длинное имя",
+    "ERR_NAME_TRAILING_DOT_SPACE": "Имя не может заканчиваться точкой или пробелом",
+    "ERR_NAME_INVALID_CHAR": "Имя содержит недопустимые символы: <>:\"/\\|?*",
+    "ERR_NAME_CONTROL_CHAR": "Имя содержит управляющие символы",
+    "ERR_NAME_RESERVED": "Имя является зарезервированным словом Windows",
+    "ERR_ACCESS_VERSIONS_DIR": "Нет доступа к папке versions",
+    "ERR_ACCESS_INSTALLERS_DIR": "Нет доступа к папке installers",
+    "ERR_READ_VERSIONS_DIR": "Не удалось прочитать папку versions",
+    "ERR_LL_VERSION_UNSUPPORTED": "Выбранная версия LeviLamina не поддерживается для этой версии игры",
+    "ERR_NAME_EXISTS": "Имя уже существует",
+    "ERR_INVALID_NAME": "Недопустимое имя",
+    "ERR_ICON_DECODE": "Ошибка декодирования иконки",
+    "ERR_ICON_NOT_SQUARE": "Иконка должна быть квадратной",
+    "ERR_NOT_FOUND_OLD": "Исходная папка не найдена",
+    "ERR_RENAME_FAILED": "Не удалось переименовать (возможно, используется или нет прав)",
+    "ERR_MSIXVC_NOT_SPECIFIED": "Пакет установщика не указан",
+    "ERR_MSIXVC_NOT_FOUND": "Пакет установщика не найден",
+    "ERR_APPX_UNINSTALL_FAILED": "Не удалось удалить существующую игру",
+    "ERR_APPX_INSTALL_FAILED": "Установка не удалась. Попробуйте снова.",
+    "ERR_MC_NOT_AUTHORIZED": "Убедитесь, что у вас есть лицензия на {{typeLabel}} версию Minecraft. Войдите в аккаунт, владеющий продуктом, или купите его и повторите попытку.",
+    "ERR_INHERIT_SOURCE_NOT_FOUND": "Исходная версия для наследования не найдена",
+    "ERR_DELETE_FAILED": "Не удалось удалить (возможно, используется или нет прав)",
+    "ERR_INHERIT_TARGET_NOT_FOUND": "Целевая версия не найдена",
+    "ERR_INHERIT_TYPE_MISMATCH": "Несовпадение типа, наследование невозможно",
+    "ERR_INHERIT_COPY_FAILED": "Не удалось скопировать наследуемые данные",
+    "ERR_NO_GAME_DATA": "В выбранной исходной версии нет игровых данных",
+    "ERR_VCRUNTIME_MISSING": "Отсутствует зависимость времени выполнения. Установите Microsoft Visual C++ Runtime и повторите попытку",
+    "ERR_SHORTCUT_CREATE_FAILED": "Не удалось создать ярлык на рабочем столе",
+    "ERR_UNREGISTER_FAILED": "Не удалось отменить регистрацию",
+    "ERR_NOT_REGISTERED_THIS_VERSION": "Эта версия не зарегистрирована в системе",
+    "ERR_DEV_MODE_REQUIRED": "Режим разработчика не включен, и автоматическое включение не удалось. Пожалуйста, включите режим разработчика вручную и повторите попытку.",
+    "ERR_LIP_PACKAGE_REQUIRED_BY_DEPENDENTS": "Этот пакет требуется другим установленным mod и сейчас не может быть удален",
+    "ERR_LIP_PACKAGE_DEMOTED_TO_DEPENDENCY": "Этот пакет по-прежнему требуется другим установленным mod, поэтому полностью удалить его нельзя; он автоматически переведен в режим установки как зависимость.",
+    "ERR_LIP_NOT_INSTALLED": "lip не установлен. Откройте «Настройки > Компоненты», чтобы установить или обновить его вручную.",
+    "ERR_INSTANCE_BACKUP_INSTANCE_NOT_FOUND": "Экземпляр для резервного копирования не найден",
+    "ERR_INSTANCE_BACKUP_NO_SCOPE": "Выберите хотя бы одну область для резервного копирования",
+    "ERR_INSTANCE_BACKUP_INVALID_SCOPE": "Запрос содержит недопустимую область резервного копирования",
+    "ERR_INSTANCE_BACKUP_INVALID_SCOPE_MODE": "Выбран недопустимый режим резервного копирования",
+    "ERR_INSTANCE_BACKUP_GAME_DATA_NOT_FOUND": "Каталог данных Minecraft Bedrock не найден",
+    "ERR_INSTANCE_BACKUP_CREATE_DIR": "Не удалось создать каталог резервных копий экземпляра",
+    "ERR_INSTANCE_BACKUP_CREATE_ARCHIVE": "Не удалось создать архив резервной копии экземпляра",
+    "ERR_INSTANCE_BACKUP_READ_SOURCE": "Не удалось прочитать исходный каталог для резервного копирования",
+    "ERR_INSTANCE_BACKUP_WRITE_ARCHIVE": "Не удалось записать архив резервной копии экземпляра",
+    "ERR_INSTANCE_BACKUP_ARCHIVE_OPEN": "Не удалось открыть архив резервной копии экземпляра",
+    "ERR_INSTANCE_BACKUP_INVALID_ARCHIVE": "Недопустимый формат архива резервной копии экземпляра",
+    "ERR_INSTANCE_BACKUP_MODS_STATE_UNAVAILABLE": "Не удалось надёжно определить состояние mods / lip. Обновите состояние экземпляра и попробуйте создать резервную копию ещё раз.",
+    "ERR_INSTANCE_BACKUP_RESTORE_EXTRACT_ARCHIVE": "Не удалось распаковать архив резервной копии экземпляра",
+    "ERR_INSTANCE_BACKUP_RESTORE_WRITE_TARGET": "Не удалось восстановить содержимое резервной копии в целевой экземпляр",
+    "ERR_INSTANCE_BACKUP_RESTORE_CONFLICT_UNRESOLVED": "Остались неразрешённые конфликты восстановления. Сначала выберите решение для каждого конфликта.",
+    "ERR_INSTANCE_BACKUP_RESTORE_INVALID_CONFLICT_RESOLUTION": "Выбранное решение конфликта восстановления недопустимо. Проверьте свой выбор.",
+    "ERR_INSTANCE_BACKUP_RESTORE_FULL_REQUIRES_EMPTY_TARGET": "Полные резервные копии Minecraft Bedrock можно восстанавливать только в пустой целевой каталог",
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_INSTALL_FAILED": "Не удалось установить некоторые пакеты, управляемые через lip",
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_MISSING": "Некоторые пакеты, управляемые через lip, не были восстановлены",
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "Версии некоторых пакетов, управляемых через lip, не совпадают с резервной копией",
+    "ERR_LL_NOT_SUPPORTED": "LeviLamina is not supported for this game version",
+    "ERR_FETCH_LL_DB": "Failed to fetch LeviLamina version database",
+    "ERR_INVALID_VERSION_FORMAT": "Invalid game version format",
+    "ERR_LIP_INSTALL_FAILED": "Failed to install LeviLamina via lip",
+    "ERR_LIP_PACKAGE_INVALID_IDENTIFIER": "Invalid lip package identifier",
+    "ERR_LIP_PACKAGE_VERSION_REQUIRED": "lip package version is required",
+    "ERR_LIP_PACKAGE_INSTALL_FAILED": "Failed to install lip package",
+    "ERR_LIP_PACKAGE_UNINSTALL_FAILED": "Failed to uninstall lip package",
+    "ERR_LIP_PACKAGE_QUERY_FAILED": "Failed to query lip package state",
+    "ERR_LIP_CACHE_CLEAN_FAILED": "Failed to clean lip cache",
+    "ERR_LL_MANAGED_IN_VERSION_SETTINGS": "LeviLamina can only be managed in Version Settings"
+  },
+  "filemanager": {
+    "sort": {
+      "name": "Имя"
+    }
+  },
+  "file": {
+    "types": {
+      "folder": "Папка",
+      "executable": "Исполняемый файл",
+      "library": "Библиотека",
+      "archive": "Архив",
+      "image": "Изображение",
+      "text": "Текстовый файл",
+      "json": "JSON",
+      "jar": "JAR",
+      "mcpack": "MC Pack",
+      "mcaddon": "MC Addon",
+      "file": "Файл"
+    }
+  },
+  "mods": {
+    "import_button": "Импорт .zip/.dll",
+    "importing_title": "Импорт...",
+    "importing_body": "Пожалуйста, подождите, идёт обработка выбранных файлов.",
+    "summary_title_done": "Импорт завершён",
+    "summary_title_partial": "Импорт завершён (с частичными ошибками)",
+    "summary_success": "Успешно",
+    "summary_failed": "Ошибка",
+    "details_title": "Информация о моде",
+    "field_name": "Название",
+    "field_version": "Версия",
+    "field_type": "Тип",
+    "field_entry": "Точка входа",
+    "field_author": "Автор",
+    "confirm_delete_body": "Вы действительно хотите удалить этот {{type}}? Действие нельзя отменить.",
+    "dll_modal_title": "Импорт DLL-плагина",
+    "dll_name": "Имя плагина",
+    "dll_type": "Тип",
+    "dll_version": "Версия",
+    "err_invalid_name": "Недопустимое имя версии или модуля",
+    "err_access_versions_dir": "Нет доступа к папке versions",
+    "err_create_target_dir": "Не удалось создать целевую папку",
+    "err_open_zip": "Не удалось открыть ZIP-архив",
+    "err_manifest_not_found": "Файл manifest.json не найден",
+    "err_invalid_package": "Неправильная структура пакета",
+    "err_duplicate_folder": "Папка модуля с таким именем уже существует",
+    "err_read_zip_entry": "Не удалось прочитать элемент ZIP",
+    "err_write_file": "Не удалось записать файл",
+    "err_unknown": "Неизвестная ошибка",
+    "overwrite_modal_title": "Обнаружен дубликат",
+    "overwrite_modal_body": "Папка модуля с таким именем уже существует. Перезаписать (обновить)?",
+    "toggle_label": "Включить мод",
+    "toggle_on": "Включён",
+    "toggle_off": "Выключён",
+    "toggle_desc_on": "Мод включён и будет загружаться при запуске игры.",
+    "toggle_desc_off": "Мод выключен и не будет загружаться при запуске игры.",
+    "only_enabled": "Показывать только включённые моды",
+    "drop_hint": "Перетащите .zip или .dll для импорта модов/плагинов",
+    "err_lip_install_failed_suggestion": "Установка не удалась, попробуйте переустановить Minecraft",
+    "rc_warning": {
+      "title": "Предупреждение об экспериментальной версии",
+      "body_1": "Версия LeviLamina ({{version}}), которую вы собираетесь установить, является релиз-кандидатом (RC).",
+      "body_2": "Это экспериментальная версия, которая может быть нестабильной. Рекомендуется только для разработчиков или опытных пользователей.",
+      "body_3": "Вы хотите продолжить установку?"
+    },
+    "tab_all": "Все",
+    "tab_normal": "Обычные моды",
+    "tab_lip": "lip моды",
+    "lip_children_summary": "Содержит: {{children}} (+{{count}})",
+    "lip_open_package": "Открыть пакет",
+    "action_promote_install": "Сделать явной установкой",
+    "action_promote_install_success": "{{name}} переведен в явную установку",
+    "action_promote_install_failed_no_version": "Не найдена установленная версия этого пакета",
+    "action_update": "Update",
+    "action_uninstall": "Uninstall",
+    "batch_update_title": "Batch Update Mods",
+    "batch_update_body": "Selected {{selected}} mods. {{updatable}} mod(s) can be updated from lip. Continue?",
+    "batch_uninstall_title": "Batch Uninstall Mods",
+    "batch_uninstall_body": "You are about to uninstall {{count}} mod(s). Continue?",
+    "update_available": "Update to {{version}}",
+    "update_latest": "Already latest",
+    "no_update_source": "No lip update source",
+    "err_ll_managed_in_version_settings": "LeviLamina can only be managed in Version Settings",
+    "action_result_title_done": "Operation Completed",
+    "action_result_title_partial": "Operation Completed (Partial Failures)",
+    "action_result_title_failed": "Operation Failed",
+    "lip_sync_loading": "Локальные моды уже загружены. Дополняем информацию lip...",
+    "lip_sync_error": "Информация lip временно недоступна. Показаны только локальные моды."
+  },
+  "terms": {
+    "title": "Лицензионное соглашение Bedrock Nexus",
+    "body": "Добро пожаловать в Bedrock Nexus\n\nИспользуя это ПО, вы соглашаетесь с тем, что:\n• Это неофициальный лаунчер Minecraft\n• У вас должна быть легальная лицензия Minecraft, иначе будет использован режим пробной версии\n• Любые формы пиратства и читерства запрещены\n• Использование модов и ресурспаков — на ваш страх и риск\n• Никакой связи с Mojang/Microsoft\n\nПродолжение использования означает согласие с условиями",
+    "agree": "Принимаю и продолжаю",
+    "decline": "Отказываюсь и выхожу"
+  },
+  "onboarding": {
+    "title": "Добро пожаловать",
+    "subtitle": "Пожалуйста, настройте пути к контенту и язык",
+    "skip": "Пропустить",
+    "finish": "Готово",
+    "unsaved": {
+      "title": "Несохранённые изменения",
+      "body": "У вас есть несохранённые изменения пути к контенту. Сохранить перед завершением?",
+      "cancel": "Отмена",
+      "save": "Сохранить и завершить"
+    }
+  },
+  "contentdownload": {
+    "title": "Загрузка контента"
+  },
+  "curseforge": {
+    "title": "CurseForge",
+    "search_placeholder": "Поиск игровых ресурсов...",
+    "search": "Поиск",
+    "minecraft_version": "Версия Minecraft",
+    "select_version": "Выбрать версию",
+    "all_versions": "Все версии",
+    "load_error": "Не удалось загрузить данные, попробуйте еще раз",
+    "search_error": "Ошибка поиска, попробуйте еще раз",
+    "class": "Класс",
+    "select_class": "Выбрать класс",
+    "all_classes": "Все классы",
+    "category": "Категория",
+    "select_category": "Выбрать категорию",
+    "sort_by": "Сортировка",
+    "select_sort": "Выбрать сортировку",
+    "no_results": "Результаты не найдены",
+    "by_author": "Автор: {{author}}",
+    "no_description": "Описание отсутствует.",
+    "downloads": "Загрузки",
+    "updated": "Обновлено",
+    "created": "Создано",
+    "size": "Размер",
+    "game_version": "Версия Minecraft",
+    "mod_not_found": "Мод не найден",
+    "go_back": "Назад",
+    "by": "Автор",
+    "updated_date": "Обновлено {{date}}",
+    "download_count": "{{count}} загрузок",
+    "install_action": "Установить",
+    "website": "Веб-сайт",
+    "source": "Исходный код",
+    "issues": "Проблемы",
+    "share": "Поделиться",
+    "no_download_url": "Нет ссылки для скачивания",
+    "no_files_found": "Файлы не найдены",
+    "sort": {
+      "featured": "Избранное",
+      "popularity": "Популярность",
+      "last_updated": "Последнее обновление",
+      "creation_date": "Дата создания",
+      "total_downloads": "Всего загрузок"
+    },
+    "install": {
+      "downloading_title": "Загрузка контента",
+      "select_version_title": "Выбор игрового инстанса",
+      "select_player_title": "Выбор игрока",
+      "importing_title": "Импорт контента",
+      "success_title": "Успешно",
+      "error_title": "Ошибка",
+      "downloading_body": "Загрузка файла...",
+      "select_version_body": "Пожалуйста, выберите игровой инстанс для импорта:",
+      "local_installation": "Локальный инстанс",
+      "select_version_placeholder": "Выберите инстанс",
+      "registered": "Зарегистрировано",
+      "select_player_body": "Этот контент требует выбора игрока:",
+      "player_label": "Игрок",
+      "select_player_placeholder": "Выберите игрока",
+      "importing_body": "Импорт контента...",
+      "success_msg": "Импорт выполнен успешно",
+      "success_desc": "Контент был успешно импортирован в выбранный инстанс.",
+      "failed_msg": "Ошибка импорта",
+      "next": "Далее",
+      "close": "Закрыть"
+    },
+    "mod_details_aria_label": "Mod Details",
+    "loading_description": "Loading description...",
+    "mod_tabs": {
+      "description": "Description",
+      "files": "Files"
+    },
+    "mod_files": {
+      "title": "All Files",
+      "table_aria_label": "Mod files table",
+      "columns": {
+        "type": "Type",
+        "name": "Name",
+        "uploaded": "Uploaded",
+        "size": "Size",
+        "downloads": "Downloads",
+        "actions": "Actions"
+      }
+    }
+  },
+  "lip": {
+    "search_placeholder": "Поиск пакетов...",
+    "sort_by": "Сортировать по",
+    "select_sort": "Выберите сортировку",
+    "order_by": "Порядок",
+    "select_order": "Выберите порядок",
+    "no_description": "Нет описания",
+    "ll_version_label": "LeviLamina version",
+    "ll_version_placeholder": "Select LeviLamina version",
+    "ll_all_versions": "All LeviLamina versions",
+    "game_version_label": "Game version",
+    "game_version_placeholder": "Select game version",
+    "game_all_versions": "All game versions",
+    "mapping_unavailable_hint": "Сопоставление версий игры для LeviLamina сейчас недоступно. Фильтры, связанные с версиями, отключены, чтобы избежать неверных совпадений.",
+    "files": {
+      "game_versions_label": "Game Versions",
+      "game_versions_unrestricted": "No game version restriction",
+      "game_versions_unavailable": "Game version mapping unavailable",
+      "ll_requirement": "LL Requirement",
+      "dependencies": "Dependencies",
+      "action": "Action",
+      "dependencies_count": "{{count}} dependencies",
+      "install": "Install",
+      "upgrade": "Обновить",
+      "downgrade": "Понизить версию",
+      "reinstall": "Переустановить",
+      "redirect": "Перейти к Loader",
+      "instance_game_version_label": "Game version",
+      "select_instance_title": "Select Target Instance",
+      "installing_version_label": "Installing package version",
+      "variant_label": "Variant",
+      "variant_hint_keep_default": "Usually no change needed",
+      "variant_placeholder": "Select a variant",
+      "variant_default": "default",
+      "select_version_incompatible_hint": "Version {{version}} is not compatible with game version {{gameVersion}}.",
+      "checking_ll_state": "Checking LeviLamina status...",
+      "mapping_unavailable_blocked_hint": "Сейчас невозможно проверить сопоставление между LeviLamina и версией игры, поэтому эта установка заблокирована во избежание неправильной установки.",
+      "ll_missing_redirect_hint": "Для этого экземпляра LeviLamina не установлен. При нажатии «Перейти к Loader» откроется вкладка Loader в настройках экземпляра, чтобы вы сначала установили его вручную.",
+      "ll_missing_redirect_to_loader": "LeviLamina не установлен. Выполняется переход на вкладку Loader в настройках экземпляра.",
+      "ll_installed_incompatible_hint": "Installed LeviLamina version {{installedVersion}} is incompatible with this package. Please adjust LeviLamina manually first.",
+      "action_failed": "Operation failed: {{error}}",
+      "tab_label": "Files",
+      "table_aria_label": "Package files table",
+      "install_success": "Installation completed successfully",
+      "upgrade_success": "Обновление выполнено успешно",
+      "downgrade_success": "Понижение версии выполнено успешно",
+      "reinstall_success": "Переустановка выполнена успешно",
+      "current_installed_version_label": "Current installed version",
+      "checking_current_installed_version": "Checking currently installed version..."
+    },
+    "guide": {
+      "open_button": "Руководство для разработчиков",
+      "title": "Руководство для разработчиков LIP",
+      "description": "Если вы хотите, чтобы ваш мод появился на странице LIP в Bedrock Nexus, публикуйте его по спецификации LIP package_manifest.",
+      "manifest_hint": "Это краткая памятка для разработчиков. Названия полей, обязательные поля, примеры и правила валидации смотрите в официальной документации.",
+      "variant_hint": "Вариант будет включён в лаунчер только если его label содержит client. По умолчанию используйте \"label\": \"client\"; для подрасширений используйте \"label\": \"client_xxxx\" или \"label\": \"client\\xxxx\".",
+      "docs_button": "Открыть спецификацию",
+      "close_button": "Закрыть"
+    },
+    "guard": {
+      "title": "lipd не установлен",
+      "description": "lipd пока не установлен. Чтобы продолжить пользоваться страницами lip или установить LeviLamina, сначала откройте «Настройки > Сторонние компоненты» и установите его."
+    },
+    "title": "lip Content",
+    "sort_options": {
+      "hotness": "Hotness",
+      "updated": "Updated",
+      "name": "Name"
+    },
+    "order_options": {
+      "desc": "Desc",
+      "asc": "Asc"
+    },
+    "by_author_inline": "| By {{author}}",
+    "package_details_aria_label": "Package Details",
+    "task_console": {
+      "title_install": "Installing",
+      "title_upgrade": "Обновление",
+      "title_downgrade": "Понижение версии",
+      "title_reinstall": "Переустановка",
+      "title_update": "Updating",
+      "title_uninstall": "Uninstalling",
+      "title_generic": "lip Task",
+      "status_running": "Running",
+      "status_success": "Success",
+      "status_failed": "Failed",
+      "target_label": "Target",
+      "progress_label": "Progress",
+      "log_title": "Log Output",
+      "no_output": "No output yet",
+      "waiting_start": "Waiting for lipd output...",
+      "copy_logs": "Copy Logs",
+      "copy_success": "Logs copied",
+      "close": "Close",
+      "stage_install_pkg": "Installing target package",
+      "stage_fallback_delete": "Package uninstall unavailable, fallback to directory delete"
+    },
+    "package": {
+      "confirm_install_title": "Подтвердите установку",
+      "confirm_install_body": "Вы уверены, что хотите {{action}} {{package}} {{version}} для {{instance}}?"
+    },
+    "bedrinth_fallback_hint": "Показаны результаты из резерва Bedrinth (экспериментально) — фильтры совместимости версий для этих элементов недоступны."
+  },
+  "server": {
+    "offline": "Офлайн / Нет соединения",
+    "players": "Игроков онлайн",
+    "delay": "Задержка",
+    "online": "В сети",
+    "version": "Версия"
+  },
+  "installpage": {
+    "error": {
+      "dll_dependency_missing": "Отсутствует библиотека VC++",
+      "name_required": "Требуется имя",
+      "msixvc_not_specified": "Пакет установки не указан",
+      "lip_not_installed": "lip не установлен. Откройте «Настройки > Компоненты», чтобы установить или обновить его вручную.",
+      "unknown": "Неизвестная ошибка",
+      "nh_err_unknown": "Неизвестная ошибка",
+      "nh_err_exception": "Неперехваченное исключение или неизвестная ошибка",
+      "nh_err_invalid_params": "Неверные параметры",
+      "nh_err_key_not_found": "Ошибка проверки пакета установки. Пожалуйста, удалите установщик и попробуйте снова.",
+      "nh_err_unauthorized_caller": "Убедитесь, что имя exe-файла лаунчера не было изменено (BedrockNexus.exe)",
+      "nh_err_pipe_open_failed": "Не удалось открыть канал прогресса",
+      "nh_err_input_not_found": "Входной файл не найден",
+      "nh_err_output_dir_invalid": "Неверный выходной каталог",
+      "nh_err_parse_failed": "Ошибка разбора пакета",
+      "nh_err_extract_failed": "Ошибка распаковки"
+    }
+  },
+  "elevation": {
+    "title": "Права администратора",
+    "description": "Bedrock Nexus требуются права администратора для применения стартового скрипта патча. Это обеспечивает корректную работу модов и патчей.",
+    "accept": "Запуск от имени администратора",
+    "decline": "Продолжить без администратора",
+    "retry": "Повторить попытку",
+    "restarting": "Перезапуск с правами администратора…",
+    "failed": "Запрос на повышение прав был отменён или завершился ошибкой. Вы можете повторить попытку или продолжить без прав администратора.",
+    "note": "Патч также можно запустить вручную позже в настройках."
+  },
+  "reportProblem": {
+    "button": "Сообщить о проблеме",
+    "settings_title": "Сообщить о проблеме",
+    "settings_desc": "Нашли ошибку или что-то не работает? Отправьте структурированный отчёт с диагностикой в трекер задач GitHub.",
+    "title": "Сообщить о проблеме",
+    "description_label": "Что произошло?",
+    "description_placeholder": "Опишите проблему, что вы делали и чего ожидали…",
+    "include_diagnostics": "Приложить диагностику (версия приложения, ОС, недавний журнал запуска)",
+    "diagnostics_preview": "Диагностика, прилагаемая к отчёту",
+    "copy": "Копировать",
+    "copied": "Диагностика скопирована в буфер обмена",
+    "copy_failed": "Не удалось скопировать — выделите и скопируйте текст вручную",
+    "loading": "Сбор диагностики…",
+    "search_issues": "Поиск существующих задач",
+    "open_issue": "Продолжить на GitHub",
+    "open_tracker": "Открыть трекер задач",
+    "privacy_note": "Ничего не отправляется автоматически. Отчёт откроется на GitHub, чтобы вы сами проверили и отправили его.",
+    "too_long_note": "Журнал слишком длинный для предварительно заполненной формы — скопируйте его и вставьте в поле Logs на GitHub.",
+    "error": "Не удалось собрать диагностику. Вы всё равно можете отправить отчёт.",
+    "default_title": "Отчёт об ошибке",
+    "import_failure_prefill": "Не удалось выполнить импорт следующих элементов:"
+  },
+  "mcpedl": {
+    "title": "MCPEDL",
+    "desc": "Поиск аддонов, карт и наборов текстур Bedrock в каталоге сообщества MCPEDL.",
+    "search_placeholder": "Поиск в MCPEDL…",
+    "search": "Поиск",
+    "experimental_badge": "Экспериментально",
+    "experimental_note": "Экспериментальная интеграция: файлы загружаются через менеджер загрузок и импортируются как обычные .mcpack/.mcaddon.",
+    "no_results": "Нет результатов",
+    "load_failed": "Не удалось загрузить",
+    "load_more": "Загрузить ещё",
+    "files": "Файлы ({{count}})",
+    "download": "Скачать",
+    "open_page": "Открыть страницу",
+    "download_started": "Загрузка началась"
+  }
+}

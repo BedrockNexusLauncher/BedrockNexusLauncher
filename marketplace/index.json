@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-29T00:00:00Z",
+  "items": [
+    {
+      "id": "example-addon",
+      "name": "Example Addon",
+      "author": "YourName",
+      "summary": "A sample Bedrock addon entry showing the marketplace index schema.",
+      "description": "## Example Addon\n\nThis is a long description. Markdown is supported.\n\n- Works on Minecraft Bedrock\n- Installable on any Bedrock Nexus instance",
+      "icon": "https://cdn.jsdelivr.net/gh/YOUR_USER/marketplace@main/assets/example-addon/icon.png",
+      "screenshots": [
+        "https://cdn.jsdelivr.net/gh/YOUR_USER/marketplace@main/assets/example-addon/shot1.png"
+      ],
+      "tags": ["addon", "adventure"],
+      "type": "mcaddon",
+      "homepage": "https://github.com/YOUR_USER/marketplace",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "date": "2026-08-29",
+          "fileType": "mcaddon",
+          "fileName": "ExampleAddon-1.0.0.mcaddon",
+          "downloadUrl": "https://github.com/YOUR_USER/marketplace/releases/download/example-addon-v1.0.0/ExampleAddon-1.0.0.mcaddon",
+          "size": 0,
+          "changelog": "Initial release."
+        }
+      ]
+    },
+    {
+      "id": "example-skinpack",
+      "name": "Example Skin Pack",
+      "author": "YourName",
+      "summary": "A sample skin pack entry (type: skinpack).",
+      "description": "## Example Skin Pack\n\nA sample skin pack entry.",
+      "icon": "https://cdn.jsdelivr.net/gh/YOUR_USER/marketplace@main/assets/example-skinpack/icon.png",
+      "screenshots": [],
+      "tags": ["skins"],
+      "type": "skinpack",
+      "homepage": "",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "date": "2026-08-29",
+          "fileType": "mcpack",
+          "fileName": "ExampleSkins-1.0.0.mcpack",
+          "downloadUrl": "https://github.com/YOUR_USER/marketplace/releases/download/example-skinpack-v1.0.0/ExampleSkins-1.0.0.mcpack",
+          "size": 0,
+          "changelog": "Initial release."
+        }
+      ]
+    }
+  ]
+}

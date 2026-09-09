@@ -1,0 +1,67 @@
+# Update & Troubleshooting
+
+Use this page when Bedrock Nexus installs, updates, or launches do not behave as expected.
+
+## Common issues
+
+### Gaming Services is missing or broken
+
+- Repair or install it through the guided flow.
+- If needed, revisit the Microsoft Store installation state for Minecraft Bedrock.
+
+### GameInput is missing
+
+- Install the required redistributable when Bedrock Nexus prompts you.
+- Restart the launcher after installation if needed.
+
+### Installation path is not writable
+
+- Move your managed content path to a writable location in **Settings**.
+- If the launcher requests elevation for install or self-update, allow it when you trust the action.
+
+### Bedrock Nexus closes immediately or never shows a window
+
+- On Windows, Bedrock Nexus now starts WebView2 in a safer software-rendered mode to reduce startup crashes on some GPU and driver combinations.
+- If the launcher still fails before the UI appears, check `%APPDATA%\BedrockNexus.exe\logs\startup.log`.
+- Retry once after a failed launch. If it still happens, attach `startup.log` when opening a GitHub issue.
+
+### A version fails to launch
+
+- test the same version without mods
+- confirm required Windows components still exist
+- verify that the version finished installing correctly
+- retry with a clean isolated test setup
+
+### Downloads are too slow or fail repeatedly
+
+- switch mirrors
+- retry later
+- use a local package source if available
+
+## Safe recovery steps
+
+1. Back up important worlds.
+2. Remove recent mods or packs.
+3. Test with a clean isolated version.
+4. Reinstall the affected version if necessary.
+
+## Self-update behavior
+
+Bedrock Nexus can check, download, and install app updates. Some environments may require elevated permission if the installation directory is not writable.
+
+## When to report a bug
+
+Open a GitHub issue when:
+
+- you can reproduce the problem consistently
+- the problem persists after basic recovery steps
+- the issue looks specific to Bedrock Nexus rather than a general Windows setup problem
+
+When reporting, include:
+
+- Windows version
+- Bedrock Nexus version
+- the exact steps you followed
+- screenshots or logs if available
+
+Open issues here: [GitHub Issues](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/issues)

@@ -1,0 +1,15 @@
+{
+	"fixed": {
+		"file_version": "1.0.0"
+	},
+	"info": {
+		"0000": {
+			"ProductVersion": "1.0.0",
+			"CompanyName": "BedrockNexus",
+			"FileDescription": "A Modern Minecraft Bedrock Edition Launcher",
+			"LegalCopyright": "(c) 2024-2026, BedrockNexus",
+			"ProductName": "Bedrock Nexus",
+			"Comments": "Some Product Comments"
+		}
+	}
+}

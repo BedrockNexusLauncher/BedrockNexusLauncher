@@ -1,0 +1,103 @@
+package mcservice
+
+import (
+	"strings"
+
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/apppath"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/config"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/discord"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/utils"
+)
+
+func GetBaseRoot() string { return apppath.BaseRoot() }
+
+func SetBaseRoot(root string) string {
+	r := strings.TrimSpace(root)
+	if r == "" {
+		return "ERR_INVALID_PATH"
+	}
+	if err := utils.CreateDir(r); err != nil {
+		return "ERR_CREATE_TARGET_DIR"
+	}
+	c, _ := config.Load()
+	c.BaseRoot = r
+	if err := config.Save(c); err != nil {
+		return "ERR_WRITE_FILE"
+	}
+	return ""
+}
+
+func ResetBaseRoot() string {
+	c, _ := config.Load()
+	c.BaseRoot = ""
+	if err := config.Save(c); err != nil {
+		return "ERR_WRITE_FILE"
+	}
+	br := apppath.BaseRoot()
+	c.BaseRoot = strings.TrimSpace(br)
+	if err := config.Save(c); err != nil {
+		return "ERR_WRITE_FILE"
+	}
+	return ""
+}
+
+func CanWriteToDir(path string) bool { return utils.CanWriteDir(path) }
+
+func GetDisableDiscordRPC() bool {
+	return config.GetDiscordRPCDisabled()
+}
+
+func SetDisableDiscordRPC(disable bool) string {
+	c, _ := config.Load()
+	c.DisableDiscordRPC = disable
+	if err := config.Save(c); err != nil {
+		return "ERR_WRITE_FILE"
+	}
+	if disable {
+		discord.Close()
+	} else {
+		discord.SetLauncherIdle()
+	}
+	return ""
+}
+
+func GetEnableBetaUpdates() bool {
+	c, _ := config.Load()
+	return c.EnableBetaUpdates
+}
+
+func SetEnableBetaUpdates(enable bool) string {
+	c, _ := config.Load()
+	c.EnableBetaUpdates = enable
+	if err := config.Save(c); err != nil {
+		return "ERR_WRITE_FILE"
+	}
+	return ""
+}
+
+func GetDisableAutoPatch() bool {
+	c, _ := config.Load()
+	return c.DisableAutoPatch
+}
+
+func SetDisableAutoPatch(disable bool) string {
+	c, _ := config.Load()
+	c.DisableAutoPatch = disable
+	if err := config.Save(c); err != nil {
+		return "ERR_WRITE_FILE"
+	}
+	return ""
+}
+
+func GetPatchRegisterMode() string {
+	return config.GetPatchRegisterMode()
+}
+
+func SetPatchRegisterMode(mode string) string {
+	c, _ := config.Load()
+	c.PatchRegisterMode = config.NormalizePatchRegisterMode(mode)
+	if err := config.Save(c); err != nil {
+		return "ERR_WRITE_FILE"
+	}
+	return ""
+}

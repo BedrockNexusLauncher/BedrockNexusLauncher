@@ -1,0 +1,2837 @@
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Button,
+  Chip,
+  Input,
+  Divider,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Spinner,
+  Progress,
+  Switch,
+  Tabs,
+  Tab,
+  Slider,
+  Select,
+  SelectItem,
+  addToast,
+} from "@heroui/react";
+
+import { useTheme } from "next-themes";
+import { RxUpdate, RxDesktop } from "react-icons/rx";
+import {
+  FaDownload,
+  FaCogs,
+  FaList,
+} from "react-icons/fa";
+import {
+  LuHardDrive,
+  LuPalette,
+  LuSun,
+  LuMoon,
+  LuMonitor,
+  LuImage,
+  LuFolderOpen,
+  LuLayers,
+  LuBug,
+} from "react-icons/lu";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import {
+  GetBaseRoot,
+  SetBaseRoot,
+  CanWriteToDir,
+  SetDisableDiscordRPC,
+  SetEnableBetaUpdates,
+  SetPatchAutoRun,
+  SetPatchRegisterMode,
+  RunPatchScript,
+  ResetBaseRoot,
+  InstallLip,
+} from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/minecraft";
+import {
+  GetInstallerDir,
+  GetVersionsDir,
+} from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/versionservice";
+import { Browser, Dialogs } from "@wailsio/runtime";
+import * as minecraft from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/minecraft";
+import { UnifiedModal } from "@/components/UnifiedModal";
+import { ReportProblemModal } from "@/components/ReportProblemModal";
+import { PageHeader } from "@/components/PageHeader";
+import { PageContainer } from "@/components/PageContainer";
+import { LAYOUT } from "@/constants/layout";
+import { THEMES, THEME_GROUPS } from "@/constants/themes";
+import { COMPONENT_STYLES } from "@/constants/componentStyles";
+import { CustomColorPicker } from "@/components/CustomColorPicker";
+import { useSettings, ThemeMode } from "@/hooks/useSettings";
+
+const normalizeHexColor = (
+  value: string | undefined,
+  fallback: string = "#8b5cf6",
+) => {
+  if (!value) return fallback;
+  const trimmed = value.trim();
+  if (/^#[0-9A-Fa-f]{6}$/.test(trimmed)) return trimmed;
+  if (/^[0-9A-Fa-f]{6}$/.test(trimmed)) return `#${trimmed}`;
+  return fallback;
+};
+
+const getColorLuminance = (hexColor: string) => {
+  const color = normalizeHexColor(hexColor, "#000000");
+  const r = parseInt(color.slice(1, 3), 16);
+  const g = parseInt(color.slice(3, 5), 16);
+  const b = parseInt(color.slice(5, 7), 16);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+};
+
+export const SettingsPage: React.FC = () => {
+  const { t, i18n } = useTranslation();
+  const { theme, setTheme } = useTheme();
+  const settings = useSettings(i18n);
+  const {
+    hasBackend,
+    navigate,
+    location,
+    appVersion,
+    checkingUpdate,
+    updating,
+    newVersion,
+    hasUpdate,
+    changelog,
+    onCheckUpdate,
+    onUpdate,
+    langNames,
+    selectedLang,
+    setSelectedLang,
+    languageChanged,
+    setLanguageChanged,
+    baseRoot,
+    setBaseRoot,
+    installerDir,
+    setInstallerDir,
+    versionsDir,
+    setVersionsDir,
+    newBaseRoot,
+    setNewBaseRoot,
+    savingBaseRoot,
+    setSavingBaseRoot,
+    baseRootWritable,
+    setBaseRootWritable,
+    discordRpcEnabled,
+    setDiscordRpcEnabled,
+    enableBetaUpdates,
+    setEnableBetaUpdates,
+    patchAutoRun,
+    setPatchAutoRun,
+    patchRegisterMode,
+    setPatchRegisterMode,
+    experimentalInstanceBackupEnabled,
+    setExperimentalInstanceBackupEnabled,
+    mcpedlExperimentalEnabled,
+    setMcpedlExperimentalEnabled,
+    lipBedrinthFallbackEnabled,
+    setLipBedrinthFallbackEnabled,
+    selectedTab,
+    setSelectedTab,
+    layoutMode,
+    setLayoutMode,
+    disableAnimations,
+    setDisableAnimations,
+    themedStrokes,
+    setThemedStrokes,
+    lightThemeColor,
+    setLightThemeColor,
+    darkThemeColor,
+    setDarkThemeColor,
+    lightCustomThemeColor,
+    setLightCustomThemeColor,
+    darkCustomThemeColor,
+    setDarkCustomThemeColor,
+    backgroundImage,
+    setBackgroundImage,
+    backgroundBlur,
+    setBackgroundBlur,
+    backgroundBrightness,
+    setBackgroundBrightness,
+    backgroundOpacity,
+    setBackgroundOpacity,
+    backgroundPlayOrder,
+    setBackgroundPlayOrder,
+    backgroundFitMode,
+    setBackgroundFitMode,
+    backgroundImageError,
+    setBackgroundImageError,
+    backgroundImageCount,
+    previewBgData,
+    lightBackgroundBaseMode,
+    setLightBackgroundBaseMode,
+    darkBackgroundBaseMode,
+    setDarkBackgroundBaseMode,
+    lightBackgroundBaseColor,
+    setLightBackgroundBaseColor,
+    darkBackgroundBaseColor,
+    setDarkBackgroundBaseColor,
+    lightBackgroundBaseOpacity,
+    setLightBackgroundBaseOpacity,
+    darkBackgroundBaseOpacity,
+    setDarkBackgroundBaseOpacity,
+    themeMode,
+    setThemeMode,
+    scheduleStart,
+    setScheduleStart,
+    scheduleEnd,
+    setScheduleEnd,
+    sunTimes,
+    resolvedTheme,
+    themeSettingMode,
+    setThemeSettingMode,
+    loadingSunTimes,
+    refreshSunTimes,
+    lipInstalled,
+    lipVersion,
+    lipLatestVersion,
+    lipPath,
+    lipUpToDate,
+    lipStatusError,
+    installingLip,
+    setInstallingLip,
+    cleaningLipCache,
+    lipStatus,
+    lipProgress,
+    lipError,
+    setLipError,
+    lipProgressDisclosure,
+    refreshLipStatus,
+    cleanLipCache,
+    resourceRulesInstalled,
+    resourceRulesUpToDate,
+    resourceRulesLocalSha,
+    resourceRulesRemoteSha,
+    resourceRulesError,
+    resourceRulesChecking,
+    resourceRulesUpdating,
+    refreshResourceRulesStatus,
+    onUpdateResourceRules,
+    processModalOpen,
+    setProcessModalOpen,
+    processes,
+    scanningProcesses,
+    refreshProcesses,
+    handleKillProcess,
+    handleKillAllProcesses,
+    unsavedOpen,
+    unsavedOnClose,
+    unsavedOnOpenChange,
+    pendingNavPath,
+    resetOpen,
+    resetOnOpen,
+    resetOnOpenChange,
+    resetOnClose,
+  } = settings;
+  const [instanceBackupWarningOpen, setInstanceBackupWarningOpen] =
+    React.useState(false);
+  const [runningPatch, setRunningPatch] = React.useState(false);
+  const [reportOpen, setReportOpen] = React.useState(false);
+  const [instanceBackupWarningCountdown, setInstanceBackupWarningCountdown] =
+    React.useState(0);
+
+  React.useEffect(() => {
+    if (!instanceBackupWarningOpen) {
+      setInstanceBackupWarningCountdown(0);
+      return;
+    }
+    setInstanceBackupWarningCountdown(10);
+    const timer = window.setInterval(() => {
+      setInstanceBackupWarningCountdown((value) => (value > 0 ? value - 1 : 0));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [instanceBackupWarningOpen]);
+
+  const closeInstanceBackupWarning = React.useCallback(() => {
+    setInstanceBackupWarningOpen(false);
+  }, []);
+
+  const confirmInstanceBackupWarning = React.useCallback(() => {
+    if (instanceBackupWarningCountdown > 0) return;
+    setExperimentalInstanceBackupEnabled(true);
+    setInstanceBackupWarningOpen(false);
+  }, [instanceBackupWarningCountdown, setExperimentalInstanceBackupEnabled]);
+
+  const handleInstanceBackupExperimentalToggle = React.useCallback(
+    (isSelected: boolean) => {
+      if (!isSelected) {
+        setExperimentalInstanceBackupEnabled(false);
+        setInstanceBackupWarningOpen(false);
+        return;
+      }
+      if (experimentalInstanceBackupEnabled) {
+        return;
+      }
+      setInstanceBackupWarningOpen(true);
+    },
+    [experimentalInstanceBackupEnabled, setExperimentalInstanceBackupEnabled],
+  );
+
+  const activeCustomThemeColor = normalizeHexColor(
+    themeSettingMode === "light" ? lightCustomThemeColor : darkCustomThemeColor,
+  );
+  const lipSummaryText = React.useMemo(() => {
+    if (!lipInstalled) {
+      return t("settings.lip.status.missing");
+    }
+    return t("settings.lip.version_label", {
+      currentVersion: lipVersion || t("settings.lip.unknown_version"),
+      latestVersion: lipLatestVersion || t("settings.lip.unknown_version"),
+    });
+  }, [lipInstalled, lipLatestVersion, lipVersion, t]);
+
+  const customThemeIconColor =
+    getColorLuminance(activeCustomThemeColor) > 0.6 ? "#111827" : "#ffffff";
+
+  return (
+    <PageContainer className="relative" animate={false}>
+      {/* settings-rtl-lock: whole page (header Tabs + all tab sections)
+         stays right-aligned under fa_IR even with the engine locked to LTR
+         (rule in style.css, scoped to html.rtl-locale; LTR locales unaffected). */}
+      <div className="flex flex-col gap-4 settings-rtl-lock">
+        {/* Header Card */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <Card className={LAYOUT.GLASS_CARD.BASE}>
+            <CardBody className="p-6">
+              <PageHeader
+                title={t("settings.header.title")}
+                description={t("settings.header.content")}
+              />
+              <Tabs
+                aria-label={t("settings.header.title")}
+                selectedKey={selectedTab}
+                onSelectionChange={(k) => setSelectedTab(k as string)}
+                classNames={{
+                  ...COMPONENT_STYLES.tabs,
+                  base: "mt-4",
+                }}
+              >
+                <Tab key="general" title={t("settings.tabs.general")} />
+                <Tab
+                  key="personalization"
+                  title={t("settings.tabs.personalization")}
+                />
+                <Tab key="components" title={t("settings.tabs.components")} />
+                <Tab key="others" title={t("settings.tabs.others")} />
+                <Tab key="help" title={t("settings.tabs.help")} />
+                <Tab key="updates" title={t("settings.tabs.updates")} />
+              </Tabs>
+            </CardBody>
+          </Card>
+        </motion.div>
+
+        {/* Content Card */}
+        <motion.div
+          key={selectedTab}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Card className={LAYOUT.GLASS_CARD.BASE}>
+            <CardBody className="p-6">
+              {selectedTab === "general" && (
+                <div className="flex flex-col gap-6">
+                  {/* Paths */}
+                  <div className="flex flex-col gap-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium">
+                          {t("settings.body.paths.title")}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="light"
+                          radius="full"
+                          onPress={() => resetOnOpen()}
+                        >
+                          {t("settings.body.paths.reset")}
+                        </Button>
+                        <Button
+                          color="primary"
+                          radius="full"
+                          isDisabled={!newBaseRoot || !baseRootWritable}
+                          isLoading={savingBaseRoot}
+                          className="bg-primary-500 hover:bg-primary-500 text-white font-bold shadow-lg shadow-primary-900/20"
+                          onPress={async () => {
+                            setSavingBaseRoot(true);
+                            try {
+                              const ok = await CanWriteToDir(newBaseRoot);
+                              if (!ok) {
+                                setBaseRootWritable(false);
+                              } else {
+                                const err = await SetBaseRoot(newBaseRoot);
+                                if (!err) {
+                                  const br = await GetBaseRoot();
+                                  setBaseRoot(String(br || ""));
+                                  const id = await GetInstallerDir();
+                                  setInstallerDir(String(id || ""));
+                                  const vd = await GetVersionsDir();
+                                  setVersionsDir(String(vd || ""));
+                                }
+                              }
+                            } catch {}
+                            setSavingBaseRoot(false);
+                          }}
+                        >
+                          {t("settings.body.paths.apply")}
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <Input
+                        label={t("settings.body.paths.base_root") as string}
+                        value={newBaseRoot}
+                        onValueChange={setNewBaseRoot}
+                        radius="lg"
+                        variant="bordered"
+                        classNames={COMPONENT_STYLES.input}
+                        endContent={
+                          <Button
+                            size="sm"
+                            variant="flat"
+                            radius="full"
+                            onPress={async () => {
+                              try {
+                                const options: any = {
+                                  Title: t("settings.body.paths.title"),
+                                  CanChooseDirectories: true,
+                                  CanChooseFiles: false,
+                                  PromptForSingleSelection: true,
+                                };
+                                if (baseRoot) {
+                                  options.Directory = baseRoot;
+                                }
+                                console.log(options);
+                                const result = await Dialogs.OpenFile(options);
+                                if (
+                                  Array.isArray(result) &&
+                                  result.length > 0
+                                ) {
+                                  setNewBaseRoot(result[0]);
+                                } else if (
+                                  typeof result === "string" &&
+                                  result
+                                ) {
+                                  setNewBaseRoot(result);
+                                }
+                              } catch (e) {
+                                console.error(e);
+                              }
+                            }}
+                          >
+                            {t("common.browse")}
+                          </Button>
+                        }
+                      />
+                      {newBaseRoot &&
+                      newBaseRoot !== baseRoot &&
+                      baseRootWritable ? (
+                        <div
+                          className="text-tiny text-warning-500 px-1"
+                          title={newBaseRoot}
+                        >
+                          {t("settings.body.paths.base_root") +
+                            ": " +
+                            newBaseRoot}
+                        </div>
+                      ) : null}
+                      {!baseRootWritable ? (
+                        <div className="text-tiny text-danger-500 px-1">
+                          {t("settings.body.paths.not_writable")}
+                        </div>
+                      ) : null}
+
+                      <div className="grid grid-cols-1 gap-2 pt-2">
+                        <div className="p-3 rounded-xl bg-default-100/50 dark:bg-zinc-800/30 border border-default-200/50 dark:border-white/5">
+                          <div
+                            className="text-tiny text-default-500 dark:text-zinc-400 flex items-center gap-2 truncate"
+                            title={installerDir || "-"}
+                          >
+                            <LuHardDrive size={14} />
+                            <span className="font-medium">
+                              {t("settings.body.paths.installer")}:
+                            </span>
+                            <span className="opacity-70">
+                              {installerDir || "-"}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="p-3 rounded-xl bg-default-100/50 dark:bg-zinc-800/30 border border-default-200/50 dark:border-white/5">
+                          <div
+                            className="text-tiny text-default-500 dark:text-zinc-400 flex items-center gap-2 truncate"
+                            title={versionsDir || "-"}
+                          >
+                            <LuHardDrive size={14} />
+                            <span className="font-medium">
+                              {t("settings.body.paths.versions")}:
+                            </span>
+                            <span className="opacity-70">
+                              {versionsDir || "-"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Divider className="bg-default-200/50" />
+
+                  {/* Language */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <p className="font-medium">
+                        {t("settings.body.language.name")}
+                      </p>
+                      <p className="text-tiny text-default-500 dark:text-zinc-400">
+                        {langNames.find((l) => l.code === selectedLang)
+                          ?.language || selectedLang}
+                      </p>
+                      {languageChanged && (
+                        <div className="text-tiny text-warning-500 mt-1">
+                          {t("settings.lang.changed")}
+                        </div>
+                      )}
+                    </div>
+                    <Dropdown classNames={COMPONENT_STYLES.dropdown}>
+                      <DropdownTrigger>
+                        <Button radius="full" variant="bordered">
+                          {t("settings.body.language.button")}
+                        </Button>
+                      </DropdownTrigger>
+                      <DropdownMenu
+                        aria-label={t("settings.body.language.button")}
+                        variant="flat"
+                        disallowEmptySelection
+                        selectionMode="single"
+                        className="max-h-60 overflow-y-auto"
+                        selectedKeys={new Set([selectedLang])}
+                        onSelectionChange={(keys) => {
+                          const arr = Array.from(
+                            keys as unknown as Set<string>,
+                          );
+                          const next = arr[0];
+                          if (typeof next === "string" && next.length > 0) {
+                            setSelectedLang(next);
+                            Promise.resolve(i18n.changeLanguage(next)).then(
+                              () => {
+                                try {
+                                  localStorage.setItem("i18nextLng", next);
+                                } catch {}
+                                setLanguageChanged(true);
+                              },
+                            );
+                          }
+                        }}
+                      >
+                        {langNames.map((lang) => (
+                          <DropdownItem
+                            key={lang.code}
+                            textValue={lang.language}
+                          >
+                            {lang.language}
+                          </DropdownItem>
+                        ))}
+                      </DropdownMenu>
+                    </Dropdown>
+                  </div>
+
+                  <Divider className="bg-default-200/50" />
+
+                  {/* Discord RPC */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-1">
+                      <p className="font-medium">
+                        {t("settings.discord_rpc.title")}
+                      </p>
+                      <p className="text-tiny text-default-500 dark:text-zinc-400">
+                        {t("settings.discord_rpc.desc")}
+                      </p>
+                    </div>
+                    <Switch
+                      size="sm"
+                      isSelected={discordRpcEnabled}
+                      onValueChange={(isSelected: boolean) => {
+                        setDiscordRpcEnabled(isSelected);
+                        SetDisableDiscordRPC(!isSelected);
+                      }}
+                      classNames={{
+                        wrapper: "group-data-[selected=true]:bg-primary-500",
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {selectedTab === "personalization" && (
+                <div className="flex flex-col gap-8">
+                  {/* Global Settings Group */}
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-2.5 mb-2">
+                      <div className="w-1.5 h-5 bg-primary-500 rounded-full" />
+                      <p className="text-base font-bold text-default-700 uppercase tracking-wider">
+                        {t("settings.appearance.global_config")}
+                      </p>
+                    </div>
+                    <div className="flex flex-col gap-0">
+                      {/* Theme Mode Switcher */}
+                      <div className="py-4 flex flex-col gap-4 border-b border-default-200/50">
+                        <div className="flex flex-col gap-4">
+                          <div className="flex flex-col gap-1">
+                            <p className="font-medium text-default-700 dark:text-zinc-200">
+                              {t("settings.appearance.theme_mode")}
+                            </p>
+                            <p className="text-tiny text-default-500 dark:text-zinc-400">
+                              {t("settings.appearance.theme_mode_desc")}
+                            </p>
+                          </div>
+                          <div className="w-full overflow-x-auto scrollbar-hide">
+                            <Tabs
+                              size="sm"
+                              selectedKey={themeMode}
+                              onSelectionChange={(key) => {
+                                const val = key as ThemeMode;
+                                setThemeMode(val);
+                              }}
+                              classNames={{
+                                ...COMPONENT_STYLES.tabs,
+                              }}
+                            >
+                              <Tab
+                                key="light"
+                                title={
+                                  <div className="flex items-center gap-2">
+                                    <LuSun size={14} />
+                                    <span>
+                                      {t("settings.appearance.theme_light")}
+                                    </span>
+                                  </div>
+                                }
+                              />
+                              <Tab
+                                key="dark"
+                                title={
+                                  <div className="flex items-center gap-2">
+                                    <LuMoon size={14} />
+                                    <span>
+                                      {t("settings.appearance.theme_dark")}
+                                    </span>
+                                  </div>
+                                }
+                              />
+                              <Tab
+                                key="schedule"
+                                title={
+                                  <div className="flex items-center gap-2">
+                                    <LuHardDrive size={14} />
+                                    <span>
+                                      {t("settings.appearance.theme_schedule")}
+                                    </span>
+                                  </div>
+                                }
+                              />
+                              <Tab
+                                key="auto"
+                                title={
+                                  <div className="flex items-center gap-2">
+                                    <RxDesktop size={14} />
+                                    <span>
+                                      {t("settings.appearance.theme_auto")}
+                                    </span>
+                                  </div>
+                                }
+                              />
+                              <Tab
+                                key="system"
+                                title={
+                                  <div className="flex items-center gap-2">
+                                    <LuMonitor size={14} />
+                                    <span>
+                                      {t("settings.appearance.theme_system")}
+                                    </span>
+                                  </div>
+                                }
+                              />
+                            </Tabs>
+                          </div>
+                        </div>
+
+                        <AnimatePresence initial={false} mode="wait">
+                          {themeMode === "system" && (
+                            <motion.div
+                              key="system-panel"
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2, ease: "easeInOut" }}
+                              className="overflow-hidden"
+                            >
+                              <div className="flex flex-col gap-4 p-4 mt-2 rounded-2xl bg-default-100/50 border border-default-200/50">
+                                <div className="flex flex-col gap-1">
+                                  <p className="text-tiny font-bold text-default-600 uppercase tracking-wider">
+                                    {t("settings.appearance.theme_system_desc")}
+                                  </p>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                          {themeMode === "schedule" && (
+                            <motion.div
+                              key="schedule-panel"
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2, ease: "easeInOut" }}
+                              className="overflow-hidden"
+                            >
+                              <div className="flex flex-col gap-4 p-4 mt-2 rounded-2xl bg-default-100/50 border border-default-200/50">
+                                <div className="flex flex-col gap-1">
+                                  <p className="text-tiny font-bold text-default-600 uppercase tracking-wider">
+                                    {t(
+                                      "settings.appearance.theme_schedule_desc",
+                                    )}
+                                  </p>
+                                </div>
+                                <div className="flex gap-4">
+                                  <Input
+                                    type="time"
+                                    label={t(
+                                      "settings.appearance.theme_start_time",
+                                    )}
+                                    size="sm"
+                                    value={scheduleStart}
+                                    onChange={(e) => {
+                                      const val = e.target.value;
+                                      setScheduleStart(val);
+                                      localStorage.setItem(
+                                        "app.scheduleStart",
+                                        val,
+                                      );
+                                      window.dispatchEvent(
+                                        new CustomEvent(
+                                          "app-theme-mode-changed",
+                                        ),
+                                      );
+                                    }}
+                                    classNames={COMPONENT_STYLES.input}
+                                  />
+                                  <Input
+                                    type="time"
+                                    label={t(
+                                      "settings.appearance.theme_end_time",
+                                    )}
+                                    size="sm"
+                                    value={scheduleEnd}
+                                    onChange={(e) => {
+                                      const val = e.target.value;
+                                      setScheduleEnd(val);
+                                      localStorage.setItem(
+                                        "app.scheduleEnd",
+                                        val,
+                                      );
+                                      window.dispatchEvent(
+                                        new CustomEvent(
+                                          "app-theme-mode-changed",
+                                        ),
+                                      );
+                                    }}
+                                    classNames={COMPONENT_STYLES.input}
+                                  />
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+
+                          {themeMode === "auto" && (
+                            <motion.div
+                              key="auto-panel"
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2, ease: "easeInOut" }}
+                              className="overflow-hidden"
+                            >
+                              <div className="flex flex-col gap-4 p-4 mt-2 rounded-2xl bg-default-100/50 border border-default-200/50">
+                                <div className="flex flex-col gap-1">
+                                  <p className="text-tiny font-bold text-default-600 uppercase tracking-wider">
+                                    {t("settings.appearance.theme_auto_desc")}
+                                  </p>
+                                </div>
+
+                                {loadingSunTimes ? (
+                                  <div className="flex items-center gap-2 py-2">
+                                    <Spinner size="sm" color="primary" />
+                                    <p className="text-tiny text-default-400">
+                                      {t("settings.appearance.calculating")}
+                                    </p>
+                                  </div>
+                                ) : sunTimes ? (
+                                  <div className="flex flex-col gap-3">
+                                    <div className="flex items-center gap-6">
+                                      <div className="flex items-center gap-2">
+                                        <div className="p-1.5 rounded-lg bg-warning-100/50 text-warning-600">
+                                          <LuSun size={14} />
+                                        </div>
+                                        <div className="flex flex-col">
+                                          <p className="text-[10px] text-default-400 uppercase font-bold">
+                                            {t(
+                                              "settings.appearance.sunrise_time",
+                                            )}
+                                          </p>
+                                          <p className="text-sm font-mono font-bold text-default-700">
+                                            {sunTimes.sunrise}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        <div className="p-1.5 rounded-lg bg-primary-100/50 dark:bg-primary-500/10 text-amber-400">
+                                          <LuMoon size={14} />
+                                        </div>
+                                        <div className="flex flex-col">
+                                          <p className="text-[10px] text-default-400 uppercase font-bold">
+                                            {t(
+                                              "settings.appearance.sunset_time",
+                                            ) || "日落"}
+                                          </p>
+                                          <p className="text-sm font-mono font-bold text-default-700">
+                                            {sunTimes.sunset}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <Button
+                                      size="sm"
+                                      variant="flat"
+                                      radius="full"
+                                      startContent={<RxUpdate size={12} />}
+                                      className="h-7 text-tiny self-start bg-default-200/50 hover:bg-default-300/50"
+                                      onClick={refreshSunTimes}
+                                    >
+                                      {t("common.refresh")}
+                                    </Button>
+                                  </div>
+                                ) : (
+                                  <div className="flex flex-col gap-2 py-2">
+                                    <p className="text-tiny text-danger-500">
+                                      {t(
+                                        "settings.appearance.sun_fetch_failed",
+                                      )}
+                                    </p>
+                                    <Button
+                                      size="sm"
+                                      variant="flat"
+                                      radius="full"
+                                      startContent={<RxUpdate size={12} />}
+                                      className="h-7 text-tiny self-start bg-default-200/50"
+                                      onClick={refreshSunTimes}
+                                    >
+                                      {t("common.retry")}
+                                    </Button>
+                                  </div>
+                                )}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      {/* Navigation Layout */}
+                      <div className="py-4 flex items-center justify-between border-b border-default-200/50">
+                        <div className="flex flex-col gap-1">
+                          <p className="font-medium text-default-700 dark:text-zinc-200">
+                            {t("settings.layout.title_navbar")}
+                          </p>
+                          <p className="text-tiny text-default-500 dark:text-zinc-400">
+                            {t("settings.layout.desc_navbar")}
+                          </p>
+                        </div>
+                        <Switch
+                          size="sm"
+                          isSelected={layoutMode === "navbar"}
+                          onValueChange={(isSelected: boolean) => {
+                            const mode = isSelected ? "navbar" : "sidebar";
+                            setLayoutMode(mode);
+                            localStorage.setItem("app.layoutMode", mode);
+                            window.dispatchEvent(
+                              new CustomEvent("app-layout-changed"),
+                            );
+                          }}
+                          classNames={{
+                            wrapper:
+                              "group-data-[selected=true]:bg-primary-500",
+                          }}
+                        />
+                      </div>
+
+                      {/* Animation */}
+                      <div className="py-4 border-b border-default-200/50 flex items-center justify-between">
+                        <div className="flex flex-col gap-1">
+                          <p className="font-medium text-default-700 dark:text-zinc-200">
+                            {t("settings.appearance.disable_animations")}
+                          </p>
+                          <p className="text-tiny text-default-500 dark:text-zinc-400">
+                            {t("settings.appearance.disable_animations_desc")}
+                          </p>
+                        </div>
+                        <Switch
+                          size="sm"
+                          isSelected={disableAnimations}
+                          onValueChange={(isSelected: boolean) => {
+                            setDisableAnimations(isSelected);
+                            localStorage.setItem(
+                              "app.disableAnimations",
+                              String(isSelected),
+                            );
+                            window.dispatchEvent(
+                              new CustomEvent("app-animations-changed"),
+                            );
+                          }}
+                          classNames={{
+                            wrapper:
+                              "group-data-[selected=true]:bg-primary-500",
+                          }}
+                        />
+                      </div>
+
+                      {/* Themed strokes */}
+                      <div className="py-4 border-b border-default-200/50 flex items-center justify-between">
+                        <div className="flex flex-col gap-1">
+                          <p className="font-medium text-default-700 dark:text-zinc-200">
+                            {t("settings.appearance.themed_strokes")}
+                          </p>
+                          <p className="text-tiny text-default-500 dark:text-zinc-400">
+                            {t("settings.appearance.themed_strokes_desc")}
+                          </p>
+                        </div>
+                        <Switch
+                          size="sm"
+                          isSelected={themedStrokes}
+                          onValueChange={(isSelected: boolean) => {
+                            setThemedStrokes(isSelected);
+                          }}
+                          classNames={{
+                            wrapper:
+                              "group-data-[selected=true]:bg-primary-500",
+                          }}
+                        />
+                      </div>
+
+                      {/* Background Image Card */}
+                      <div className="flex flex-col gap-4 p-5 mt-6 rounded-3xl bg-default-200/10 border border-default-200/50">
+                        <div className="flex items-center gap-2">
+                          <LuImage className="text-primary-500" size={18} />
+                          <div className="flex flex-col gap-0.5">
+                            <div className="flex items-center gap-2">
+                              <p className="text-small font-bold text-default-700">
+                                {t("settings.appearance.background_image")}
+                              </p>
+                              {backgroundImageCount > 0 && (
+                                <Chip
+                                  size="sm"
+                                  variant="flat"
+                                  color="primary"
+                                  className="h-5 px-1.5 text-[10px] min-w-0"
+                                >
+                                  {backgroundImageCount}
+                                </Chip>
+                              )}
+                            </div>
+                            <p className="text-tiny text-default-500">
+                              {t("settings.appearance.background_image_desc")}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-6">
+                          {/* Image Picker Row */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3 overflow-hidden">
+                              <div className="w-12 h-12 rounded-lg bg-default-300/30 flex items-center justify-center flex-shrink-0 border border-default-300/50 overflow-hidden">
+                                {previewBgData && !backgroundImageError ? (
+                                  <img
+                                    src={previewBgData}
+                                    className="w-full h-full object-cover"
+                                    onError={() =>
+                                      setBackgroundImageError(true)
+                                    }
+                                  />
+                                ) : (
+                                  <LuImage
+                                    className="text-default-400"
+                                    size={20}
+                                  />
+                                )}
+                              </div>
+                              <div className="flex flex-col min-w-0">
+                                <p className="text-tiny font-medium truncate text-default-600">
+                                  {backgroundImage ||
+                                    t("settings.appearance.no_image_selected")}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {backgroundImage && (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    color="default"
+                                    variant="flat"
+                                    className="h-8"
+                                    onPress={async () => {
+                                      const path = backgroundImage;
+                                      if (path) {
+                                        await (minecraft as any).OpenPathDir(
+                                          path,
+                                        );
+                                      }
+                                    }}
+                                  >
+                                    {t("common.open_folder")}
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    color="danger"
+                                    variant="flat"
+                                    className="h-8"
+                                    onPress={() => {
+                                      setBackgroundImage("");
+                                      localStorage.setItem(
+                                        "app.backgroundImage",
+                                        "",
+                                      );
+                                      window.dispatchEvent(
+                                        new CustomEvent(
+                                          "app-background-changed",
+                                        ),
+                                      );
+                                    }}
+                                  >
+                                    {t("settings.appearance.clear_image")}
+                                  </Button>
+                                </>
+                              )}
+                              <Button
+                                size="sm"
+                                variant="solid"
+                                color="primary"
+                                className="h-8 shadow-sm"
+                                onPress={async () => {
+                                  try {
+                                    const result = await Dialogs.OpenFile({
+                                      Title: t(
+                                        "settings.appearance.select_image",
+                                      ),
+                                      CanChooseDirectories: true,
+                                      CanChooseFiles: false,
+                                    });
+                                    let path = "";
+                                    if (
+                                      Array.isArray(result) &&
+                                      result.length > 0
+                                    )
+                                      path = result[0];
+                                    else if (
+                                      typeof result === "string" &&
+                                      result
+                                    )
+                                      path = result;
+
+                                    if (path) {
+                                      setBackgroundImage(path);
+                                      localStorage.setItem(
+                                        "app.backgroundImage",
+                                        path,
+                                      );
+                                      window.dispatchEvent(
+                                        new CustomEvent(
+                                          "app-background-changed",
+                                        ),
+                                      );
+                                    }
+                                  } catch {}
+                                }}
+                              >
+                                {t("settings.appearance.select_image")}
+                              </Button>
+                            </div>
+                          </div>
+
+                          {backgroundImage && (
+                            <>
+                              <Divider className="bg-default-200/50" />
+
+                              {/* Fit Mode and Play Order */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                                <div className="flex flex-col gap-2">
+                                  <p className="text-tiny font-medium text-default-700">
+                                    {t(
+                                      "settings.appearance.background_fit_mode",
+                                    )}
+                                  </p>
+                                  <Select
+                                    size="sm"
+                                    aria-label={t(
+                                      "settings.appearance.background_fit_mode",
+                                    )}
+                                    disallowEmptySelection
+                                    classNames={COMPONENT_STYLES.select}
+                                    selectedKeys={new Set([backgroundFitMode])}
+                                    onSelectionChange={(keys) => {
+                                      const val = Array.from(keys)[0] as string;
+                                      if (!val) return; // Prevent empty selection
+                                      setBackgroundFitMode(val);
+                                      localStorage.setItem(
+                                        "app.backgroundFitMode",
+                                        val,
+                                      );
+                                      window.dispatchEvent(
+                                        new CustomEvent(
+                                          "app-background-settings-changed",
+                                        ),
+                                      );
+                                    }}
+                                  >
+                                    <SelectItem
+                                      key="smart"
+                                      textValue={t(
+                                        "settings.appearance.background_fit_smart",
+                                      )}
+                                    >
+                                      {t(
+                                        "settings.appearance.background_fit_smart",
+                                      )}
+                                    </SelectItem>
+                                    <SelectItem
+                                      key="center"
+                                      textValue={t(
+                                        "settings.appearance.background_fit_center",
+                                      )}
+                                    >
+                                      {t(
+                                        "settings.appearance.background_fit_center",
+                                      )}
+                                    </SelectItem>
+                                    <SelectItem
+                                      key="fit"
+                                      textValue={t(
+                                        "settings.appearance.background_fit_fit",
+                                      )}
+                                    >
+                                      {t(
+                                        "settings.appearance.background_fit_fit",
+                                      )}
+                                    </SelectItem>
+                                    <SelectItem
+                                      key="stretch"
+                                      textValue={t(
+                                        "settings.appearance.background_fit_stretch",
+                                      )}
+                                    >
+                                      {t(
+                                        "settings.appearance.background_fit_stretch",
+                                      )}
+                                    </SelectItem>
+                                    <SelectItem
+                                      key="tile"
+                                      textValue={t(
+                                        "settings.appearance.background_fit_tile",
+                                      )}
+                                    >
+                                      {t(
+                                        "settings.appearance.background_fit_tile",
+                                      )}
+                                    </SelectItem>
+                                    <SelectItem
+                                      key="top_left"
+                                      textValue={t(
+                                        "settings.appearance.background_fit_top_left",
+                                      )}
+                                    >
+                                      {t(
+                                        "settings.appearance.background_fit_top_left",
+                                      )}
+                                    </SelectItem>
+                                    <SelectItem
+                                      key="top_right"
+                                      textValue={t(
+                                        "settings.appearance.background_fit_top_right",
+                                      )}
+                                    >
+                                      {t(
+                                        "settings.appearance.background_fit_top_right",
+                                      )}
+                                    </SelectItem>
+                                  </Select>
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                  <p className="text-tiny font-medium text-default-700">
+                                    {t(
+                                      "settings.appearance.background_play_order",
+                                    )}
+                                  </p>
+                                  <Select
+                                    size="sm"
+                                    aria-label={t(
+                                      "settings.appearance.background_play_order",
+                                    )}
+                                    disallowEmptySelection
+                                    classNames={COMPONENT_STYLES.select}
+                                    selectedKeys={
+                                      new Set([backgroundPlayOrder])
+                                    }
+                                    onSelectionChange={(keys) => {
+                                      const val = Array.from(keys)[0] as
+                                        | "random"
+                                        | "sequential";
+                                      if (!val) return; // Prevent empty selection
+                                      setBackgroundPlayOrder(val);
+                                      localStorage.setItem(
+                                        "app.backgroundPlayOrder",
+                                        val,
+                                      );
+                                      window.dispatchEvent(
+                                        new CustomEvent(
+                                          "app-background-settings-changed",
+                                        ),
+                                      );
+                                    }}
+                                  >
+                                    <SelectItem
+                                      key="random"
+                                      textValue={t(
+                                        "settings.appearance.background_play_random",
+                                      )}
+                                    >
+                                      {t(
+                                        "settings.appearance.background_play_random",
+                                      )}
+                                    </SelectItem>
+                                    <SelectItem
+                                      key="sequential"
+                                      textValue={t(
+                                        "settings.appearance.background_play_sequential",
+                                      )}
+                                    >
+                                      {t(
+                                        "settings.appearance.background_play_sequential",
+                                      )}
+                                    </SelectItem>
+                                  </Select>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                                {/* Blur */}
+                                <div className="flex flex-col gap-2">
+                                  <div className="flex items-center justify-between">
+                                    <p className="text-tiny font-medium text-default-600">
+                                      {t("settings.appearance.background_blur")}
+                                    </p>
+                                    <div className="flex items-center">
+                                      <input
+                                        type="number"
+                                        className="w-10 bg-transparent text-tiny font-mono text-primary-500 text-right outline-none border-none p-0 [appearance:textfield]"
+                                        value={backgroundBlur}
+                                        onChange={(e) => {
+                                          const val = Math.min(
+                                            50,
+                                            Math.max(
+                                              0,
+                                              parseInt(e.target.value) || 0,
+                                            ),
+                                          );
+                                          setBackgroundBlur(val);
+                                          localStorage.setItem(
+                                            "app.backgroundBlur",
+                                            String(val),
+                                          );
+                                          window.dispatchEvent(
+                                            new CustomEvent("app-blur-changed"),
+                                          );
+                                        }}
+                                      />
+                                      <span className="text-tiny font-mono text-primary-500 ms-0.5">
+                                        px
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <Slider
+                                    size="sm"
+                                    step={1}
+                                    maxValue={50}
+                                    minValue={0}
+                                    aria-label={t(
+                                      "settings.appearance.background_blur",
+                                    )}
+                                    value={backgroundBlur}
+                                    classNames={{
+                                      filler: "bg-primary-500",
+                                      thumb: "bg-primary-500",
+                                    }}
+                                    onChange={(v) => {
+                                      const val = Number(v);
+                                      setBackgroundBlur(val);
+                                      localStorage.setItem(
+                                        "app.backgroundBlur",
+                                        String(val),
+                                      );
+                                      window.dispatchEvent(
+                                        new CustomEvent("app-blur-changed"),
+                                      );
+                                    }}
+                                  />
+                                </div>
+
+                                {/* Brightness */}
+                                <div className="flex flex-col gap-2">
+                                  <div className="flex items-center justify-between">
+                                    <p className="text-tiny font-medium text-default-600">
+                                      {t(
+                                        "settings.appearance.background_brightness",
+                                      )}
+                                    </p>
+                                    <div className="flex items-center">
+                                      <input
+                                        type="number"
+                                        className="w-10 bg-transparent text-tiny font-mono text-primary-500 text-right outline-none border-none p-0 [appearance:textfield]"
+                                        value={backgroundBrightness}
+                                        onChange={(e) => {
+                                          const val = Math.min(
+                                            100,
+                                            Math.max(
+                                              20,
+                                              parseInt(e.target.value) || 0,
+                                            ),
+                                          );
+                                          setBackgroundBrightness(val);
+                                          localStorage.setItem(
+                                            "app.backgroundBrightness",
+                                            String(val),
+                                          );
+                                          window.dispatchEvent(
+                                            new CustomEvent(
+                                              "app-brightness-changed",
+                                            ),
+                                          );
+                                        }}
+                                      />
+                                      <span className="text-tiny font-mono text-primary-500 ms-0.5">
+                                        %
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <Slider
+                                    size="sm"
+                                    step={1}
+                                    maxValue={100}
+                                    minValue={20}
+                                    aria-label={t(
+                                      "settings.appearance.background_brightness",
+                                    )}
+                                    value={backgroundBrightness}
+                                    classNames={{
+                                      filler: "bg-primary-500",
+                                      thumb: "bg-primary-500",
+                                    }}
+                                    onChange={(v) => {
+                                      const val = Number(v);
+                                      setBackgroundBrightness(val);
+                                      localStorage.setItem(
+                                        "app.backgroundBrightness",
+                                        String(val),
+                                      );
+                                      window.dispatchEvent(
+                                        new CustomEvent(
+                                          "app-brightness-changed",
+                                        ),
+                                      );
+                                    }}
+                                  />
+                                </div>
+
+                                {/* Opacity */}
+                                <div className="flex flex-col gap-2">
+                                  <div className="flex items-center justify-between">
+                                    <p className="text-tiny font-medium text-default-600">
+                                      {t(
+                                        "settings.appearance.background_opacity",
+                                      )}
+                                    </p>
+                                    <div className="flex items-center">
+                                      <input
+                                        type="number"
+                                        className="w-10 bg-transparent text-tiny font-mono text-primary-500 text-right outline-none border-none p-0 [appearance:textfield]"
+                                        value={backgroundOpacity}
+                                        onChange={(e) => {
+                                          const val = Math.min(
+                                            100,
+                                            Math.max(
+                                              0,
+                                              parseInt(e.target.value) || 0,
+                                            ),
+                                          );
+                                          setBackgroundOpacity(val);
+                                          localStorage.setItem(
+                                            "app.backgroundOpacity",
+                                            String(val),
+                                          );
+                                          window.dispatchEvent(
+                                            new CustomEvent(
+                                              "app-opacity-changed",
+                                            ),
+                                          );
+                                        }}
+                                      />
+                                      <span className="text-tiny font-mono text-primary-500 ms-0.5">
+                                        %
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <Slider
+                                    size="sm"
+                                    step={1}
+                                    maxValue={100}
+                                    minValue={0}
+                                    aria-label={t(
+                                      "settings.appearance.background_opacity",
+                                    )}
+                                    value={backgroundOpacity}
+                                    classNames={{
+                                      filler: "bg-primary-500",
+                                      thumb: "bg-primary-500",
+                                    }}
+                                    onChange={(v) => {
+                                      const val = Number(v);
+                                      setBackgroundOpacity(val);
+                                      localStorage.setItem(
+                                        "app.backgroundOpacity",
+                                        String(val),
+                                      );
+                                      window.dispatchEvent(
+                                        new CustomEvent("app-opacity-changed"),
+                                      );
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Mode-Specific Settings Card */}
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-2.5 mb-2">
+                      <div className="w-1.5 h-5 bg-primary-500 rounded-full" />
+                      <p className="text-base font-bold text-default-700 uppercase tracking-wider">
+                        {t("settings.appearance.mode_config")}
+                      </p>
+                    </div>
+
+                    <Card className="border-none shadow-none bg-transparent overflow-visible">
+                      <CardBody className="p-0 flex flex-col">
+                        {/* Mode Switcher Header */}
+                        <div className="py-4 border-b border-default-200/50 flex items-center justify-between rounded-t-2xl">
+                          <div className="flex flex-col gap-0.5">
+                            <p className="font-bold text-default-700 dark:text-zinc-100 flex items-center gap-2">
+                              {themeSettingMode === "light" ? (
+                                <LuSun className="text-warning-500" size={18} />
+                              ) : (
+                                <LuMoon className="text-amber-400" size={18} />
+                              )}
+                              {themeSettingMode === "light"
+                                ? t("settings.appearance.theme_light")
+                                : t("settings.appearance.theme_dark")}
+                            </p>
+                            <p className="text-tiny text-default-500">
+                              {t("settings.appearance.edit_mode_desc")}
+                            </p>
+                          </div>
+                          <Tabs
+                            size="sm"
+                            selectedKey={themeSettingMode}
+                            onSelectionChange={(key) =>
+                              setThemeSettingMode(key as "light" | "dark")
+                            }
+                            classNames={COMPONENT_STYLES.tabs}
+                          >
+                            <Tab
+                              key="light"
+                              title={t("settings.appearance.theme_light")}
+                            />
+                            <Tab
+                              key="dark"
+                              title={t("settings.appearance.theme_dark")}
+                            />
+                          </Tabs>
+                        </div>
+
+                        {/* Content Area */}
+                        <div className="py-6 flex flex-col gap-8">
+                          {/* Theme Color Group */}
+                          <div className="flex flex-col gap-4 p-5 rounded-3xl bg-default-200/10 border border-default-200/50">
+                            {/* Theme Color Section */}
+                            <div className="flex flex-col gap-4">
+                              <div className="flex items-center gap-2">
+                                <LuPalette
+                                  className="text-primary-500"
+                                  size={18}
+                                />
+                                <div className="flex flex-col gap-0.5">
+                                  <p className="text-small font-bold text-default-700">
+                                    {t("settings.appearance.theme_color")}
+                                  </p>
+                                  <p className="text-tiny text-default-500">
+                                    {t("settings.appearance.theme_color_desc")}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex flex-col gap-6">
+                                {/* Preset Colors Group (Manual 50-950) */}
+                                <div className="flex flex-col gap-3">
+                                  <div className="flex items-center justify-between px-1">
+                                    <span className="text-tiny font-bold text-default-500 uppercase tracking-wider">
+                                      {t("settings.appearance.theme_standard")}
+                                    </span>
+                                  </div>
+                                  <div className="flex gap-3 flex-wrap p-4 rounded-2xl bg-default-200/20 border border-default-200/50">
+                                    {THEME_GROUPS.preset.map((colorName) => {
+                                      const isSelected =
+                                        themeSettingMode === "light"
+                                          ? lightThemeColor === colorName
+                                          : darkThemeColor === colorName;
+                                      return (
+                                        <div
+                                          key={colorName}
+                                          className={`w-8 h-8 rounded-full cursor-pointer flex items-center justify-center transition hover:scale-110 active:scale-95 ${
+                                            isSelected
+                                              ? "ring-2 ring-offset-2 ring-primary-500 shadow-lg"
+                                              : ""
+                                          }`}
+                                          style={{
+                                            backgroundColor:
+                                              THEMES[colorName][500],
+                                          }}
+                                          onClick={() => {
+                                            if (themeSettingMode === "light") {
+                                              setLightThemeColor(colorName);
+                                              localStorage.setItem(
+                                                "app.lightThemeColor",
+                                                colorName,
+                                              );
+                                            } else {
+                                              setDarkThemeColor(colorName);
+                                              localStorage.setItem(
+                                                "app.darkThemeColor",
+                                                colorName,
+                                              );
+                                            }
+                                            window.dispatchEvent(
+                                              new CustomEvent(
+                                                "app-theme-changed",
+                                              ),
+                                            );
+                                          }}
+                                        >
+                                          {isSelected && (
+                                            <div className="w-2.5 h-2.5 bg-white rounded-full shadow-sm" />
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+
+                                {/* Generated Colors Group (Automatic) */}
+                                <div className="flex flex-col gap-3">
+                                  <div className="flex items-center justify-between px-1">
+                                    <span className="text-tiny font-bold text-default-500 uppercase tracking-wider">
+                                      {t("settings.appearance.theme_generated")}
+                                    </span>
+                                  </div>
+                                  <div className="flex gap-3 flex-wrap p-4 rounded-2xl bg-default-200/20 border border-default-200/50">
+                                    {THEME_GROUPS.generated.map((colorName) => {
+                                      const isSelected =
+                                        themeSettingMode === "light"
+                                          ? lightThemeColor === colorName
+                                          : darkThemeColor === colorName;
+                                      return (
+                                        <div
+                                          key={colorName}
+                                          className={`w-8 h-8 rounded-full cursor-pointer flex items-center justify-center transition hover:scale-110 active:scale-95 ${
+                                            isSelected
+                                              ? "ring-2 ring-offset-2 ring-primary-500 shadow-lg"
+                                              : ""
+                                          }`}
+                                          style={{
+                                            backgroundColor:
+                                              THEMES[colorName][500],
+                                          }}
+                                          onClick={() => {
+                                            if (themeSettingMode === "light") {
+                                              setLightThemeColor(colorName);
+                                              localStorage.setItem(
+                                                "app.lightThemeColor",
+                                                colorName,
+                                              );
+                                            } else {
+                                              setDarkThemeColor(colorName);
+                                              localStorage.setItem(
+                                                "app.darkThemeColor",
+                                                colorName,
+                                              );
+                                            }
+                                            window.dispatchEvent(
+                                              new CustomEvent(
+                                                "app-theme-changed",
+                                              ),
+                                            );
+                                          }}
+                                        >
+                                          {isSelected && (
+                                            <div className="w-2.5 h-2.5 bg-white rounded-full shadow-sm" />
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                    <div
+                                      className={`w-8 h-8 rounded-full cursor-pointer flex items-center justify-center transition hover:scale-110 active:scale-95 relative overflow-hidden group ${
+                                        (
+                                          themeSettingMode === "light"
+                                            ? lightThemeColor === "custom"
+                                            : darkThemeColor === "custom"
+                                        )
+                                          ? "ring-2 ring-offset-2 ring-primary-500 shadow-lg"
+                                          : "hover:shadow-md"
+                                      }`}
+                                      onClick={() => {
+                                        if (themeSettingMode === "light") {
+                                          setLightThemeColor("custom");
+                                          localStorage.setItem(
+                                            "app.lightThemeColor",
+                                            "custom",
+                                          );
+                                        } else {
+                                          setDarkThemeColor("custom");
+                                          localStorage.setItem(
+                                            "app.darkThemeColor",
+                                            "custom",
+                                          );
+                                        }
+                                        window.dispatchEvent(
+                                          new CustomEvent("app-theme-changed"),
+                                        );
+                                      }}
+                                      style={{
+                                        backgroundColor: activeCustomThemeColor,
+                                      }}
+                                    >
+                                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,_rgba(255,255,255,0.35),_transparent_55%)]" />
+                                      <LuPalette
+                                        className="relative z-10 w-4 h-4 drop-shadow-sm"
+                                        style={{ color: customThemeIconColor }}
+                                      />
+
+                                      {(themeSettingMode === "light"
+                                        ? lightThemeColor === "custom"
+                                        : darkThemeColor === "custom") && (
+                                        <div className="absolute inset-0 bg-black/10 z-0 flex items-center justify-center">
+                                          <div className="w-2.5 h-2.5 bg-white rounded-full shadow-sm z-20" />
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  <Divider className="bg-default-200/50" />
+
+                                  {/* Base Mode Section */}
+                                  <div className="flex flex-col gap-4">
+                                    <div className="flex items-center gap-2">
+                                      <LuLayers
+                                        className="text-primary-500"
+                                        size={18}
+                                      />
+                                      <div className="flex flex-col gap-0.5">
+                                        <p className="text-small font-bold text-default-700">
+                                          {t(
+                                            "settings.appearance.background_base_mode",
+                                          )}
+                                        </p>
+                                        <p className="text-tiny text-default-500">
+                                          {t(
+                                            "settings.appearance.background_base_mode_desc",
+                                          )}
+                                        </p>
+                                      </div>
+                                    </div>
+
+                                    <div className="flex flex-col gap-6 mt-2">
+                                      <Tabs
+                                        size="sm"
+                                        selectedKey={
+                                          themeSettingMode === "light"
+                                            ? lightBackgroundBaseMode
+                                            : darkBackgroundBaseMode
+                                        }
+                                        onSelectionChange={(key) => {
+                                          const val = key as string;
+                                          if (themeSettingMode === "light") {
+                                            setLightBackgroundBaseMode(val);
+                                            localStorage.setItem(
+                                              "app.lightBackgroundBaseMode",
+                                              val,
+                                            );
+                                          } else {
+                                            setDarkBackgroundBaseMode(val);
+                                            localStorage.setItem(
+                                              "app.darkBackgroundBaseMode",
+                                              val,
+                                            );
+                                          }
+                                          window.dispatchEvent(
+                                            new CustomEvent(
+                                              "app-background-settings-changed",
+                                            ),
+                                          );
+                                        }}
+                                        classNames={COMPONENT_STYLES.tabs}
+                                      >
+                                        <Tab
+                                          key="none"
+                                          title={t(
+                                            "settings.appearance.background_base_none",
+                                          )}
+                                        />
+                                        <Tab
+                                          key="theme"
+                                          title={t(
+                                            "settings.appearance.background_base_theme",
+                                          )}
+                                        />
+                                        <Tab
+                                          key="color"
+                                          title={t(
+                                            "settings.appearance.background_base_color",
+                                          )}
+                                        />
+                                      </Tabs>
+
+                                      <AnimatePresence
+                                        initial={false}
+                                        mode="wait"
+                                      >
+                                        {(themeSettingMode === "light"
+                                          ? lightBackgroundBaseMode
+                                          : darkBackgroundBaseMode) !==
+                                          "none" && (
+                                          <motion.div
+                                            key="background-base-settings"
+                                            initial={{
+                                              opacity: 0,
+                                              height: 0,
+                                            }}
+                                            animate={{
+                                              opacity: 1,
+                                              height: "auto",
+                                            }}
+                                            exit={{
+                                              opacity: 0,
+                                              height: 0,
+                                            }}
+                                            className="flex flex-col gap-6 overflow-hidden"
+                                          >
+                                            {(themeSettingMode === "light"
+                                              ? lightBackgroundBaseMode
+                                              : darkBackgroundBaseMode) ===
+                                              "color" && (
+                                              <div className="flex flex-col gap-3">
+                                                <div className="flex items-center justify-between">
+                                                  <p className="text-tiny font-medium text-default-600">
+                                                    {t(
+                                                      "settings.appearance.background_base_color_pick",
+                                                    )}
+                                                  </p>
+                                                  <div className="px-2 py-0.5 bg-default-200/50 rounded font-mono text-[10px] text-primary-500">
+                                                    {themeSettingMode ===
+                                                    "light"
+                                                      ? lightBackgroundBaseColor
+                                                      : darkBackgroundBaseColor}
+                                                  </div>
+                                                </div>
+                                                <CustomColorPicker
+                                                  color={
+                                                    themeSettingMode === "light"
+                                                      ? lightBackgroundBaseColor
+                                                      : darkBackgroundBaseColor
+                                                  }
+                                                  onChange={(hex) => {
+                                                    if (
+                                                      themeSettingMode ===
+                                                      "light"
+                                                    ) {
+                                                      setLightBackgroundBaseColor(
+                                                        hex,
+                                                      );
+                                                      localStorage.setItem(
+                                                        "app.lightBackgroundBaseColor",
+                                                        hex,
+                                                      );
+                                                    } else {
+                                                      setDarkBackgroundBaseColor(
+                                                        hex,
+                                                      );
+                                                      localStorage.setItem(
+                                                        "app.darkBackgroundBaseColor",
+                                                        hex,
+                                                      );
+                                                    }
+                                                    window.dispatchEvent(
+                                                      new CustomEvent(
+                                                        "app-background-settings-changed",
+                                                      ),
+                                                    );
+                                                  }}
+                                                />
+                                              </div>
+                                            )}
+
+                                            <div className="flex flex-col gap-2">
+                                              <div className="flex items-center justify-between">
+                                                <p className="text-tiny font-medium text-default-600">
+                                                  {t(
+                                                    "settings.appearance.background_base_opacity",
+                                                  )}
+                                                </p>
+                                                <div className="flex items-center">
+                                                  <span className="text-tiny font-mono text-primary-500">
+                                                    {themeSettingMode ===
+                                                    "light"
+                                                      ? lightBackgroundBaseOpacity
+                                                      : darkBackgroundBaseOpacity}
+                                                    %
+                                                  </span>
+                                                </div>
+                                              </div>
+                                              <Slider
+                                                size="sm"
+                                                step={1}
+                                                maxValue={100}
+                                                minValue={0}
+                                                aria-label={t(
+                                                  "settings.appearance.background_base_opacity",
+                                                )}
+                                                value={
+                                                  themeSettingMode === "light"
+                                                    ? lightBackgroundBaseOpacity
+                                                    : darkBackgroundBaseOpacity
+                                                }
+                                                classNames={{
+                                                  filler: "bg-primary-500",
+                                                  thumb: "bg-primary-500",
+                                                }}
+                                                onChange={(v) => {
+                                                  const val = Number(v);
+                                                  if (
+                                                    themeSettingMode === "light"
+                                                  ) {
+                                                    setLightBackgroundBaseOpacity(
+                                                      val,
+                                                    );
+                                                    localStorage.setItem(
+                                                      "app.lightBackgroundBaseOpacity",
+                                                      String(val),
+                                                    );
+                                                  } else {
+                                                    setDarkBackgroundBaseOpacity(
+                                                      val,
+                                                    );
+                                                    localStorage.setItem(
+                                                      "app.darkBackgroundBaseOpacity",
+                                                      String(val),
+                                                    );
+                                                  }
+                                                  window.dispatchEvent(
+                                                    new CustomEvent(
+                                                      "app-background-settings-changed",
+                                                    ),
+                                                  );
+                                                }}
+                                              />
+                                            </div>
+                                          </motion.div>
+                                        )}
+                                      </AnimatePresence>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {(themeSettingMode === "light"
+                                ? lightThemeColor === "custom"
+                                : darkThemeColor === "custom") && (
+                                <div className="flex flex-col gap-4 bg-default-200/20 p-6 rounded-2xl border border-default-200/50">
+                                  <div className="flex items-center justify-between">
+                                    <p className="text-small font-bold text-default-700">
+                                      {t("settings.appearance.custom_color") ||
+                                        "Custom Color"}
+                                    </p>
+                                    <div className="px-3 py-1 bg-default-200/50 rounded-lg">
+                                      <span className="text-tiny font-mono uppercase text-primary-500 font-bold">
+                                        {activeCustomThemeColor}
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  <CustomColorPicker
+                                    color={activeCustomThemeColor}
+                                    onChange={(hex) => {
+                                      if (themeSettingMode === "light") {
+                                        setLightCustomThemeColor(hex);
+                                        localStorage.setItem(
+                                          "app.lightCustomThemeColor",
+                                          hex,
+                                        );
+                                      } else {
+                                        setDarkCustomThemeColor(hex);
+                                        localStorage.setItem(
+                                          "app.darkCustomThemeColor",
+                                          hex,
+                                        );
+                                      }
+                                      window.dispatchEvent(
+                                        new CustomEvent("app-theme-changed"),
+                                      );
+                                    }}
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </div>
+                </div>
+              )}
+
+              {selectedTab === "general" && (
+                <div className="flex flex-col gap-6"></div>
+              )}
+
+              {selectedTab === "components" && (
+                <div className="flex flex-col gap-6">
+                  {/* LIP */}
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex flex-col gap-1 min-w-0">
+                      <p className="font-medium">{t("settings.lip.title")}</p>
+                      <p
+                        className="text-tiny text-default-500 dark:text-zinc-400 truncate"
+                        title={lipSummaryText}
+                      >
+                        {lipSummaryText}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Chip
+                        color={
+                          lipUpToDate
+                            ? "success"
+                            : lipInstalled
+                              ? "warning"
+                              : "default"
+                        }
+                        variant="flat"
+                      >
+                        {lipUpToDate
+                          ? t("settings.lip.latest_label")
+                          : lipInstalled
+                            ? t("settings.lip.outdated_label")
+                            : t("settings.lip.missing_label")}
+                      </Chip>
+                      {lipInstalled && (
+                        <Button
+                          radius="full"
+                          variant="bordered"
+                          size="sm"
+                          isLoading={cleaningLipCache}
+                          isDisabled={installingLip || cleaningLipCache}
+                          onPress={() => {
+                            void cleanLipCache().then((err) => {
+                              if (err) {
+                                addToast({
+                                  title: t("common.error"),
+                                  description: t(`errors.${err}`, {
+                                    defaultValue: err,
+                                  }),
+                                  color: "danger",
+                                });
+                                return;
+                              }
+
+                              addToast({
+                                title: t("common.success"),
+                                description: t(
+                                  "settings.lip.cache_clean_success",
+                                ),
+                                color: "success",
+                              });
+                            });
+                          }}
+                        >
+                          {cleaningLipCache
+                            ? t("settings.lip.cache_cleaning")
+                            : t("settings.lip.cache_clean_button")}
+                        </Button>
+                      )}
+                      <Button
+                        radius="full"
+                        variant="bordered"
+                        size="sm"
+                        isLoading={installingLip}
+                        isDisabled={installingLip || cleaningLipCache}
+                        onPress={() => {
+                          if (lipInstalled && lipUpToDate) {
+                            setLipError("");
+                            void refreshLipStatus();
+                            return;
+                          }
+                          setInstallingLip(true);
+                          setLipError("");
+                          lipProgressDisclosure.onOpen();
+                          InstallLip().then((err) => {
+                            if (err) {
+                              setInstallingLip(false);
+                              setLipError(err);
+                            } else {
+                              refreshLipStatus().finally(() => {
+                                setInstallingLip(false);
+                              });
+                            }
+                          });
+                        }}
+                      >
+                        {installingLip
+                          ? t("settings.lip.installing")
+                          : lipInstalled
+                            ? lipUpToDate
+                              ? t("settings.lip.check_button")
+                              : t("settings.lip.update_button")
+                            : t("settings.lip.install_button")}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <Divider className="bg-default-200/50" />
+
+                  {/* resource_pack_rules.bin */}
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex flex-col gap-1 min-w-0">
+                      <p className="font-medium">
+                        {t("settings.resource_rules.title")}
+                      </p>
+                      <p className="text-tiny text-default-500 dark:text-zinc-400">
+                        {resourceRulesChecking
+                          ? t("settings.resource_rules.status.checking")
+                          : resourceRulesError
+                            ? t("settings.resource_rules.status.check_failed", {
+                                error: resourceRulesError,
+                              })
+                            : resourceRulesInstalled
+                              ? resourceRulesUpToDate
+                                ? t("settings.resource_rules.status.up_to_date")
+                                : t("settings.resource_rules.status.outdated")
+                              : t("settings.resource_rules.status.missing")}
+                      </p>
+                      {resourceRulesLocalSha || resourceRulesRemoteSha ? (
+                        <p
+                          className="text-tiny font-mono text-default-400 dark:text-zinc-500 truncate"
+                          title={`local: ${resourceRulesLocalSha || "-"} | remote: ${resourceRulesRemoteSha || "-"}`}
+                        >
+                          {`local: ${resourceRulesLocalSha ? `${resourceRulesLocalSha.slice(0, 12)}...` : "-"} | remote: ${resourceRulesRemoteSha ? `${resourceRulesRemoteSha.slice(0, 12)}...` : "-"}`}
+                        </p>
+                      ) : null}
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Chip
+                        color={
+                          resourceRulesUpToDate
+                            ? "success"
+                            : resourceRulesInstalled
+                              ? "warning"
+                              : "default"
+                        }
+                        variant="flat"
+                      >
+                        {resourceRulesUpToDate
+                          ? t("settings.resource_rules.latest_label")
+                          : resourceRulesInstalled
+                            ? t("settings.resource_rules.outdated_label")
+                            : t("settings.resource_rules.missing_label")}
+                      </Chip>
+                      <Button
+                        radius="full"
+                        variant="bordered"
+                        size="sm"
+                        isLoading={resourceRulesChecking}
+                        isDisabled={resourceRulesUpdating}
+                        onPress={refreshResourceRulesStatus}
+                      >
+                        {t("settings.resource_rules.check_button")}
+                      </Button>
+                      {!resourceRulesUpToDate && (
+                        <Button
+                          radius="full"
+                          variant="bordered"
+                          size="sm"
+                          isLoading={resourceRulesUpdating}
+                          isDisabled={resourceRulesChecking}
+                          onPress={onUpdateResourceRules}
+                        >
+                          {t("settings.resource_rules.update_button")}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedTab === "others" && (
+                <div className="flex flex-col gap-6">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex flex-col gap-1">
+                      <p className="font-medium">
+                        {t("settings.process.title")}
+                      </p>
+                      <p className="text-tiny text-default-500 dark:text-zinc-400">
+                        {t("settings.process.desc")}
+                      </p>
+                    </div>
+                    <Button
+                      radius="full"
+                      variant="bordered"
+                      onPress={() => setProcessModalOpen(true)}
+                    >
+                      {t("settings.process.scan")}
+                    </Button>
+                  </div>
+
+                  <Divider className="bg-default-200/50" />
+
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-1">
+                      <p className="font-medium">
+                        {t("settings.experimental.title")}
+                      </p>
+                      <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                        {t("settings.experimental.desc")}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex flex-col gap-1">
+                        <p className="font-medium">
+                          {t("settings.experimental.instance_backup.title")}
+                        </p>
+                        <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                          {t("settings.experimental.instance_backup.desc")}
+                        </p>
+                      </div>
+                      <Switch
+                        size="sm"
+                        isSelected={experimentalInstanceBackupEnabled}
+                        onValueChange={handleInstanceBackupExperimentalToggle}
+                        classNames={{
+                          wrapper: "group-data-[selected=true]:bg-primary-500",
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex flex-col gap-1">
+                        <p className="font-medium">
+                          {t("settings.experimental.mcpedl.title")}
+                        </p>
+                        <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                          {t("settings.experimental.mcpedl.desc")}
+                        </p>
+                      </div>
+                      <Switch
+                        size="sm"
+                        isSelected={mcpedlExperimentalEnabled}
+                        onValueChange={setMcpedlExperimentalEnabled}
+                        classNames={{
+                          wrapper: "group-data-[selected=true]:bg-primary-500",
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex flex-col gap-1">
+                        <p className="font-medium">
+                          {t("settings.experimental.lip_bedrinth.title")}
+                        </p>
+                        <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                          {t("settings.experimental.lip_bedrinth.desc")}
+                        </p>
+                      </div>
+                      <Switch
+                        size="sm"
+                        isSelected={lipBedrinthFallbackEnabled}
+                        onValueChange={setLipBedrinthFallbackEnabled}
+                        classNames={{
+                          wrapper: "group-data-[selected=true]:bg-primary-500",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <Divider className="bg-default-200/50" />
+
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex flex-col gap-1">
+                        <p className="font-medium">
+                          {t("settings.patch.title")}
+                        </p>
+                        <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                          {t("settings.patch.desc")}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2 rounded-xl bg-default-100/50 dark:bg-zinc-800/30 p-4 border border-default-200/50 dark:border-white/5">
+                      <p className="font-medium text-small">
+                        {t("settings.patch.register_mode")}
+                      </p>
+                      <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                        {t("settings.patch.register_mode_desc")}
+                      </p>
+                      <Select
+                        size="sm"
+                        className="mt-2 max-w-md"
+                        aria-label={t("settings.patch.register_mode")}
+                        disallowEmptySelection
+                        classNames={COMPONENT_STYLES.select}
+                        selectedKeys={new Set([patchRegisterMode])}
+                        onSelectionChange={(keys) => {
+                          const val = Array.from(keys)[0] as string;
+                          if (!val) return;
+                          setPatchRegisterMode(val);
+                          SetPatchRegisterMode(val);
+                        }}
+                      >
+                        <SelectItem
+                          key="latest_release"
+                          textValue={t(
+                            "settings.patch.register_mode_latest_release",
+                          )}
+                        >
+                          {t("settings.patch.register_mode_latest_release")}
+                        </SelectItem>
+                        <SelectItem
+                          key="latest_preview"
+                          textValue={t(
+                            "settings.patch.register_mode_latest_preview",
+                          )}
+                        >
+                          {t("settings.patch.register_mode_latest_preview")}
+                        </SelectItem>
+                        <SelectItem
+                          key="last_launched"
+                          textValue={t(
+                            "settings.patch.register_mode_last_launched",
+                          )}
+                        >
+                          {t("settings.patch.register_mode_last_launched")}
+                        </SelectItem>
+                        <SelectItem
+                          key="off"
+                          textValue={t("settings.patch.register_mode_off")}
+                        >
+                          {t("settings.patch.register_mode_off")}
+                        </SelectItem>
+                      </Select>
+                    </div>
+                    <div className="flex flex-col gap-2 rounded-xl bg-default-100/50 dark:bg-zinc-800/30 p-4 border border-default-200/50 dark:border-white/5">
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex flex-col gap-1">
+                          <p className="font-medium text-small">
+                            {t("settings.patch.auto_run")}
+                          </p>
+                          <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                            {t("settings.patch.auto_run_desc")}
+                          </p>
+                        </div>
+                        <Switch
+                          size="sm"
+                          isSelected={patchAutoRun}
+                          onValueChange={(isSelected: boolean) => {
+                            setPatchAutoRun(isSelected);
+                            SetPatchAutoRun(isSelected);
+                          }}
+                          classNames={{
+                            wrapper: "group-data-[selected=true]:bg-primary-500",
+                          }}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between gap-4 mt-2 flex-wrap">
+                        <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-xl">
+                          {t("settings.patch.run_desc")}
+                        </p>
+                        <Button
+                          radius="full"
+                          variant="bordered"
+                          isDisabled={runningPatch}
+                          startContent={
+                            runningPatch ? (
+                              <Spinner size="sm" color="primary" />
+                            ) : undefined
+                          }
+                          onPress={() => {
+                            setRunningPatch(true);
+                            RunPatchScript()
+                              .then((errCode: string) => {
+                                if (errCode) {
+                                  addToast({
+                                    title: t("settings.patch.failed"),
+                                    description: t(
+                                      `errors.${errCode}`,
+                                      { defaultValue: errCode },
+                                    ),
+                                    color: "danger",
+                                  });
+                                  return;
+                                }
+                                addToast({
+                                  title: t("common.success"),
+                                  description: t("settings.patch.success"),
+                                  color: "success",
+                                });
+                              })
+                              .finally(() => setRunningPatch(false));
+                          }}
+                        >
+                          {runningPatch
+                            ? t("settings.patch.running")
+                            : t("settings.patch.run_button")}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedTab === "help" && (
+                <div className="flex flex-col gap-6">
+                  <div className="flex items-start gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-primary-500/10 flex items-center justify-center text-primary-600 dark:text-primary-500 shrink-0">
+                      <LuBug className="w-5 h-5" />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <p className="font-medium">
+                        {t("reportProblem.settings_title")}
+                      </p>
+                      <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                        {t("reportProblem.settings_desc")}
+                      </p>
+                    </div>
+                  </div>
+
+                  <Divider className="bg-default-200/50" />
+
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      radius="full"
+                      color="primary"
+                      variant="flat"
+                      onPress={() => setReportOpen(true)}
+                    >
+                      {t("reportProblem.button")}
+                    </Button>
+                    <Button
+                      radius="full"
+                      variant="light"
+                      onPress={() =>
+                        Browser.OpenURL(
+                          "https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/issues",
+                        )
+                      }
+                    >
+                      {t("reportProblem.open_tracker")}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {selectedTab === "updates" && (
+                <div className="flex flex-col gap-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-1">
+                      <p className="font-medium">
+                        {t("settings.beta_updates.title")}
+                      </p>
+                      <p className="text-tiny text-default-500 dark:text-zinc-400">
+                        {t("settings.beta_updates.desc")}
+                      </p>
+                    </div>
+                    <Switch
+                      size="sm"
+                      isSelected={enableBetaUpdates}
+                      onValueChange={(isSelected: boolean) => {
+                        setEnableBetaUpdates(isSelected);
+                        SetEnableBetaUpdates(isSelected);
+                      }}
+                      classNames={{
+                        wrapper: "group-data-[selected=true]:bg-primary-500",
+                      }}
+                    />
+                  </div>
+
+                  <Divider className="bg-default-200/50" />
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <p className="font-medium text-large">
+                        {t("settings.body.version.name")}
+                      </p>
+                      <p className="text-tiny text-default-500 dark:text-zinc-400">
+                        v{appVersion}
+                      </p>
+                    </div>
+                    {checkingUpdate ? (
+                      <Spinner size="sm" color="primary" />
+                    ) : (
+                      <Button
+                        radius="full"
+                        variant="bordered"
+                        onPress={onCheckUpdate}
+                      >
+                        {t("settings.body.version.button")}
+                      </Button>
+                    )}
+                  </div>
+
+                  <AnimatePresence>
+                    {hasUpdate && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="rounded-xl bg-default-100/50 dark:bg-zinc-800/30 p-4 border border-default-200/50 dark:border-white/5">
+                          <div className="flex items-center justify-between mb-3">
+                            <p className="text-small font-bold text-primary-600 dark:text-primary-500">
+                              {t("settings.body.version.hasnew")} {newVersion}
+                            </p>
+                            <Button
+                              color="primary"
+                              radius="full"
+                              onPress={onUpdate}
+                              isDisabled={updating}
+                              className="bg-primary-500 hover:bg-primary-500 text-white font-bold shadow-lg shadow-primary-900/20"
+                              startContent={<RxUpdate />}
+                            >
+                              {updating
+                                ? t("common.updating")
+                                : t("settings.modal.2.footer.download_button")}
+                            </Button>
+                          </div>
+
+                          {changelog && (
+                            <div className="text-small wrap-break-word leading-6 max-h-[200px] overflow-y-auto pe-1 scrollbar-thin scrollbar-thumb-default-300">
+                              <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                  h1: ({ children }) => (
+                                    <h1 className="text-base font-bold my-1">
+                                      {children}
+                                    </h1>
+                                  ),
+                                  h2: ({ children }) => (
+                                    <h2 className="text-sm font-bold my-1">
+                                      {children}
+                                    </h2>
+                                  ),
+                                  p: ({ children }) => (
+                                    <p className="my-1 text-default-600">
+                                      {children}
+                                    </p>
+                                  ),
+                                  ul: ({ children }) => (
+                                    <ul className="list-disc ps-5 my-1 text-default-600">
+                                      {children}
+                                    </ul>
+                                  ),
+                                  li: ({ children }) => (
+                                    <li className="my-0.5">{children}</li>
+                                  ),
+                                  a: ({ href, children }) => {
+                                    const cleanUrl = (url: string) => {
+                                      const target = "https://github.com";
+                                      const idx = url.lastIndexOf(target);
+                                      return idx > 0 ? url.substring(idx) : url;
+                                    };
+                                    return (
+                                      <a
+                                        href={href}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-primary-500 underline"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          if (href) {
+                                            Browser.OpenURL(cleanUrl(href));
+                                          }
+                                        }}
+                                      >
+                                        {Array.isArray(children)
+                                          ? children.map((child) =>
+                                              typeof child === "string"
+                                                ? cleanUrl(child)
+                                                : child,
+                                            )
+                                          : typeof children === "string"
+                                            ? cleanUrl(children)
+                                            : children}
+                                      </a>
+                                    );
+                                  },
+                                }}
+                              >
+                                {changelog}
+                              </ReactMarkdown>
+                            </div>
+                          )}
+
+                          {updating && (
+                            <div className="mt-3">
+                              <Progress
+                                size="sm"
+                                radius="sm"
+                                color="success"
+                                isIndeterminate={true}
+                                classNames={{
+                                  indicator:
+                                    "bg-primary-500 hover:bg-primary-500",
+                                }}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
+            </CardBody>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* Process Management Modal */}
+      <UnifiedModal
+        size="2xl"
+        isOpen={processModalOpen}
+        onOpenChange={setProcessModalOpen}
+        scrollBehavior="inside"
+        type="primary"
+        title={
+          <div className="flex flex-col gap-1">
+            <span>{t("settings.process.title")}</span>
+            <span className="text-small font-normal text-default-500 dark:text-zinc-400">
+              {t("settings.process.desc")}
+            </span>
+          </div>
+        }
+        icon={<FaList className="w-6 h-6" />}
+        footer={
+          <Button variant="light" onPress={() => setProcessModalOpen(false)}>
+            {t("common.close")}
+          </Button>
+        }
+      >
+        <div className="flex items-center justify-end mb-4 gap-2">
+          <Button
+            size="sm"
+            variant="flat"
+            color="primary"
+            isLoading={scanningProcesses}
+            onPress={refreshProcesses}
+          >
+            {t("settings.process.scan")}
+          </Button>
+          {processes.length > 0 && (
+            <Button
+              size="sm"
+              color="danger"
+              variant="flat"
+              onPress={handleKillAllProcesses}
+            >
+              {t("settings.process.kill_all")}
+            </Button>
+          )}
+        </div>
+        <div className="flex flex-col gap-4">
+          {processes.length === 0 ? (
+            <div className="text-center py-8 text-default-500 dark:text-zinc-400">
+              {t("settings.process.no_process")}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {processes.map((p) => (
+                <div
+                  key={p.pid}
+                  className="flex items-center justify-between p-3 rounded-xl bg-default-100/50 dark:bg-default-100/10 border border-default-200/50"
+                >
+                  <div className="flex flex-col gap-1 overflow-hidden">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-small bg-default-200/50 px-1.5 rounded text-default-600">
+                        {p.pid}
+                      </span>
+                      {p.isLauncher && p.versionName ? (
+                        <Chip
+                          size="sm"
+                          color="success"
+                          variant="flat"
+                          className="h-5 text-[10px]"
+                        >
+                          {p.versionName}
+                        </Chip>
+                      ) : (
+                        <span className="text-small font-medium">
+                          Minecraft.Windows.exe
+                        </span>
+                      )}
+                    </div>
+                    <span
+                      className="text-tiny text-default-400 truncate max-w-[400px]"
+                      title={p.exePath}
+                    >
+                      {p.exePath}
+                    </span>
+                  </div>
+                  <Button
+                    size="sm"
+                    color="danger"
+                    variant="light"
+                    onPress={() => handleKillProcess(p.pid)}
+                  >
+                    {t("settings.process.kill")}
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </UnifiedModal>
+
+      <UnifiedModal
+        size="lg"
+        isOpen={instanceBackupWarningOpen}
+        onOpenChange={setInstanceBackupWarningOpen}
+        type="warning"
+        title={t("settings.experimental.instance_backup.warning.title")}
+        hideCloseButton
+        isDismissable={false}
+        showConfirmButton={false}
+        showCancelButton={false}
+        footer={
+          <div className="flex w-full justify-end gap-2">
+            <Button variant="light" onPress={closeInstanceBackupWarning}>
+              {t("common.cancel")}
+            </Button>
+            <Button
+              color="warning"
+              radius="full"
+              className="text-white! font-bold shadow-lg shadow-warning-500/20"
+              isDisabled={instanceBackupWarningCountdown > 0}
+              onPress={confirmInstanceBackupWarning}
+            >
+              {instanceBackupWarningCountdown > 0
+                ? `${t("settings.experimental.instance_backup.warning.confirm")} (${instanceBackupWarningCountdown}s)`
+                : t("settings.experimental.instance_backup.warning.confirm")}
+            </Button>
+          </div>
+        }
+      >
+        <div className="space-y-4 text-sm leading-7 text-default-700 dark:text-zinc-300">
+          <p className="font-medium text-warning-700 dark:text-warning-400">
+            {t("settings.experimental.instance_backup.warning.body_1")}
+          </p>
+          <p>{t("settings.experimental.instance_backup.warning.body_2")}</p>
+          <p>{t("settings.experimental.instance_backup.warning.body_3")}</p>
+        </div>
+      </UnifiedModal>
+
+      {/* LIP Install Progress */}
+      <UnifiedModal
+        size="md"
+        isOpen={lipProgressDisclosure.isOpen}
+        onOpenChange={lipProgressDisclosure.onOpenChange}
+        hideCloseButton
+        isDismissable={false}
+        type={lipError ? "error" : "info"}
+        title={lipError ? t("common.error") : t("settings.lip.installing")}
+        icon={lipError ? undefined : <FaDownload className="w-6 h-6" />}
+        confirmText={lipError ? t("common.close") : undefined}
+        onConfirm={lipError ? () => lipProgressDisclosure.onClose() : undefined}
+        footer={
+          lipError ? undefined : (
+            <>
+              <Button
+                color="danger"
+                variant="light"
+                onPress={lipProgressDisclosure.onClose}
+                isDisabled={!installingLip}
+              >
+                {t("common.hide")}
+              </Button>
+              <Button
+                color="primary"
+                onPress={lipProgressDisclosure.onClose}
+                isDisabled={installingLip && !lipError}
+              >
+                {t("common.ok")}
+              </Button>
+            </>
+          )
+        }
+      >
+        {lipError ? (
+          <div className="text-danger">
+            {t(
+              `settings.lip.error.${lipError
+                .toLowerCase()
+                .replace(/^err_/, "")}`,
+            )}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <div className="h-2 w-full rounded bg-default-200 overflow-hidden">
+              <div
+                className="h-full bg-primary"
+                style={{ width: `${lipProgress.percentage}%` }}
+              />
+            </div>
+            <div className="text-small text-default-500 dark:text-zinc-400">
+              {t(`settings.lip.status.${lipStatus}`)}
+              {lipProgress.total > 0 ? (
+                <span className="ms-2">
+                  {`${(lipProgress.current / (1024 * 1024)).toFixed(2)} MB / ${(lipProgress.total / (1024 * 1024)).toFixed(2)} MB`}
+                </span>
+              ) : (
+                ` (${lipProgress.percentage.toFixed(0)}%)`
+              )}
+            </div>
+          </div>
+        )}
+      </UnifiedModal>
+
+      <UnifiedModal
+        size="md"
+        isOpen={unsavedOpen}
+        onOpenChange={unsavedOnOpenChange}
+        type="warning"
+        title={t("settings.unsaved.title")}
+        cancelText={t("settings.unsaved.cancel")}
+        confirmText={t("settings.unsaved.save")}
+        showCancelButton
+        confirmButtonProps={{
+          isLoading: savingBaseRoot,
+          isDisabled: !newBaseRoot || !baseRootWritable,
+        }}
+        onCancel={() => unsavedOnClose()}
+        onConfirm={async () => {
+          setSavingBaseRoot(true);
+          try {
+            const ok = await CanWriteToDir(newBaseRoot);
+            if (!ok) {
+              setBaseRootWritable(false);
+            } else {
+              const err = await SetBaseRoot(newBaseRoot);
+              if (!err) {
+                const br = await GetBaseRoot();
+                setBaseRoot(String(br || ""));
+                const id = await GetInstallerDir();
+                setInstallerDir(String(id || ""));
+                const vd = await GetVersionsDir();
+                setVersionsDir(String(vd || ""));
+                unsavedOnClose();
+                if (pendingNavPath === "-1") {
+                  navigate(-1);
+                } else if (pendingNavPath) {
+                  navigate(pendingNavPath);
+                }
+              }
+            }
+          } catch {}
+          setSavingBaseRoot(false);
+        }}
+      >
+        <div className="text-default-700 dark:text-zinc-300 text-sm">
+          {t("settings.unsaved.body")}
+        </div>
+        {!baseRootWritable && (
+          <div className="text-tiny text-danger-500 mt-1">
+            {t("settings.body.paths.not_writable")}
+          </div>
+        )}
+      </UnifiedModal>
+
+      <UnifiedModal
+        size="sm"
+        isOpen={resetOpen}
+        onOpenChange={resetOnOpenChange}
+        type="error"
+        title={t("settings.reset.confirm.title")}
+        cancelText={t("common.cancel")}
+        confirmText={t("common.confirm")}
+        showCancelButton
+        onCancel={() => resetOnClose()}
+        onConfirm={async () => {
+          try {
+            const err = await ResetBaseRoot();
+            if (!err) {
+              const br = await GetBaseRoot();
+              setBaseRoot(String(br || ""));
+              setNewBaseRoot(String(br || ""));
+              const id = await GetInstallerDir();
+              setInstallerDir(String(id || ""));
+              const vd = await GetVersionsDir();
+              setVersionsDir(String(vd || ""));
+            }
+          } catch {}
+          resetOnClose();
+        }}
+      >
+        <div className="text-default-700 dark:text-zinc-300 text-sm">
+          {t("settings.reset.confirm.body")}
+        </div>
+      </UnifiedModal>
+
+      <ReportProblemModal isOpen={reportOpen} onOpenChange={setReportOpen} />
+    </PageContainer>
+  );
+};
+
+export default SettingsPage;

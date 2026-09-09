@@ -1,0 +1,708 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "./hero.ts";
+
+@font-face {
+  font-family: "MiSans";
+  src: url("./assets/fonts/MiSans-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+/* Note: You may need to change the path to fit your project structure */
+@source "../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
+
+@theme {
+  --font-sans: "MiSans", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", "MiSans", sans-serif;
+
+  /* Fallback palette = launcher default (violet, matches the logo).
+     The active palette is applied at runtime as --theme-* vars by
+     useThemeColors.ts; these fallbacks cover first paint. */
+  --color-primary-50: rgb(var(--theme-50, 245, 243, 255));
+  --color-primary-100: rgb(var(--theme-100, 237, 233, 254));
+  --color-primary-200: rgb(var(--theme-200, 221, 214, 254));
+  --color-primary-300: rgb(var(--theme-300, 196, 181, 253));
+  --color-primary-400: rgb(var(--theme-400, 167, 139, 250));
+  --color-primary-500: rgb(var(--theme-500, 139, 92, 246));
+  --color-primary-600: rgb(var(--theme-600, 124, 58, 237));
+  --color-primary-700: rgb(var(--theme-700, 109, 40, 217));
+  --color-primary-800: rgb(var(--theme-800, 91, 33, 182));
+  --color-primary-900: rgb(var(--theme-900, 76, 29, 149));
+  --color-primary-950: rgb(var(--theme-950, 46, 16, 101));
+  --color-primary: rgb(var(--theme-500, 139, 92, 246));
+
+  --animate-fadeInUp: fadeInUp 1s ease-out;
+  --animate-fadeInUp2: fadeInUp 1.5s ease-out;
+  --animate-fadeIn: fadeIn 1s ease-out;
+  --animate-expand: expand 1s ease-out;
+  --animate-bounceIn: bounceIn 1s ease-in-out;
+  --animate-slideIn: slideIn 0.5s ease-out;
+  --animate-fade-in: fadeIn 2s ease-in-out;
+  --animate-scale-up: scaleUp 2s ease-in-out;
+
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes expand {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes bounceIn {
+    0%,
+    20%,
+    40%,
+    60%,
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  @keyframes slideIn {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @keyframes progress-md-bar2 {
+    0% {
+      left: -200%;
+      right: 100%;
+    }
+    60% {
+      left: 40%;
+      right: -80%;
+    }
+    100% {
+      left: 100%;
+      right: -90%;
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes text-gradient-move {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes dropAndBounce {
+    0% {
+      transform: translateY(-1000px);
+    }
+    60% {
+      transform: translateY(0);
+    }
+    70% {
+      transform: translateY(-30px);
+    }
+    80% {
+      transform: translateY(0);
+    }
+    90% {
+      transform: translateY(-15px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fadeInMove {
+    0% {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes progress-indeterminate {
+    0% {
+      transform: translateX(-30%);
+    }
+    100% {
+      transform: translateX(130%);
+    }
+  }
+
+  @keyframes progress-md-bar1 {
+    0% {
+      left: -35%;
+      right: 100%;
+    }
+    60% {
+      left: 100%;
+      right: -90%;
+    }
+    100% {
+      left: 100%;
+      right: -90%;
+    }
+  }
+
+  --animate-spin: spin 5s linear infinite;
+  --animate-gradient: gradient 10s ease infinite;
+  --animate-text-gradient: text-gradient-move 4s ease-in-out infinite;
+  --animate-drop-and-bounce: dropAndBounce 1.5s ease-in-out;
+  --animate-fade-out: fadeOut 1.25s forwards 1.25s;
+  --animate-fadeInMove: fadeInMove 0.6s ease-out both;
+  --animate-progress-indeterminate: progress-indeterminate 1.5s linear infinite;
+  --animate-indeterminate-bar1: progress-md-bar1 1.4s
+    cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  --animate-indeterminate-bar2: progress-md-bar2 1.4s
+    cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@variant dark (&:is(.dark *));
+
+body,
+html,
+button,
+input,
+textarea,
+select {
+  font-family: var(--font-sans);
+}
+
+body,
+html {
+  touch-action: pan-x pan-y;
+
+  -webkit-user-select: none;
+  /* Chrome, Safari, Opera */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+img {
+  /* -webkit-user-drag is a non-standard WebKit property with no unprefixed
+     standard equivalent; a bare `user-drag` would be invalid CSS. */
+  -webkit-user-drag: none;
+}
+
+/* Make root fill viewport and disable window-level scroll; internal panes should manage their own scrolling */
+html,
+body,
+#root {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* reserve space for scrollbar to avoid layout shift during content height changes */
+  scrollbar-gutter: stable both-edges;
+  /* hide scrollbar while keeping scroll */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#root::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+#wails-draggable,
+.wails-draggable {
+  --wails-draggable: drag;
+}
+
+.wails-no-drag {
+  --wails-draggable: no-drag;
+}
+
+.gradient-text {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--theme-400, 167, 139, 250)),
+    rgb(var(--theme-600, 124, 58, 237))
+  );
+  background-size: 200% 200%;
+  animation: var(--animate-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Branded, higher-contrast animated gradient for header title */
+.brand-text-gradient {
+  background-image: linear-gradient(
+    90deg,
+    #22c55e 0%,
+    #06b6d4 50%,
+    #f59e0b 100%
+  );
+}
+.dark .brand-text-gradient {
+  background-image: linear-gradient(
+    90deg,
+    #34d399 0%,
+    #60a5fa 50%,
+    #fbbf24 100%
+  );
+}
+
+/* Global Scrollbar overrides to match .pretty-scrollbar style */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-clip: padding-box;
+  background-color: rgba(113, 113, 122, 0.35); /* neutral-500/35 */
+  border: 3px solid transparent;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(113, 113, 122, 0.55);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(161, 161, 170, 0.25); /* zinc-400/25 */
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(161, 161, 170, 0.45);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Custom scrollbar utility class (slimmer version) */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(113, 113, 122, 0.35) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(113, 113, 122, 0.35);
+  border: 1.5px solid transparent;
+  background-clip: padding-box;
+  border-radius: 9999px;
+}
+
+.dark .custom-scrollbar {
+  scrollbar-color: rgba(161, 161, 170, 0.25) transparent;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(161, 161, 170, 0.25);
+}
+
+/* Hide scrollbars but keep scrolling (for scrollable panes like version lists) */
+.no-scrollbar,
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* Scrollbar thin utility */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+/* Reserve stable space for the scrollbar so it won't be visually clipped */
+.gutter-stable {
+  scrollbar-gutter: stable both-edges;
+}
+
+/* Themed, minimal scrollbars for scrollable panes */
+.pretty-scrollbar {
+  /* Show thin themed scrollbar on Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(113, 113, 122, 0.5) transparent; /* thumb, track */
+}
+.pretty-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.pretty-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.pretty-scrollbar::-webkit-scrollbar-thumb {
+  background-clip: padding-box;
+  background-color: rgba(113, 113, 122, 0.35); /* neutral-500/35 */
+  border: 3px solid transparent;
+  border-radius: 9999px;
+}
+.pretty-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(113, 113, 122, 0.55);
+}
+.pretty-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Material-style indeterminate linear progress (double bars) */
+.indeterminate-bar2 {
+  animation-delay: 0.7s;
+}
+
+/* ---- RTL text alignment (fa_IR) ----
+   کلاس rtl-locale فقط «متن» را راست‌چین می‌کند و به زبان فعال وصل است.
+   انجین لانچر همیشه LTR است (<html dir="ltr">)؛ ترتیب flex و آیکون‌ها هیچ‌وقت
+   برعکس نمی‌شود. بخش‌هایی که در فارسی باید راست‌چین دیده شوند (مثل کل صفحه
+   تنظیمات) با کلاس settings-rtl-lock جهت RTL می‌گیرند.
+   - text-align: right از body به ارث می‌رسد و هر المانی که خودش
+      text-center/left داشته باشد (مثل دکمه‌ها) همان را نگه می‌دارد.
+   - unicode-bidi: plaintext باعث می‌شود هر خط متن بر اساس اولین نویسه‌ی
+      قوی خودش مرتب شود؛ یعنی متن فارسی RTL و اعداد/لاتین LTR رندر می‌شوند. */
+html.rtl-locale body {
+  text-align: right;
+}
+html.rtl-locale span,
+html.rtl-locale p,
+html.rtl-locale h1,
+html.rtl-locale h2,
+html.rtl-locale h3,
+html.rtl-locale h4,
+html.rtl-locale h5,
+html.rtl-locale h6,
+html.rtl-locale a,
+html.rtl-locale label,
+html.rtl-locale button,
+html.rtl-locale div {
+  unicode-bidi: plaintext;
+}
+/* HeroUI's Card component hard-codes `text-left` on its body
+   (@heroui/theme/dist/components/card.js → CardBody), which would otherwise
+   override body's inherited `text-align: right` for fa_IR and leave card
+   text (e.g. the "About / درباره ما" page) left-aligned in RTL.
+   Neutralize that utility for RTL locales only; elements that intentionally
+   pass `text-center` / `text-start` / `text-right` keep their own alignment. */
+html.rtl-locale .text-left {
+  text-align: right;
+}
+/* جمله‌های فارسیِ مخلوط با واژه‌های لاتین (مثل متن‌های صفحه «درباره» که با
+   «Bedrock Nexus» شروع می‌شوند) با قاعدهٔ plaintext بالا برای هر «خط» جهت
+   اولین نویسهٔ قوی را می‌گیرند؛ یعنی خطی که با حرف لاتین شروع یا شکسته شود
+   LTR رندر و ترتیب کلمات فارسی به‌هم می‌ریزد. کلاس rtl-paragraph جهت
+   پاراگراف را در تمام خط‌ها روی RTL قفل می‌کند و واژه‌های لاتین داخل جمله
+   به‌صورت ایزوله سرِ جای خود می‌مانند؛ در زبان‌های LTR بی‌اثر است. */
+html.rtl-locale .rtl-paragraph {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+/* Settings page (all tabs) stays right-aligned for RTL locales: the engine
+   itself is always LTR, so the wrapper forces RTL base direction so flex
+   rows mirror (text right, controls left) and text hugs the right edge.
+   No effect in LTR locales. */
+html.rtl-locale .settings-rtl-lock {
+  direction: rtl;
+  text-align: right;
+}
+
+/* ---- RTL typography polish ----
+   فونت MiSans گلیف فارسی/عربی ندارد؛ برای زبان‌های RTL یک زنجیره‌ی فونت
+   مناسب فارسی جلوی زنجیره قرار می‌گیرد (Vazirmatn اگر روی سیستم نصب باشد،
+   وگرنه Segoe UI/Tahoma ویندوز که رندر فارسی خوبی دارند).
+   letter-spacing منفی (tracking-tight) هم برای تیترهای فارسی حذف می‌شود؛
+   حروف فارسی چسبان‌اند و فاصله‌ی منفی اتصال حروف را به‌هم می‌ریزد. */
+html[lang^="fa"] {
+  --font-sans: "Vazirmatn", "Segoe UI", Tahoma, "MiSans", sans-serif;
+}
+
+html.rtl-locale h1,
+html.rtl-locale h2,
+html.rtl-locale h3,
+html.rtl-locale h4,
+html.rtl-locale h5,
+html.rtl-locale h6 {
+  letter-spacing: normal;
+}
+
+/* ---- Visual polish (1.1): themed selection, card hover, ambient glow ---- */
+
+/* Themed text selection follows the user's accent color */
+::selection {
+  background-color: rgb(var(--theme-200, 221, 214, 254));
+  color: rgb(var(--theme-950, 46, 16, 101));
+}
+.dark ::selection {
+  background-color: rgb(var(--theme-700, 109, 40, 217));
+  color: #fafafa;
+}
+
+/* Soft hover lift shared by dashboard cards */
+.card-hover {
+  transition:
+    transform var(--dur-base, 250ms) var(--ease-enter, cubic-bezier(0.22, 1, 0.36, 1)),
+    box-shadow var(--dur-base, 250ms) var(--ease-enter, cubic-bezier(0.22, 1, 0.36, 1)),
+    border-color var(--dur-base, 250ms) var(--ease-enter, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.18);
+  border-color: rgba(var(--theme-500, 139, 92, 246), 0.3);
+}
+.dark .card-hover:hover {
+  box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.55);
+}
+
+/* Ambient accent glow behind the shell when no wallpaper is set.
+   Static radial wash on purpose: an infinite large-area blur animation
+   costs a full re-raster every frame on weak iGPUs, while a 26s drift is
+   barely perceptible. Purely decorative. */
+.ambient-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ambient-glow::before,
+.ambient-glow::after {
+  content: "";
+  position: absolute;
+  width: 55vmax;
+  height: 55vmax;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.14;
+}
+.ambient-glow::before {
+  top: -22vmax;
+  inset-inline-start: -14vmax;
+  background: radial-gradient(
+    circle at center,
+    rgb(var(--theme-400, 167, 139, 250)),
+    transparent 65%
+  );
+}
+.ambient-glow::after {
+  bottom: -25vmax;
+  inset-inline-end: -16vmax;
+  background: radial-gradient(
+    circle at center,
+    rgb(var(--theme-300, 196, 181, 253)),
+    transparent 65%
+  );
+}
+.dark .ambient-glow::before,
+.dark .ambient-glow::after {
+  opacity: 0.18;
+}
+
+/* ---- Themed strokes (optional personalization) ----
+   با فعال بودن گزینه «Themed Strokes» در تنظیمات (شخصی‌سازی)، همه‌ی
+   حاشیه‌ها/استروک‌های واقعی رابط به رنگ تم انتخاب‌شده tint می‌شوند. رنگ از
+   --theme-stroke-hsl می‌آید (در useThemeColors.ts ست می‌شود؛ در حالت تیره
+   شید روشن‌تر و آلفای کمتر برای پس‌زمینه‌ی سیاه). حاشیه‌های وضعیت‌دار مهم —
+   فوکوس primary، خطای danger، li شفاف — چون خودشان !important با
+   specificity بالاتر دارند، دست‌نخورده می‌مانند. */
+html.themed-strokes {
+  --theme-stroke-alpha: 0.4;
+}
+html.dark.themed-strokes {
+  --theme-stroke-alpha: 0.32;
+}
+html.themed-strokes *,
+html.themed-strokes *::before,
+html.themed-strokes *::after {
+  border-color: hsl(
+    var(--theme-stroke-hsl, 258.9 90.2% 66.1%) /
+      var(--theme-stroke-alpha, 0.4)
+  ) !important;
+}
+
+/* ---- Launcher "Ignition Deck" motion system ----
+   توکن‌های حرکتی لانچر: سه دیرش، سه ایزینگ. همه‌ی انیمیشن‌های
+   LauncherPage از همین‌ها می‌آیند؛ عدد خام تازه ممنوع. */
+:root {
+  --dur-instant: 100ms;
+  --dur-fast: 160ms;
+  --dur-base: 250ms;
+  --dur-slow: 450ms;
+  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-move: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-press: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Hero card: layered accent aurora drifting behind the content.
+   Static wash on purpose (see .ambient-glow note): no per-frame cost,
+   same dressed look. Purely decorative (aria-hidden blobs). */
+.launcher-hero {
+  position: relative;
+  isolation: isolate;
+}
+.launcher-hero-aurora {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.launcher-hero-aurora::before,
+.launcher-hero-aurora::after {
+  content: "";
+  position: absolute;
+  width: 34vmax;
+  height: 34vmax;
+  border-radius: 9999px;
+  filter: blur(70px);
+  opacity: 0.22;
+}
+.launcher-hero-aurora::before {
+  top: -18vmax;
+  inset-inline-end: -10vmax;
+  background: radial-gradient(
+    circle at center,
+    rgb(var(--theme-400, 167, 139, 250)),
+    transparent 65%
+  );
+}
+.launcher-hero-aurora::after {
+  bottom: -20vmax;
+  inset-inline-start: -12vmax;
+  background: radial-gradient(
+    circle at center,
+    rgb(var(--theme-600, 124, 58, 237)),
+    transparent 65%
+  );
+}
+.dark .launcher-hero-aurora::before,
+.dark .launcher-hero-aurora::after {
+  opacity: 0.22;
+}
+
+/* LAUNCH button: light-charge on hover (glow) + shine sweep.
+   Press dip is handled by framer-motion whileTap in LauncherPage;
+   this class only owns transform/opacity-friendly paint. */
+.launch-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    box-shadow var(--dur-base) var(--ease-enter),
+    filter var(--dur-base) var(--ease-enter);
+}
+.launch-btn::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  /* Physical `left` on purpose: the sweep always travels left→right
+     in both LTR and RTL shells. */
+  left: -60%;
+  width: 45%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%
+  );
+  transform: translateX(0) skewX(-18deg);
+  opacity: 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .launch-btn:hover::after {
+    opacity: 1;
+    animation: launcher-shine var(--dur-slow) var(--ease-enter) 1;
+  }
+}
+@keyframes launcher-shine {
+  0% {
+    transform: translateX(0) skewX(-18deg);
+  }
+  100% {
+    /* Stripe is 45% wide starting off-edge: 480% of its own width
+       always carries it fully across any button size. */
+    transform: translateX(480%) skewX(-18deg);
+  }
+}
+
+/* Motion safety: honor the OS-level preference even if the in-app
+   "Disable Animations" toggle was never flipped. */
+@media (prefers-reduced-motion: reduce) {
+  .launch-btn::after {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+  .card-hover,
+  .card-hover:hover {
+    transform: none;
+  }
+}

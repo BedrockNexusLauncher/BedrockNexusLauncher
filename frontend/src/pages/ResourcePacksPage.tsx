@@ -1,0 +1,1230 @@
+import React from "react";
+import { useTranslation } from "react-i18next";
+import {
+  Button,
+  Chip,
+  Image,
+  Spinner,
+  Tooltip,
+  useDisclosure,
+  Input,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Checkbox,
+  Pagination,
+  Card,
+  CardBody,
+  addToast,
+  Select,
+  SelectItem,
+  Progress,
+} from "@heroui/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "@heroui/react";
+import { DeleteConfirmModal } from "@/components/DeleteConfirmModal";
+import { UnifiedModal } from "@/components/UnifiedModal";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+  FaArrowLeft,
+  FaSync,
+  FaFolderOpen,
+  FaSortAmountDown,
+  FaSortAmountUp,
+  FaFilter,
+  FaTrash,
+  FaCheckSquare,
+  FaBox,
+  FaTimes,
+  FaClock,
+  FaHdd,
+  FaTag,
+  FaMagic,
+  FaExchangeAlt,
+} from "react-icons/fa";
+import { OpenPathDir } from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/minecraft";
+import {
+  GetContentRoots,
+  ListPacksForVersion,
+  DeletePack,
+  GetPackInfo,
+  CheckResourcePackMaterialCompatibility,
+  UpdateResourcePackMaterialBins,
+  TransferPackToVersion,
+} from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/contentservice";
+import * as types from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/types/models";
+import * as packages from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/packages/models";
+import {
+  GetVersionLogoDataUrl,
+  ListVersionMetas,
+} from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/versionservice";
+import { readCurrentVersionName } from "@/utils/currentVersion";
+import * as minecraft from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/minecraft";
+import { renderMcText } from "@/utils/mcformat";
+import { PageHeader } from "@/components/PageHeader";
+import { PageContainer } from "@/components/PageContainer";
+import { LAYOUT } from "@/constants/layout";
+import { cn } from "@/utils/cn";
+import { COMPONENT_STYLES } from "@/constants/componentStyles";
+import { useScrollManager } from "@/hooks/useScrollManager";
+import { useSelectionMode } from "@/hooks/useSelectionMode";
+import { useContentSort } from "@/hooks/useContentSort";
+import { formatBytes, formatDate } from "@/utils/formatting";
+import { compareVersions } from "@/utils/version";
+import { ImportResultModal } from "@/components/ImportResultModal";
+import { getPathBaseName } from "@/utils/fs";
+
+const getNameFn = (p: any) => String(p.name || getPathBaseName(p.path) || "");
+const getTimeFn = (p: any) => Number(p.modTime || 0);
+type TransferTargetVersion = {
+  name: string;
+  gameVersion: string;
+  type: string;
+  icon?: string;
+};
+
+import { SelectionBar } from "@/components/SelectionBar";
+
+export default function ResourcePacksPage() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const hasBackend = minecraft !== undefined;
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<string>("");
+  const [currentVersionName, setCurrentVersionName] =
+    React.useState<string>("");
+  const [roots, setRoots] = React.useState<types.ContentRoots>({
+    base: "",
+    usersRoot: "",
+    resourcePacks: "",
+    behaviorPacks: "",
+    isIsolation: false,
+    isPreview: false,
+  });
+  const [entries, setEntries] = React.useState<
+    { name: string; path: string }[]
+  >([]);
+  const [packs, setPacks] = React.useState<any[]>([]);
+  const [activePack, setActivePack] = React.useState<any | null>(null);
+  const {
+    isOpen: delOpen,
+    onOpen: delOnOpen,
+    onOpenChange: delOnOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: delCfmOpen,
+    onOpen: delCfmOnOpen,
+    onOpenChange: delCfmOnOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: delManyCfmOpen,
+    onOpen: delManyCfmOnOpen,
+    onOpenChange: delManyCfmOnOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: updateCfmOpen,
+    onOpen: updateCfmOnOpen,
+    onOpenChange: updateCfmOnOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: transferTargetOpen,
+    onOpen: transferTargetOnOpen,
+    onClose: transferTargetOnClose,
+    onOpenChange: transferTargetOnOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: transferResultOpen,
+    onOpen: transferResultOnOpen,
+    onOpenChange: transferResultOnOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: dupOpen,
+    onOpen: dupOnOpen,
+    onClose: dupOnClose,
+    onOpenChange: dupOnOpenChange,
+  } = useDisclosure();
+  const [deletingOne, setDeletingOne] = React.useState<boolean>(false);
+  const [deletingMany, setDeletingMany] = React.useState<boolean>(false);
+  const [packToUpdate, setPackToUpdate] = React.useState<any | null>(null);
+  const [transferring, setTransferring] = React.useState<boolean>(false);
+  const [currentTransferItem, setCurrentTransferItem] =
+    React.useState<string>("");
+  const [transferTargets, setTransferTargets] = React.useState<
+    TransferTargetVersion[]
+  >([]);
+  const [selectedTransferTargets, setSelectedTransferTargets] = React.useState<
+    string[]
+  >([]);
+  const [transferResultSuccess, setTransferResultSuccess] = React.useState<
+    string[]
+  >([]);
+  const [transferResultFailed, setTransferResultFailed] = React.useState<
+    Array<{ name: string; err: string }>
+  >([]);
+  const dupResolveRef = React.useRef<((overwrite: boolean) => void) | null>(
+    null,
+  );
+  const dupNameRef = React.useRef<string>("");
+  const [updatingMaterialByPath, setUpdatingMaterialByPath] = React.useState<
+    Record<string, boolean>
+  >({});
+  const [onlyShowUpdates, setOnlyShowUpdates] = React.useState<boolean>(
+    location.state?.showIncompatible || false,
+  );
+
+  const scrollRef = React.useRef<HTMLDivElement | null>(null);
+
+  const hasIncompatibleShaders = React.useMemo(() => {
+    return packs.some(
+      (p) => p.materialCompat?.hasMaterialBin && p.materialCompat?.needsUpdate,
+    );
+  }, [packs]);
+
+  const displayedPacks = React.useMemo(() => {
+    if (!onlyShowUpdates) return packs;
+    return packs.filter(
+      (p) => p.materialCompat?.hasMaterialBin && p.materialCompat?.needsUpdate,
+    );
+  }, [packs, onlyShowUpdates]);
+
+  React.useEffect(() => {
+    if (!loading && !hasIncompatibleShaders && onlyShowUpdates) {
+      setOnlyShowUpdates(false);
+    }
+  }, [loading, hasIncompatibleShaders, onlyShowUpdates]);
+
+  const sort = useContentSort(
+    "content.resource.sort",
+    displayedPacks,
+    getNameFn,
+    getTimeFn,
+  );
+  const { lastScrollTopRef, restorePendingRef } = useScrollManager(
+    scrollRef,
+    [displayedPacks],
+    [sort.currentPage],
+  );
+  const selection = useSelectionMode(sort.filtered);
+
+  const refreshAll = React.useCallback(
+    async (silent?: boolean) => {
+      if (!silent) setLoading(true);
+      setError("");
+      const name = readCurrentVersionName();
+      setCurrentVersionName(name);
+      try {
+        if (!hasBackend || !name) {
+          setRoots({
+            base: "",
+            usersRoot: "",
+            resourcePacks: "",
+            behaviorPacks: "",
+            isIsolation: false,
+            isPreview: false,
+          });
+          setEntries([]);
+          setPacks([]);
+        } else {
+          const [r, allPacks] = await Promise.all([
+            GetContentRoots(name),
+            ListPacksForVersion(name, ""),
+          ]);
+          const safe = r || {
+            base: "",
+            usersRoot: "",
+            resourcePacks: "",
+            behaviorPacks: "",
+            isIsolation: false,
+            isPreview: false,
+          };
+          setRoots(safe);
+          setEntries([]);
+
+          const filtered = (allPacks || []).filter(
+            (p) => p.manifest.pack_type === 6,
+          );
+
+          const basic = await Promise.all(
+            filtered.map(async (p) => {
+              try {
+                const info = await GetPackInfo(p.path);
+                return { ...info, path: p.path };
+              } catch {
+                return {
+                  name: p.manifest.name,
+                  description: p.manifest.description,
+                  version: p.manifest.identity.version
+                    ? `${p.manifest.identity.version.major}.${p.manifest.identity.version.minor}.${p.manifest.identity.version.patch}`
+                    : "",
+                  minEngineVersion: "",
+                  iconDataUrl: "",
+                  path: p.path,
+                };
+              }
+            }),
+          );
+
+          const withTime = await Promise.all(
+            basic.map(async (p: any) => {
+              let modTime = 0;
+              try {
+                if (typeof (minecraft as any).GetPathModTime === "function") {
+                  modTime = await (minecraft as any).GetPathModTime(p.path);
+                }
+              } catch {}
+              return { ...p, modTime };
+            }),
+          );
+          setPacks(withTime);
+          Promise.resolve()
+            .then(async () => {
+              const readCache = () => {
+                try {
+                  return JSON.parse(
+                    localStorage.getItem("content.size.cache") || "{}",
+                  );
+                } catch {
+                  return {};
+                }
+              };
+              const writeCache = (c: any) => {
+                try {
+                  localStorage.setItem("content.size.cache", JSON.stringify(c));
+                } catch {}
+              };
+              const cache = readCache();
+              const limit = 4;
+              const items = withTime.slice();
+              for (let i = 0; i < items.length; i += limit) {
+                const chunk = items.slice(i, i + limit);
+                await Promise.all(
+                  chunk.map(async (p: any) => {
+                    const key = p.path;
+                    const c = cache[key];
+                    if (
+                      c &&
+                      typeof c.size === "number" &&
+                      Number(c.modTime || 0) === Number(p.modTime || 0)
+                    ) {
+                      setPacks((prev) =>
+                        prev.map((it: any) =>
+                          it.path === key ? { ...it, size: c.size } : it,
+                        ),
+                      );
+                    } else {
+                      let size = 0;
+                      try {
+                        if (
+                          typeof (minecraft as any).GetPathSize === "function"
+                        ) {
+                          size = await (minecraft as any).GetPathSize(key);
+                        }
+                      } catch {}
+                      cache[key] = { modTime: p.modTime || 0, size };
+                      setPacks((prev) =>
+                        prev.map((it: any) =>
+                          it.path === key ? { ...it, size } : it,
+                        ),
+                      );
+                    }
+                  }),
+                );
+                writeCache(cache);
+              }
+
+              for (let i = 0; i < items.length; i += limit) {
+                const chunk = items.slice(i, i + limit);
+                await Promise.all(
+                  chunk.map(async (p: any) => {
+                    const key = p.path;
+                    let materialCompat: any = null;
+                    try {
+                      materialCompat =
+                        await CheckResourcePackMaterialCompatibility(name, key);
+                    } catch {}
+                    setPacks((prev) =>
+                      prev.map((it: any) =>
+                        it.path === key ? { ...it, materialCompat } : it,
+                      ),
+                    );
+                  }),
+                );
+              }
+            })
+            .catch(() => {});
+        }
+      } catch (e) {
+        setError(t("contentpage.error_resolve_paths") as string);
+      } finally {
+        if (!silent) setLoading(false);
+      }
+    },
+    [hasBackend, t],
+  );
+
+  React.useEffect(() => {
+    refreshAll();
+  }, []);
+
+  const updateMaterialBinsForPack = React.useCallback(
+    async (packPath: string) => {
+      const p = String(packPath || "").trim();
+      if (!p || !currentVersionName) return;
+      if (updatingMaterialByPath[p]) return;
+      setUpdatingMaterialByPath((prev) => ({ ...prev, [p]: true }));
+      try {
+        let result: any = null;
+        try {
+          result = await UpdateResourcePackMaterialBins(currentVersionName, p);
+        } catch {}
+        if (!result) {
+          addToast({
+            title: t("contentpage.update_material_bin_failed") as string,
+            color: "danger",
+          });
+          return;
+        }
+        if (result.error) {
+          addToast({
+            title: t("contentpage.update_material_bin_failed") as string,
+            description: String(result.error),
+            color: "danger",
+          });
+          return;
+        }
+        const updated = Number(result.updatedCount || 0);
+        const failed = Number(result.failedCount || 0);
+        addToast({
+          title: t("contentpage.update_material_bin_success") as string,
+          description:
+            t("contentpage.update_material_bin_stat_updated", {
+              count: updated,
+            }) +
+            (failed > 0
+              ? ", " +
+                t("contentpage.update_material_bin_stat_failed", {
+                  count: failed,
+                })
+              : ""),
+          color: failed > 0 ? "warning" : "success",
+        });
+        await refreshAll(true);
+      } finally {
+        setUpdatingMaterialByPath((prev) => ({ ...prev, [p]: false }));
+      }
+    },
+    [currentVersionName, refreshAll, updatingMaterialByPath],
+  );
+
+  const openTransferTargetModal = React.useCallback(async () => {
+    if (transferring || selection.selectedCount === 0) return;
+
+    const sourceVersionName = currentVersionName || readCurrentVersionName();
+    if (!sourceVersionName) {
+      addToast({
+        title: t("launcherpage.currentVersion_none") as string,
+        color: "danger",
+      });
+      return;
+    }
+
+    try {
+      const list = await (ListVersionMetas as any)?.();
+      const metas = Array.isArray(list) ? list : [];
+      const targets: TransferTargetVersion[] = metas
+        .filter(
+          (m: any) =>
+            m &&
+            typeof m.name === "string" &&
+            m.name &&
+            m.enableIsolation &&
+            m.name !== sourceVersionName,
+        )
+        .sort((a: any, b: any) => {
+          const byVersion = compareVersions(
+            String(b.gameVersion || "0"),
+            String(a.gameVersion || "0"),
+          );
+          if (byVersion !== 0) return byVersion;
+          return String(a.name || "").localeCompare(String(b.name || ""));
+        })
+        .map((m: any) => ({
+          name: String(m.name || ""),
+          gameVersion: String(m.gameVersion || ""),
+          type: String(m.type || ""),
+        }));
+
+      await Promise.all(
+        targets.map(async (target) => {
+          try {
+            const icon = await (GetVersionLogoDataUrl as any)?.(target.name);
+            if (icon) target.icon = icon;
+          } catch {}
+        }),
+      );
+
+      setTransferTargets(targets);
+      setSelectedTransferTargets(targets.length > 0 ? [targets[0].name] : []);
+      transferTargetOnOpen();
+    } catch (e) {
+      addToast({
+        title: "Error",
+        description: String(e),
+        color: "danger",
+      });
+    }
+  }, [
+    currentVersionName,
+    selection.selectedCount,
+    t,
+    transferring,
+    transferTargetOnOpen,
+  ]);
+
+  const transferSelectedPacksToTargets = React.useCallback(async () => {
+    if (transferring) return;
+
+    const sourceVersionName = currentVersionName || readCurrentVersionName();
+    if (!sourceVersionName) {
+      addToast({
+        title: t("launcherpage.currentVersion_none") as string,
+        color: "danger",
+      });
+      return;
+    }
+
+    const selectedPaths = selection.getSelectedKeys().filter(Boolean);
+    const targetNames = selectedTransferTargets.filter(Boolean);
+    if (selectedPaths.length === 0 || targetNames.length === 0) return;
+
+    transferTargetOnClose();
+
+    const packNameMap = new Map<string, string>(
+      packs.map((pack: any) => {
+        const path = String(pack?.path || "");
+        const fallbackName = getPathBaseName(path);
+        const displayName = String(pack?.name || fallbackName);
+        return [path, displayName];
+      }),
+    );
+
+    const succFiles: string[] = [];
+    const errPairs: Array<{ name: string; err: string }> = [];
+
+    try {
+      setTransferring(true);
+      setCurrentTransferItem("");
+
+      for (const targetName of targetNames) {
+        for (const packPath of selectedPaths) {
+          const fallbackName = getPathBaseName(packPath);
+          const packName = packNameMap.get(packPath) || fallbackName;
+          const itemLabel = `${packName} -> ${targetName}`;
+          setCurrentTransferItem(itemLabel);
+
+          let err = await TransferPackToVersion(
+            sourceVersionName,
+            packPath,
+            targetName,
+            false,
+          );
+          if (err) {
+            if (
+              String(err) === "ERR_DUPLICATE_FOLDER" ||
+              String(err) === "ERR_DUPLICATE_UUID"
+            ) {
+              dupNameRef.current = itemLabel;
+              await new Promise<void>((resolve) => setTimeout(resolve, 0));
+              dupOnOpen();
+              const ok = await new Promise<boolean>((resolve) => {
+                dupResolveRef.current = resolve;
+              });
+              if (ok) {
+                err = await TransferPackToVersion(
+                  sourceVersionName,
+                  packPath,
+                  targetName,
+                  true,
+                );
+                if (!err) {
+                  succFiles.push(itemLabel);
+                  continue;
+                }
+              } else {
+                continue;
+              }
+            }
+            errPairs.push({ name: itemLabel, err: String(err) });
+            continue;
+          }
+          succFiles.push(itemLabel);
+        }
+      }
+
+      if (succFiles.length > 0 || errPairs.length > 0) {
+        setTransferResultSuccess(succFiles);
+        setTransferResultFailed(errPairs);
+        transferResultOnOpen();
+      }
+      if (succFiles.length > 0) {
+        selection.clearSelection();
+        await refreshAll(true);
+      }
+    } catch (e) {
+      addToast({
+        title: "Error",
+        description: String(e),
+        color: "danger",
+      });
+    } finally {
+      setTransferring(false);
+      setCurrentTransferItem("");
+    }
+  }, [
+    currentVersionName,
+    selectedTransferTargets,
+    selection,
+    packs,
+    t,
+    transferring,
+    refreshAll,
+    transferTargetOnClose,
+    transferResultOnOpen,
+    dupOnOpen,
+  ]);
+
+  return (
+    <PageContainer ref={scrollRef}>
+      <Card className={LAYOUT.GLASS_CARD.BASE}>
+        <CardBody className="p-6 flex flex-col gap-6">
+          <PageHeader
+            title={t("contentpage.resource_packs")}
+            endContent={
+              <div className="flex items-center gap-2">
+                <Button
+                  radius="full"
+                  variant="flat"
+                  startContent={<FaFolderOpen />}
+                  onPress={() => OpenPathDir(roots.resourcePacks)}
+                  className="bg-default-100 dark:bg-zinc-800 text-default-600 dark:text-zinc-200 font-medium"
+                >
+                  {t("common.open")}
+                </Button>
+                <Tooltip content={t("common.select_mode")}>
+                  <Button
+                    isIconOnly
+                    radius="full"
+                    variant="flat"
+                    className="bg-default-100 dark:bg-zinc-800 text-default-600 dark:text-zinc-200"
+                    onPress={selection.toggleSelectMode}
+                  >
+                    <FaCheckSquare />
+                  </Button>
+                </Tooltip>
+                <Tooltip content={t("common.refresh") as unknown as string}>
+                  <Button
+                    isIconOnly
+                    radius="full"
+                    variant="flat"
+                    className="bg-default-100 dark:bg-zinc-800 text-default-600 dark:text-zinc-200"
+                    onPress={() => refreshAll()}
+                    isDisabled={loading}
+                  >
+                    <FaSync
+                      className={loading ? "animate-spin" : ""}
+                      size={18}
+                    />
+                  </Button>
+                </Tooltip>
+              </div>
+            }
+          />
+
+          <div className="flex flex-col md:flex-row gap-4 items-end md:items-center justify-between">
+            <Input
+              placeholder={t("common.search_placeholder")}
+              value={sort.query}
+              onValueChange={sort.setQuery}
+              startContent={<FaFilter className="text-default-400" />}
+              endContent={
+                sort.query && (
+                  <button onClick={() => sort.setQuery("")}>
+                    <FaTimes className="text-default-400 hover:text-default-600" />
+                  </button>
+                )
+              }
+              radius="full"
+              variant="flat"
+              className="w-full md:max-w-xs"
+              classNames={COMPONENT_STYLES.input}
+            />
+
+            <div className="flex items-center gap-3">
+              {hasIncompatibleShaders && (
+                <Checkbox
+                  isSelected={onlyShowUpdates}
+                  onValueChange={setOnlyShowUpdates}
+                  radius="full"
+                  size="lg"
+                  classNames={{ wrapper: "after:bg-warning" }}
+                >
+                  <span className="text-sm text-default-600">
+                    {t("contentpage.only_show_updates")}
+                  </span>
+                </Checkbox>
+              )}
+
+              <Dropdown classNames={COMPONENT_STYLES.dropdown}>
+                <DropdownTrigger>
+                  <Button
+                    variant="flat"
+                    radius="full"
+                    startContent={
+                      sort.sortAsc ? <FaSortAmountDown /> : <FaSortAmountUp />
+                    }
+                    className="min-w-[120px] bg-default-100 dark:bg-zinc-800 text-default-600 dark:text-zinc-200 font-medium"
+                  >
+                    {sort.sortKey === "name"
+                      ? (t("filemanager.sort.name") as string)
+                      : (t("contentpage.sort_time") as string)}
+                    {" / "}
+                    {sort.sortAsc
+                      ? t("contentpage.sort_asc")
+                      : t("contentpage.sort_desc")}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  selectionMode="single"
+                  selectedKeys={
+                    new Set([
+                      `${sort.sortKey}-${sort.sortAsc ? "asc" : "desc"}`,
+                    ])
+                  }
+                  onSelectionChange={(keys) => {
+                    const val = Array.from(keys)[0] as string;
+                    const [k, order] = val.split("-");
+                    sort.setSortKey(k as "name" | "time");
+                    sort.setSortAsc(order === "asc");
+                  }}
+                >
+                  <DropdownItem
+                    key="name-asc"
+                    startContent={<FaSortAmountDown />}
+                  >
+                    {t("filemanager.sort.name")} (A-Z)
+                  </DropdownItem>
+                  <DropdownItem
+                    key="name-desc"
+                    startContent={<FaSortAmountUp />}
+                  >
+                    {t("filemanager.sort.name")} (Z-A)
+                  </DropdownItem>
+                  <DropdownItem
+                    key="time-asc"
+                    startContent={<FaSortAmountDown />}
+                  >
+                    {t("contentpage.sort_time")} (Old-New)
+                  </DropdownItem>
+                  <DropdownItem
+                    key="time-desc"
+                    startContent={<FaSortAmountUp />}
+                  >
+                    {t("contentpage.sort_time")} (New-Old)
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          </div>
+          <div className="mt-2 text-default-500 dark:text-zinc-400 text-sm flex flex-wrap items-center gap-2">
+            <span>{t("contentpage.current_version")}:</span>
+            <span className="font-medium text-default-700 dark:text-zinc-200 bg-default-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md">
+              {currentVersionName || t("contentpage.none")}
+            </span>
+            <span className="text-default-300 dark:text-zinc-700">|</span>
+            <span>{t("contentpage.isolation")}:</span>
+            <span className="font-medium text-default-700 dark:text-zinc-200 bg-default-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md">
+              {roots.isIsolation ? t("common.yes") : t("common.no")}
+            </span>
+          </div>
+        </CardBody>
+      </Card>
+
+      <SelectionBar
+        selectedCount={selection.selectedCount}
+        totalCount={sort.filtered.length}
+        onSelectAll={selection.selectAll}
+        onDelete={delManyCfmOnOpen}
+        isSelectMode={selection.isSelectMode}
+        onTransfer={openTransferTargetModal}
+        isTransferDisabled={
+          !hasBackend || selection.selectedCount === 0 || transferring
+        }
+      />
+
+      {loading ? (
+        <div className="flex flex-col items-center justify-center py-20 gap-4">
+          <Spinner size="lg" />
+          <span className="text-default-500 dark:text-zinc-400">
+            {t("common.loading")}
+          </span>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {sort.filtered.length ? (
+            <div className="flex flex-col gap-3">
+              {sort.paginatedItems.map((p: any, idx: number) => (
+                <motion.div
+                  key={`${p.path}-${idx}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div
+                    className={cn(
+                      COMPONENT_STYLES.contentListItem,
+                      "w-full p-5 flex gap-5 group cursor-pointer relative overflow-hidden",
+                      selection.isSelectMode && selection.selected[p.path]
+                        ? "ring-2 ring-primary bg-primary/5"
+                        : "",
+                    )}
+                    onClick={() => {
+                      if (selection.isSelectMode)
+                        selection.toggleSelect(p.path);
+                    }}
+                  >
+                    <div className="relative shrink-0">
+                      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-default-100/50 flex items-center justify-center overflow-hidden shadow-sm group-hover:shadow-md transition-shadow">
+                        {p.iconDataUrl ? (
+                          <Image
+                            src={p.iconDataUrl}
+                            alt={p.name || p.path}
+                            className="w-full h-full object-cover"
+                            radius="none"
+                          />
+                        ) : (
+                          <div className="flex flex-col items-center gap-2">
+                            <FaFolderOpen className="text-4xl text-default-300" />
+                            <span className="text-[10px] text-default-400 font-medium uppercase tracking-wider">
+                              No Icon
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      {selection.isSelectMode && (
+                        <div className="absolute -top-2 -start-2 z-20">
+                          <Checkbox
+                            isSelected={!!selection.selected[p.path]}
+                            onValueChange={() => selection.toggleSelect(p.path)}
+                            classNames={{
+                              wrapper:
+                                "bg-white dark:bg-zinc-900 shadow-lg scale-110",
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="flex justify-between items-start gap-2 mb-1">
+                        <h3
+                          className="text-lg font-bold text-default-900 dark:text-white truncate"
+                          title={p.name}
+                        >
+                          {renderMcText(p.name || getPathBaseName(p.path))}
+                        </h3>
+                      </div>
+
+                      <p
+                        className="text-sm text-default-500 dark:text-zinc-400 line-clamp-2 w-full mb-3"
+                        title={p.description}
+                      >
+                        {renderMcText(p.description || "")}
+                      </p>
+                      {p.materialCompat?.hasMaterialBin &&
+                        p.materialCompat?.needsUpdate && (
+                          <div
+                            className="mb-3 rounded-xl border border-warning-200/50 bg-warning-50/50 p-3 dark:border-warning-900/30 dark:bg-warning-900/10 backdrop-blur-md"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                              <div className="flex items-center gap-2 text-warning-600 dark:text-warning-400">
+                                <FaSync
+                                  className={
+                                    updatingMaterialByPath[p.path]
+                                      ? "animate-spin"
+                                      : ""
+                                  }
+                                />
+                                <span className="text-sm font-medium">
+                                  {t("contentpage.update_material_bin_desc")}
+                                </span>
+                              </div>
+                              <Button
+                                size="sm"
+                                color="warning"
+                                variant="shadow"
+                                radius="full"
+                                isLoading={!!updatingMaterialByPath[p.path]}
+                                onPress={(e) => {
+                                  // e.stopPropagation() is handled by parent div onClick
+                                  setPackToUpdate(p);
+                                  updateCfmOnOpen();
+                                }}
+                                className="font-medium text-white shadow-warning-500/20 shrink-0"
+                              >
+                                {t("contentpage.update_material_bin")}
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      <div className="flex items-end justify-between mt-auto">
+                        <div className="flex flex-wrap items-center gap-4 text-xs text-default-400 dark:text-zinc-500">
+                          <div className="flex items-center gap-1.5 bg-default-100/50 dark:bg-zinc-800/50 px-2 py-1 rounded-lg">
+                            <FaHdd className="text-default-400" />
+                            <span>{formatBytes(p.size)}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 bg-default-100/50 dark:bg-zinc-800/50 px-2 py-1 rounded-lg">
+                            <FaClock className="text-default-400" />
+                            <span>{formatDate(p.modTime)}</span>
+                          </div>
+                          {p.version && (
+                            <div className="flex items-center gap-1.5 bg-default-100/50 dark:bg-zinc-800/50 px-2 py-1 rounded-lg">
+                              <FaTag className="text-default-400" />
+                              <span>v{p.version}</span>
+                            </div>
+                          )}
+                          {p.materialCompat?.hasMaterialBin && (
+                            <div className="flex items-center gap-1.5 bg-default-100/50 dark:bg-zinc-800/50 px-2 py-1 rounded-lg">
+                              <FaMagic className="text-default-400" />
+                              <span>{t("contentpage.shader_chip")}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity ms-4">
+                          <Tooltip content={t("common.open")}>
+                            <Button
+                              isIconOnly
+                              size="sm"
+                              variant="flat"
+                              radius="lg"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                OpenPathDir(p.path);
+                              }}
+                              className="bg-default-100 hover:bg-default-200 text-default-600 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200"
+                            >
+                              <FaFolderOpen size={14} />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip content={t("common.delete")}>
+                            <Button
+                              isIconOnly
+                              size="sm"
+                              color="danger"
+                              variant="flat"
+                              radius="lg"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActivePack(p);
+                                delCfmOnOpen();
+                              }}
+                              className="bg-danger-50 hover:bg-danger-100 text-danger-500 dark:bg-danger-900/20 dark:hover:bg-danger-900/30"
+                            >
+                              <FaTrash size={14} />
+                            </Button>
+                          </Tooltip>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 text-default-400 dark:text-zinc-500">
+              <FaBox className="text-6xl mb-4 opacity-20" />
+              <p>
+                {sort.query
+                  ? t("common.no_results")
+                  : t("contentpage.no_resource_packs")}
+              </p>
+            </div>
+          )}
+
+          {sort.totalPages > 1 && (
+            <div className="relative h-12">
+              <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-full flex justify-center">
+                <Pagination
+                  total={sort.totalPages}
+                  page={sort.currentPage}
+                  onChange={sort.setCurrentPage}
+                  showControls
+                  size="sm"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      {/* Single Delete Modal */}
+      <DeleteConfirmModal
+        isOpen={delCfmOpen}
+        onOpenChange={delCfmOnOpenChange}
+        title={t("common.confirm_delete")}
+        description={t("contentpage.delete_pack_confirm", {
+          name: activePack?.name || activePack?.path,
+        })}
+        itemName={activePack?.name || activePack?.path}
+        warning={t("contentpage.delete_warning")}
+        isPending={deletingOne}
+        onConfirm={async () => {
+          if (activePack) {
+            setDeletingOne(true);
+            try {
+              await DeletePack(currentVersionName, activePack.path);
+              addToast({
+                title: t("contentpage.deleted_name", {
+                  name: activePack.name,
+                }),
+                color: "success",
+              });
+              setActivePack(null);
+              refreshAll();
+            } catch (e) {
+              addToast({
+                title: "Error",
+                description: String(e),
+                color: "danger",
+              });
+              throw e;
+            } finally {
+              setDeletingOne(false);
+            }
+          }
+        }}
+      />
+
+      {/* Batch Delete Modal */}
+      <DeleteConfirmModal
+        isOpen={delManyCfmOpen}
+        onOpenChange={delManyCfmOnOpenChange}
+        title={t("common.confirm_delete")}
+        description={t("contentpage.delete_selected_confirm", {
+          count: Object.values(selection.selected).filter(Boolean).length,
+        })}
+        warning={t("contentpage.delete_warning")}
+        isPending={deletingMany}
+        onConfirm={async () => {
+          const targets = selection.getSelectedKeys();
+          if (targets.length === 0) return;
+
+          setDeletingMany(true);
+          try {
+            let success = 0;
+            for (const p of targets) {
+              try {
+                await DeletePack(currentVersionName, p);
+                success++;
+              } catch (e) {
+                console.error(e);
+              }
+            }
+            addToast({
+              title: t("contentpage.deleted_count", {
+                count: success,
+              }),
+              color: "success",
+            });
+            selection.clearSelection();
+            refreshAll();
+          } finally {
+            setDeletingMany(false);
+          }
+        }}
+      />
+
+      <UnifiedModal
+        isOpen={transferring}
+        type="primary"
+        title={t("contentpage.transfer_progress_title")}
+        icon={<FaExchangeAlt className="w-6 h-6" />}
+        hideCloseButton
+        isDismissable={false}
+        showConfirmButton={false}
+        showCancelButton={false}
+      >
+        <div className="flex flex-col gap-4">
+          <Progress
+            isIndeterminate
+            aria-label="transferring"
+            className="w-full"
+            size="sm"
+            color="primary"
+          />
+          <div className="text-default-600 dark:text-zinc-300 text-sm">
+            {t("contentpage.transfer_progress_body")}
+          </div>
+          {currentTransferItem ? (
+            <div className="p-3 bg-default-100/50 dark:bg-zinc-800 rounded-xl border border-default-200/50 text-small font-mono text-default-800 dark:text-zinc-200 break-all">
+              {currentTransferItem}
+            </div>
+          ) : null}
+        </div>
+      </UnifiedModal>
+
+      <UnifiedModal
+        isOpen={transferTargetOpen}
+        onOpenChange={(open) => {
+          if (!open) transferTargetOnClose();
+        }}
+        type="primary"
+        title={t("contentpage.transfer_resources_title")}
+        confirmText={t("common.confirm")}
+        cancelText={t("common.cancel")}
+        showCancelButton
+        onConfirm={() => void transferSelectedPacksToTargets()}
+        onCancel={() => transferTargetOnClose()}
+        confirmButtonProps={{
+          isDisabled:
+            selectedTransferTargets.length === 0 ||
+            selection.selectedCount === 0 ||
+            transferring,
+        }}
+      >
+        <div className="flex flex-col gap-4">
+          <div className="text-sm text-default-700 dark:text-zinc-300">
+            {t("contentpage.transfer_resources_body_simple")}
+          </div>
+
+          {transferTargets.length > 0 ? (
+            <Select
+              items={transferTargets}
+              label={t("mirror.target") || "Target Instance"}
+              placeholder={t("contentpage.transfer_target_placeholder")}
+              selectedKeys={new Set(selectedTransferTargets)}
+              onSelectionChange={(keys) => {
+                const selected = Array.from(keys).map(String);
+                setSelectedTransferTargets(selected);
+              }}
+              classNames={COMPONENT_STYLES.select}
+            >
+              {(item) => (
+                <SelectItem key={item.name} textValue={item.name}>
+                  <div className="flex gap-2 items-center">
+                    <div className="w-8 h-8 rounded bg-default-200 flex items-center justify-center overflow-hidden">
+                      <img
+                        src={
+                          item.icon ||
+                          "https://raw.githubusercontent.com/BedrockNexusLauncher/BedrockNexusLauncher/main/build/appicon.png"
+                        }
+                        alt="icon"
+                        className="w-full h-full object-cover"
+                        onError={(e) =>
+                          (e.currentTarget.style.display = "none")
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-small">{item.name}</span>
+                      <span className="text-tiny text-default-400">
+                        {item.gameVersion}
+                      </span>
+                    </div>
+                  </div>
+                </SelectItem>
+              )}
+            </Select>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-8 text-default-400 dark:text-zinc-500">
+              <FaExchangeAlt className="text-4xl mb-3 opacity-20" />
+              <p className="text-sm">{t("contentpage.transfer_no_targets")}</p>
+            </div>
+          )}
+        </div>
+      </UnifiedModal>
+
+      <ImportResultModal
+        isOpen={transferResultOpen}
+        onOpenChange={transferResultOnOpenChange}
+        results={{
+          success: transferResultSuccess,
+          failed: transferResultFailed,
+        }}
+        onConfirm={() => {
+          setTransferResultSuccess([]);
+          setTransferResultFailed([]);
+        }}
+      />
+
+      <UnifiedModal
+        isOpen={dupOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            dupOnClose();
+            dupResolveRef.current?.(false);
+          }
+        }}
+        type="warning"
+        title={t("mods.overwrite_modal_title")}
+        confirmText={t("common.confirm")}
+        cancelText={t("common.cancel")}
+        showCancelButton
+        onConfirm={() => {
+          dupResolveRef.current?.(true);
+          dupOnClose();
+        }}
+        onCancel={() => {
+          dupResolveRef.current?.(false);
+          dupOnClose();
+        }}
+      >
+        <div className="flex flex-col gap-4">
+          <div className="text-sm text-default-700 dark:text-zinc-300">
+            {t("mods.overwrite_modal_body")}
+          </div>
+          {dupNameRef.current ? (
+            <div className="p-3 bg-default-100/50 dark:bg-zinc-800 rounded-xl border border-default-200/50 text-small font-mono text-default-800 dark:text-zinc-200 break-all">
+              {dupNameRef.current}
+            </div>
+          ) : null}
+        </div>
+      </UnifiedModal>
+
+      {/* Update Confirmation Modal */}
+      <UnifiedModal
+        isOpen={updateCfmOpen}
+        onOpenChange={updateCfmOnOpenChange}
+        type="warning"
+        title={t("contentpage.update_material_bin_modal_title")}
+        confirmText={t("common.confirm")}
+        cancelText={t("common.cancel")}
+        showCancelButton
+        onConfirm={() => {
+          if (packToUpdate) {
+            void updateMaterialBinsForPack(packToUpdate.path);
+          }
+          updateCfmOnOpenChange();
+        }}
+      >
+        <p>{t("contentpage.update_material_bin_modal_content")}</p>
+        <div className="mt-4 p-3 bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-lg">
+          <p className="text-warning-600 dark:text-warning-500 text-sm font-medium">
+            {t("contentpage.update_material_bin_risk_title")}
+          </p>
+          <p className="text-warning-600 dark:text-warning-500 text-sm mt-1">
+            {t("contentpage.update_material_bin_risk_content")}
+          </p>
+        </div>
+      </UnifiedModal>
+    </PageContainer>
+  );
+}

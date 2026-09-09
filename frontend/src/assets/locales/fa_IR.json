@@ -1,0 +1,1466 @@
+{
+  "app": {
+    "settings": "تنظیمات"
+  },
+  "nav": {
+    "versions": "نمونه‌ها",
+    "more": "بیشتر",
+    "about": "درباره",
+    "back": "بازگشت",
+    "forward": "رو به جلو",
+    "mcpedl": "MCPEDL"
+  },
+  "theme": {
+    "toggle": "تغییر پوسته"
+  },
+  "launcherpage": {
+    "launch_button": "اجرا",
+    "content_manage": "مدیریت محتوا",
+    "go_version_settings": "تنظیمات نمونه",
+    "manage_versions": "مدیریت نمونه‌ها",
+    "search_versions": "جست‌وجوی نمونه یا نام",
+    "open_exe_dir": "باز کردن پوشه نصب بازی",
+    "register_system_button": "ثبت در سیستم",
+    "registered_tip": "ثبت شده",
+    "levilamina_update_available": "به‌روزرسانی موجود است",
+    "register": {
+      "installing": {
+        "title": "در حال ثبت در سیستم",
+        "body": "در حال ثبت نمونه در سیستم؛ لطفاً صبر کنید…"
+      },
+      "success": {
+        "title": "ثبت انجام شد",
+        "body": "نمونه در سیستم ثبت شد؛ از این پس می‌توانید آن را از فهرست برنامه‌های سیستم اجرا کنید."
+      },
+      "failed": {
+        "title": "ثبت ناموفق بود",
+        "body": "هنگام ثبت خطایی رخ داد. لطفاً دوباره تلاش کنید یا محیط را بررسی کنید."
+      }
+    },
+    "delete": {
+      "complete": {
+        "title": "حذف کامل شد",
+        "content": "نمونه انتخاب‌شده با موفقیت حذف شد!",
+        "close_button": "بستن"
+      },
+      "confirm": {
+        "title": "تأیید حذف",
+        "content": "آیا از حذف این نمونه مطمئن هستید؟ این عملیات قابل بازگشت نیست."
+      }
+    },
+    "launch": {
+      "failed": {
+        "title": "خطا در اجرای بازی",
+        "content": "فایل‌های نمونه و زمان‌اجراهای مورد نیاز را بررسی کنید و پیش از تلاش مجدد مطمئن شوید هیچ ماد، افزونه یا بستهٔ منبع ناسازگاری وجود ندارد.",
+        "close_button": "بستن"
+      },
+      "force_run_button": "اجرای اجباری"
+    },
+    "currentVersion": "نمونه فعلی",
+    "vcruntime": {
+      "completing": {
+        "title": "تکمیل DLL ناموجود",
+        "body": "در حال دانلود و تکمیل vcruntime140_1.dll؛ لطفاً صبر کنید…"
+      },
+      "installing": {
+        "title": "نصب Microsoft Visual C++ Runtime",
+        "body": "در حال دانلود و نصب Microsoft Visual C++ Runtime؛ لطفاً صبر کنید…",
+        "preparing": "در حال آماده‌سازی دانلود..."
+      },
+      "missing": {
+        "title": "Visual C++ Runtime موجود نیست",
+        "body": "برای اجرای بازی به Microsoft Visual C++ 2015-2022 Redistributable (x64) نیاز است. اکنون نصب شود؟",
+        "install_now": "نصب فوری"
+      }
+    },
+    "mclaunch": {
+      "loading": {
+        "title": "در حال اجرای Minecraft",
+        "body": "در انتظار باز شدن پنجرهٔ بازی؛ لطفاً صبر کنید…"
+      }
+    },
+    "shortcut": {
+      "create_button": "ساخت میانبر دسکتاپ",
+      "success": {
+        "title": "میانبر ساخته شد",
+        "body": "میانبر دسکتاپ برای این نمونه ساخته شد."
+      }
+    },
+    "gameinput": {
+      "installing": {
+        "title": "نصب GameInput",
+        "body": "در حال دانلود و اجرای نصب‌کننده؛ برای تکمیل، مراحل سیستم را دنبال کنید.",
+        "preparing": "در حال آماده‌سازی دانلود..."
+      },
+      "missing": {
+        "title": "مؤلفهٔ GameInput موجود نیست",
+        "body": "برای اجرای بازی به Microsoft GameInput نیاز است. اکنون نصب شود؟",
+        "install_now": "نصب فوری"
+      }
+    },
+    "gs": {
+      "missing": {
+        "title": "Microsoft Gaming Services موجود نیست",
+        "body": "Microsoft Gaming Services شناسایی نشد. این پیش‌نیاز برای Minecraft ضروری است.",
+        "open_store": "باز کردن Store برای نصب",
+        "ignore_forever": "نادیده گرفتن و دیگر یادآوری نکن"
+      }
+    },
+    "install_confirm": {
+      "title": "نصب کامل شد؟",
+      "body": "پس از پایان نصب روی «انجام شد، بررسی مجدد» کلیک کنید؛ در غیر این صورت نصب را ادامه دهید.",
+      "continue": "ادامهٔ نصب",
+      "done_and_check": "انجام شد، بررسی مجدد"
+    },
+    "currentVersion_none": "هیچ‌کدام",
+    "version_select": {
+      "title": "انتخاب نمونه",
+      "unknown": "نامشخص"
+    },
+    "tip": {
+      "version_selector": "برای جابه‌جایی سریع بین نمونه‌ها از فهرست کشویی نسخه استفاده کنید.",
+      "version_search": "پیش از انتخاب از فهرست کشویی، بر اساس نام نمونه یا نسخهٔ بازی جست‌وجو کنید.",
+      "manage_versions": "برای نصب، وارد کردن یا مرتب‌سازی نمونه‌ها روی «مدیریت نمونه‌ها» در پنل کشویی کلیک کنید.",
+      "quick_actions_menu": "منوی کنار دکمهٔ اجرا شامل تنظیمات نمونه، میانبر دسکتاپ، پوشهٔ بازی و عملیات ثبت در سیستم است.",
+      "launch_dependencies": "اگر GameInput یا VC++ Runtime یا Gaming Services وجود نداشته باشند، Bedrock Nexus پیش از اجرا شما را برای نصب آن‌ها راهنمایی می‌کند.",
+      "mods_card": "کارت «مادها» مادهای فعال نمونهٔ فعلی را نشان می‌دهد و با یک کلیک صفحهٔ کامل مادها را باز می‌کند.",
+      "content_counts_card": "کارت «محتوا» تعداد دنیاها و بسته‌های منبع و رفتاری را نشان می‌دهد و هر ردیف صفحهٔ مربوطه را باز می‌کند.",
+      "incompatible_resource_packs": "اگر بسته‌های منبع ناسازگار شناسایی شوند، با کلیک روی ردیف هشدار می‌توانید مستقیماً آن‌ها را بررسی کنید.",
+      "content_download_sources": "با کارت دانلود بدون خروج از لانچر به منابع محتوای CurseForge یا lip دسترسی پیدا کنید.",
+      "settings_personalize": "در تنظیمات می‌توانید پوسته، رنگ، تصویر پس‌زمینه و سایر گزینه‌های ظاهری را متناسب با سلیقهٔ خود تغییر دهید.",
+      "settings_storage_path": "مسیرهای ذخیره‌سازی را می‌توانید در تنظیمات تغییر دهید؛ پیش از انتقال محتوا مطمئن شوید پوشهٔ مقصد قابل نوشتن است.",
+      "download_mirror": "اگر دانلودها کند هستند، در تنظیمات سرورهای آینه یا گزینه‌های مربوط به شبکه را امتحان کنید.",
+      "open_source": "Bedrock Nexus متن‌باز است؛ مشکلات لانچر را از طریق Issues گیت‌هاب گزارش دهید یا پیشنهادهای بهبود ارائه کنید.",
+      "backup_worlds": "پیش از آزمودن بسته‌های منبع یا رفتاری جدید و مادهای تازه، به‌طور منظم از دنیاهای مهم خود نسخهٔ پشتیبان تهیه کنید."
+    },
+    "edition": "نسخهٔ Bedrock",
+    "select_version_first": "لطفاً ابتدا یک نسخه انتخاب کنید — می‌توانید از فهرست نسخه‌ها یکی را انتخاب کنید."
+  },
+  "moddedcard": {
+    "title": "مادها",
+    "content": {
+      "none": "هیچ مادی یافت نشد"
+    },
+    "manage": "مدیریت مادها"
+  },
+  "download_manager": {
+    "title": "مدیریت دانلود",
+    "description": "مشاهده و مدیریت وظایف دانلود جاری",
+    "no_downloads": "وظیفهٔ دانلود فعالی وجود ندارد",
+    "unknown_file": "فایل ناشناخته",
+    "actions": {
+      "retry": "تلاش مجدد",
+      "delete": "حذف"
+    }
+  },
+  "updating": {
+    "title": "به‌روزرسانی Bedrock Nexus",
+    "body": "در حال دریافت مجوز مدیر و انجام به‌روزرسانی است؛ هنگام به‌روزرسانی این پنجره را نبندید.",
+    "failed_title": "به‌روزرسانی ناموفق بود",
+    "phase": {
+      "download": "دانلود بستهٔ به‌روزرسانی",
+      "install": "نصب به‌روزرسانی"
+    },
+    "status": {
+      "checking": "بررسی وجود به‌روزرسانی",
+      "verifying": "بررسی صحت بسته",
+      "elevating": "درخواست مجوز مدیر",
+      "restarting": "راه‌اندازی مجدد لانچر"
+    },
+    "errors": {
+      "generic": "به‌روزرسانی انجام نشد؛ لطفاً بعداً دوباره تلاش کنید.",
+      "update_admin_required": "برای ادامهٔ به‌روزرسانی، مجوز مدیر لازم است.",
+      "update_asset_missing": "بستهٔ به‌روزرسانی مورد نیاز یافت نمی‌شود یا نام آن اشتباه است.",
+      "update_release_unavailable": "اطلاعات انتشار به‌روزرسانی در حال حاضر در دسترس نیست.",
+      "update_verify_failed": "اعتبارسنجی بستهٔ به‌روزرسانی ناموفق بود.",
+      "update_download_failed": "دانلود بستهٔ به‌روزرسانی ناموفق بود.",
+      "update_install_failed": "نصب بستهٔ به‌روزرسانی ناموفق بود.",
+      "update_restart_failed": "لانچرِ به‌روزشده نتوانست به‌طور خودکار دوباره اجرا شود."
+    }
+  },
+  "downloadpage": {
+    "error": {
+      "already_downloading": "این فایل هم‌اکنون در حال دانلود است"
+    },
+    "changelog": {
+      "title": "آخرین تغییرات"
+    },
+    "status": {
+      "downloaded": "دانلود شده",
+      "not_downloaded": "دانلود نشده",
+      "checking": "در حال بررسی…"
+    },
+    "table": {
+      "aria_label": "جدول نسخه‌ها",
+      "empty": "داده‌ای نیست",
+      "header": {
+        "version": "نسخه",
+        "type": "نوع",
+        "status": "وضعیت",
+        "loader": "لودر",
+        "actions": "عملیات"
+      },
+      "type": {
+        "release": "انتشار رسمی",
+        "preview": "پیش‌نمایش"
+      }
+    },
+    "topcontent": {
+      "types": "نوع",
+      "types_all": "همه",
+      "status": "وضعیت",
+      "status_all": "همه",
+      "status_downloaded": "دانلود شده",
+      "status_not_downloaded": "دانلود نشده",
+      "loader": "لودر",
+      "input": {
+        "placeholder": "جست‌وجو بر اساس نسخه..."
+      }
+    },
+    "actions": {
+      "delete_installer": "حذف نصب‌کننده"
+    },
+    "bottomcontent": {
+      "total": "مجموعاً {{count}} نسخه"
+    },
+    "install_folder": {
+      "confirm_title": "نصب نمونه",
+      "name_label": "نام نسخه",
+      "placeholder_name": "لطفاً نام نسخه را وارد کنید",
+      "enable_isolation": "جداسازی نسخه",
+      "enable_isolation_desc": "داده‌های بازی (دنیاها، تنظیمات، حافظهٔ نهان و…) به‌جای AppData به مسیر versions/<name>/ منتقل می‌شود.",
+      "inherit_label": "ارث‌بری از",
+      "inherit_hint": "کپی داده‌ها از یک نسخهٔ جداسازی‌شده با نوع مشابه",
+      "inherit_none": "بدون ارث‌بری",
+      "inherit_gdk": "ارث‌بری از پوشهٔ GDK"
+    },
+    "mirror": {
+      "no_recommended": "سرور آینهٔ پیشنهادی وجود ندارد",
+      "download_started": "دانلود آغاز شد...",
+      "title": "انتخاب سرور آینهٔ دانلود",
+      "target": "مقصد",
+      "testing": "در حال آزمایش…",
+      "unselected": "انتخاب‌نشده",
+      "copy_link": "کپی پیوند",
+      "recommended": "سرور آینهٔ پیشنهادی",
+      "auto_testing": "آزمایش خودکار…",
+      "others": "سرورهای آینهٔ دیگر",
+      "no_mirrors": "برای این نسخه هیچ سرور آینه‌ای در دسترس نیست.",
+      "filename_fallback": "(فایل)",
+      "retest": "آزمایش مجدد",
+      "download_selected": "دانلود موارد انتخاب‌شده",
+      "install_button": "نصب",
+      "install_selected": "نصب موارد انتخاب‌شده"
+    },
+    "progress": {
+      "unknown_error": "خطای ناشناخته"
+    },
+    "download": {
+      "success_body": "فایل دانلود شد: "
+    },
+    "delete": {
+      "title": "تأیید حذف",
+      "body": "این نصب‌کننده حذف خواهد شد: ",
+      "warning": "این عملیات قابل بازگشت نیست.",
+      "success_body": "نصب‌کننده حذف شد: "
+    },
+    "install": {
+      "levilamina_label": "نصب LeviLamina",
+      "levilamina_desc": "نصب خودکار لودر LeviLamina",
+      "version_label": "نسخه",
+      "ll_version_label": "نسخهٔ LeviLamina",
+      "ll_version_placeholder": "یک نسخه از LeviLamina انتخاب کنید",
+      "hint": "لطفاً صبر کنید؛ این فرایند ممکن است کمی طول بکشد…",
+      "estimated_size": "حجم نوشتاری (تقریبی)",
+      "target": "مقصد نصب",
+      "success_title": "نصب کامل شد",
+      "success": "نصب با موفقیت انجام شد.",
+      "progress": "پیشرفت نصب",
+      "custom_installer": {
+        "label": "انتخاب نصب‌کنندهٔ محلی (.msixvc)",
+        "hint": "به‌طور پیش‌فرض از فایل‌های موجود در پوشهٔ installers استفاده می‌شود"
+      },
+      "levilamina_unsupported": "LeviLamina برای این نسخه از بازی پشتیبانی نمی‌شود",
+      "title": "نصب"
+    },
+    "customappx": {
+      "button": "سفارشی",
+      "modal": {
+        "1": {
+          "header": "اطلاعات نسخه",
+          "body": {
+            "select": {
+              "item1": "انتشار رسمی",
+              "item2": "پیش‌نمایش"
+            }
+          },
+          "footer": {
+            "install_button": "نصب"
+          }
+        }
+      }
+    }
+  },
+  "onboarding": {
+    "title": "راه‌اندازی اولیه",
+    "subtitle": "ابتدا مسیر محتوا و زبان را تنظیم کنید",
+    "skip": "رد کردن",
+    "finish": "پایان",
+    "unsaved": {
+      "title": "تغییرات ذخیره‌نشده",
+      "body": "تغییراتی در مسیر محتوا اعمال کرده‌اید که ذخیره نشده است. پیش از پایان، ذخیره شود؟",
+      "cancel": "لغو",
+      "save": "ذخیره و پایان"
+    }
+  },
+  "settings": {
+    "layout": {
+      "title_navbar": "استفاده از نوار ناوبری بالایی",
+      "desc_navbar": "به‌جای نوار کناری عمودی پیش‌فرض، از نوار ناوبری بالایی استفاده می‌شود"
+    },
+    "tabs": {
+      "general": "تنظیمات پایه",
+      "personalization": "شخصی‌سازی ظاهری",
+      "components": "مؤلفه‌های شخص ثالث",
+      "others": "سایر",
+      "updates": "به‌روزرسانی‌ها",
+      "help": "گزارش مشکل"
+    },
+    "unsaved": {
+      "title": "تغییرات ذخیره‌نشده",
+      "body": "مسیر محتوا را تغییر داده‌اید اما ذخیره نکرده‌اید. ذخیره شود و خارج شوید؟",
+      "cancel": "لغو",
+      "save": "ذخیره و خروج"
+    },
+    "lang": {
+      "changed": "زبان تغییر کرد"
+    },
+    "discord_rpc": {
+      "title": "حضور غنی Discord",
+      "desc": "نمایش وضعیت بازی شما در Discord"
+    },
+    "beta_updates": {
+      "title": "دریافت به‌روزرسانی‌های بتا",
+      "desc": "برای دریافت نسخه‌های پیش از انتشار، فعال کنید"
+    },
+    "experimental": {
+      "title": "قابلیت‌های آزمایشی",
+      "desc": "قابلیت‌های ناتمام را اینجا بیازمایید. این قابلیت‌ها ممکن است بدون اطلاع قبلی تغییر کنند، از کار بیفتند یا حذف شوند.",
+      "instance_backup": {
+        "title": "پشتیبان‌گیری از نمونه (آزمایشی)",
+        "desc": "عملیات پشتیبان‌گیری و بازیابی را در تنظیمات نمونه فعال می‌کند. این قابلیت هنوز آزمایشی است.",
+        "warning": {
+          "title": "پشتیبان‌گیری آزمایشی از نمونه فعال شود؟",
+          "body_1": "این قابلیت فقط برای توسعه‌دهندگان و آزمایش‌کنندگان طراحی شده است؛ از آن با داده‌های مهم و اصلی استفاده نکنید.",
+          "body_2": "قالب فایل پشتیبان، محدودهٔ شامل‌شده و سازگاری بازیابی ممکن است در نسخه‌های بعدی تغییر کند و سازگاری با نسخه‌های آینده تضمین نمی‌شود.",
+          "body_3": "لطفاً مطمئن شوید ریسک‌ها را درک کرده‌اید و تنها پس از خواندن کامل این هشدار و گذشت ۱۰ ثانیه دربارهٔ فعال‌سازی آن تصمیم بگیرید.",
+          "confirm": "ریسک‌ها را درک می‌کنم"
+        }
+      },
+      "mcpedl": {
+        "title": "کاتالوگ MCPEDL (آزمایشی)",
+        "desc": "صفحهٔ جستجوی MCPEDL برای پیدا کردن و دانلود ادان‌های بدراک به ناوبری اضافه می‌شود. ناپایدار است و ممکن است با تغییر MCPEDL از کار بیفتد."
+      },
+      "lip_bedrinth": {
+        "title": "فال‌بک Bedrinth برای LIP (آزمایشی)",
+        "desc": "وقتی ایندکس پکیج‌های LIP در دسترس نباشد، از API بدرینت استفاده می‌شود. موارد بارگذاری‌شده از این راه دادهٔ سازگاری نسخه ندارند."
+      }
+    },
+    "reset": {
+      "confirm": {
+        "title": "بازگرداندن مسیر پیش‌فرض؟",
+        "body": "با این کار مسیر محتوا به محل پیش‌فرض بازنشانی می‌شود. مطمئن هستید؟"
+      }
+    },
+    "lip": {
+      "title": "lip",
+      "install_button": "نصب",
+      "check_button": "بررسی",
+      "cache_clean_button": "پاک کردن حافظهٔ نهان",
+      "cache_cleaning": "در حال پاک کردن حافظهٔ نهان...",
+      "cache_clean_success": "حافظهٔ نهان lip پاک شد",
+      "installing": "در حال نصب lip...",
+      "latest_label": "جدیدترین",
+      "outdated_label": "به‌روزرسانی موجود است",
+      "missing_label": "نصب نشده",
+      "status": {
+        "checking": "در حال بررسی وضعیت lip...",
+        "checking_runtime": "در حال بررسی زمان‌اجرای ‎.NET 10...",
+        "preparing": "در حال آماده‌سازی دانلود...",
+        "installing_runtime": "در حال نصب زمان‌اجرای ‎.NET 10...",
+        "downloading": "در حال دانلود بستهٔ فشردهٔ lip...",
+        "extracting": "در حال استخراج lipd.exe...",
+        "writing": "در حال نوشتن lipd.exe...",
+        "verifying": "در حال بررسی صحت نصب...",
+        "up_to_date": "نسخهٔ فعلی به‌روز است",
+        "outdated": "نسخهٔ جدیدتری موجود است",
+        "missing": "lip نصب نشده است",
+        "check_failed": "بررسی وضعیت lip ناموفق بود: {{error}}",
+        "done": "نصب lip تکمیل شد"
+      },
+      "error": {
+        "lip_fetch_release": "دریافت اطلاعات بستهٔ lip ناموفق بود",
+        "lip_release_asset_not_found": "اطلاعات جدیدترین نسخهٔ lip شامل بستهٔ Windows x64 نیست",
+        "lip_download_dotnet_installer": "دانلود اسکریپت نصب ‎.NET 10 ناموفق بود",
+        "lip_install_dotnet_runtime": "نصب زمان‌اجرای ‎.NET 10 ناموفق بود",
+        "lip_verify_dotnet_runtime": "اعتبارسنجی زمان‌اجرای ‎.NET 10 ناموفق بود",
+        "lip_download_archive": "دانلود بستهٔ ‎.tgz مربوط به lip ناموفق بود",
+        "lip_open_archive": "باز کردن بستهٔ ‎.tgz مربوط به lip ناموفق بود",
+        "lip_extract_binary": "استخراج win32-x64/lipd.exe ناموفق بود",
+        "lip_create_target_dir": "ساخت پوشهٔ نصب lip ناموفق بود",
+        "lip_replace_file": "جایگزینی lipd.exe ناموفق بود",
+        "lip_verify_install": "اعتبارسنجی نسخهٔ نصب‌شدهٔ lip ناموفق بود",
+        "lip_install_failed": "نصب lip ناموفق بود"
+      },
+      "version_label": "فعلی: {{currentVersion}} / جدیدترین: {{latestVersion}}",
+      "startup_prompt": {
+        "title": "به‌روزرسانی lip موجود است",
+        "description": "نسخهٔ جدیدتری از lip موجود است ({{currentVersion}} -> {{latestVersion}}). Bedrock Nexus آن را به‌طور خودکار به‌روزرسانی نمی‌کند؛ برای به‌روزرسانی دستی به تنظیمات > مؤلفه‌ها بروید.",
+        "later_button": "بعداً",
+        "ignore_button": "نادیده گرفتن این نسخه",
+        "open_settings_button": "باز کردن تنظیمات",
+        "current_version": "نسخهٔ فعلی: {{currentVersion}}",
+        "latest_version": "جدیدترین نسخه: {{latestVersion}}"
+      },
+      "unknown_version": "نامشخص",
+      "update_button": "به‌روزرسانی"
+    },
+    "resource_rules": {
+      "title": "داده‌های زمان‌اجرای لانچر",
+      "check_button": "بررسی به‌روزرسانی",
+      "update_button": "به‌روزرسانی",
+      "latest_label": "به‌روز",
+      "outdated_label": "قدیمی",
+      "missing_label": "یافت نشد",
+      "status": {
+        "checking": "در حال بررسی SHA256...",
+        "up_to_date": "SHA256 با نسخهٔ منتشرشده مطابقت دارد",
+        "outdated": "SHA256 با نسخهٔ منتشرشده متفاوت است",
+        "missing": "فایل محلی یافت نشد",
+        "check_failed": "بررسی ناموفق بود: {{error}}"
+      }
+    },
+    "header": {
+      "title": "تنظیمات",
+      "content": "پیکربندی گزینه‌های رایج لانچر"
+    },
+    "body": {
+      "version": {
+        "name": "نسخهٔ فعلی",
+        "hasnew": "نسخهٔ جدیدی موجود است! ",
+        "button": "بررسی به‌روزرسانی",
+        "ignore": "نادیده گرفتن این نسخه"
+      },
+      "paths": {
+        "title": "مسیرهای محتوا",
+        "subtitle": "مدیریت محل ذخیره‌سازی داده‌های بازی",
+        "base_root": "مسیر اصلی",
+        "apply": "اعمال",
+        "reset": "بازنشانی",
+        "installer": "نصب‌کننده‌ها",
+        "versions": "نسخه‌ها",
+        "unsaved": "تغییرات ذخیره نشده‌اند",
+        "not_writable": "در این پوشه نمی‌توان نوشت"
+      },
+      "language": {
+        "name": "زبان",
+        "button": "تغییر"
+      }
+    },
+    "process": {
+      "title": "مدیریت فرایندها",
+      "desc": "مدیریت فرایندهای در حال اجرای Minecraft",
+      "scan": "اسکن فرایندها",
+      "kill_all": "پایان دادن به همهٔ فرایندها",
+      "kill": "پایان وظیفه",
+      "no_process": "هیچ فرایند در حال اجرایی از Minecraft یافت نشد"
+    },
+    "patch": {
+      "title": "پچ لانچر",
+      "desc": "اعمال اسکریپت پچ داخلی لانچر",
+      "auto_run": "اجرای خودکار هنگام استارت",
+      "auto_run_desc": "با فعال بودن این گزینه، اسکریپت پچ هر بار که Bedrock Nexus اجرا می‌شود اعمال خواهد شد (نیازمند تأیید دسترسی مدیر). با خاموش کردن، اسکریپت در اجراهای بعدی اجرا نمی‌شود.",
+      "run_button": "اجرای پچ اکنون",
+      "run_desc": "اسکریپت پچ داخلی را به‌صورت دستی اعمال می‌کند؛ ویندوز مجوز مدیر را درخواست خواهد کرد.",
+      "running": "در حال اجرا...",
+      "success": "پچ با موفقیت اعمال شد",
+      "failed": "اجرای پچ ناموفق بود",
+      "register_mode": "نسخه‌ای که قبل از پچ ثبت می‌شود",
+      "register_mode_desc": "اگر ماینکرفت در سیستم ثبت نشده باشد، نسخهٔ انتخاب‌شده قبل از اجرای اسکریپت‌های پچ به‌صورت خودکار ثبت می‌شود تا پچ بتواند بازی را پیدا کند.",
+      "register_mode_latest_release": "جدیدترین نسخهٔ Release",
+      "register_mode_latest_preview": "جدیدترین نسخهٔ Preview",
+      "register_mode_last_launched": "آخرین نسخهٔ اجرا شده",
+      "register_mode_off": "هرگز به‌صورت خودکار ثبت نکن"
+    },
+    "modal": {
+      "2": {
+        "footer": {
+          "download_button": "به‌روزرسانی"
+        }
+      }
+    },
+    "appearance": {
+      "global_config": "پیکربندی سراسری",
+      "mode_config": "پیکربندی مخصوص هر حالت",
+      "edit_mode_desc": "تنظیمات شخصی‌سازی (رنگ‌ها، شفافیت و…) برای حالت روشن و تاریک به‌طور جداگانه ذخیره می‌شوند. برای پیکربندی هر حالت، زبانه‌های سمت راست را عوض کنید.",
+      "theme_mode": "حالت پوسته",
+      "theme_mode_desc": "پوستهٔ برنامه را انتخاب کنید",
+      "theme_system": "هماهنگ با سیستم",
+      "theme_light": "حالت روشن",
+      "theme_dark": "حالت تاریک",
+      "theme_schedule": "زمان‌بندی دستی",
+      "theme_auto": "طلوع/غروب خورشید",
+      "theme_start_time": "زمان شروع حالت تاریک",
+      "theme_end_time": "زمان پایان حالت تاریک",
+      "theme_schedule_desc": "در بازهٔ زمانی مشخص، به‌طور خودکار به حالت تاریک سوئیچ می‌شود",
+      "theme_auto_desc": "تغییر خودکار پوسته بر اساس زمان طلوع و غروب خورشید محلی",
+      "theme_system_desc": "پیروی از تنظیمات سیستم ویندوز",
+      "theme_color": "رنگ پوسته",
+      "theme_color_desc": "رنگ تأکیدی اصلی برنامه",
+      "theme_standard": "رنگ‌های آماده",
+      "theme_generated": "رنگ‌های بیشتر",
+      "hue": "فام رنگ",
+      "custom_color": "رنگ سفارشی",
+      "background_image": "تصویر پس‌زمینه",
+      "background_image_desc": "پوشه‌ای را انتخاب کنید تا تصاویر آن به‌عنوان پس‌زمینه استفاده شوند",
+      "background_play_order": "ترتیب نمایش",
+      "background_play_random": "تصادفی",
+      "background_play_sequential": "ترتیبی",
+      "background_fit_mode": "حالت اندازه‌گیری",
+      "background_fit_smart": "هوشمند",
+      "background_fit_center": "وسط‌چین",
+      "background_fit_fit": "جا شدن در کادر",
+      "background_fit_stretch": "کشیده شدن",
+      "background_fit_tile": "کاشی‌کاری",
+      "background_fit_top_left": "بالا-چپ",
+      "background_fit_top_right": "بالا-راست",
+      "no_image_selected": "پوشه‌ای انتخاب نشده است",
+      "select_image": "انتخاب پوشه",
+      "clear_image": "پاک کردن پوشه",
+      "background_blur": "محو شدن پس‌زمینه",
+      "background_brightness": "روشنایی پس‌زمینه",
+      "background_opacity": "شفافیت پس‌زمینه",
+      "background_base_mode": "لایهٔ زیرین",
+      "background_base_mode_desc": "برای افزایش کنتراست، یک لایهٔ رنگ یک‌دست زیر تصویر پس‌زمینه قرار می‌گیرد",
+      "background_base_none": "هیچ‌کدام",
+      "background_base_theme": "هماهنگ با رنگ پوسته",
+      "background_base_color": "رنگ سفارشی",
+      "background_base_color_pick": "رنگ لایهٔ زیرین",
+      "background_base_opacity": "شفافیت لایهٔ زیرین",
+      "disable_animations": "غیرفعال کردن انیمیشن‌ها",
+      "disable_animations_desc": "انیمیشن‌های انتقالی رابط کاربری خاموش می‌شوند تا کارایی بهتر شود",
+      "themed_strokes": "استروک‌های رنگی",
+      "themed_strokes_desc": "رنگ‌آمیزی حاشیه‌ها و خطوط رابط با رنگ تم انتخاب‌شده",
+      "calculating": "در حال محاسبه...",
+      "sunrise_time": "طلوع امروز",
+      "sunset_time": "غروب امروز",
+      "sun_fetch_failed": "دریافت زمان طلوع/غروب خورشید ناموفق بود"
+    }
+  },
+  "downloadmodal": {
+    "download_button": "دانلود",
+    "installing": {
+      "title": "در حال نصب"
+    },
+    "open_folder": "باز کردن پوشه"
+  },
+  "about": {
+    "description": "Bedrock Nexus - یک لانچر مدرن، رایگان و متن باز برای Minecraft Bedrock روی ویندوز",
+    "authors": "سازنده لانچر",
+    "author": "سازنده",
+    "source": "کد منبع و متن‌باز",
+    "contribute": "مشارکت",
+    "contribute.desc": "مشارکت از طریق Issues یا Pull Requests برای بهبود Bedrock Nexus خوشامد است.",
+    "github_repo": "GitHub · Bedrock Nexus",
+    "license.tip": "برای جزئیات مجوز، پروندهٔ LICENSE را در مخزن ببینید.",
+    "issue": "مشکلات",
+    "star_fork": "Star / Fork",
+    "creator_name": "Aster",
+    "creator_desc": "طراحی، توسعه و نگهداری توسط Aster با هدف ساخت لانچری سریع، تمیز و قابل اعتماد.",
+    "launcher": "درباره‌ی لانچر",
+    "launcher.desc": "Bedrock Nexus یک لانچر دسکتاپ مدرن و متن باز برای Minecraft Bedrock Edition روی ویندوز است. می‌توانید نسخه‌های Release و Preview را کنار هم نصب و مدیریت کنید، پک‌های منابع، دنیاها و مادها را مرتب نگه دارید و با یک کلیک هر نمونه خود را اجرا کنید - همه در یک رابط کاربری سریع، تمیز و یکپارچه."
+  },
+  "common": {
+    "retry": "تلاش مجدد",
+    "completed": "تکمیل شد",
+    "downloading": "در حال دانلود",
+    "ok": "باشه",
+    "continue": "ادامه",
+    "cancel": "لغو",
+    "cancelled": "لغو شد",
+    "error": "خطا",
+    "refresh": "بازخوانی",
+    "quit_launcher": "خروج از لانچر",
+    "confirm": "تأیید",
+    "success": "موفق",
+    "delete": "حذف",
+    "search": "جست‌وجو",
+    "search_placeholder": "جست‌وجو...",
+    "open": "باز کردن",
+    "select_mode": "انتخاب حالت",
+    "select_all": "انتخاب همه",
+    "selected_count": "{{count}} مورد انتخاب شده",
+    "preview": "پیش‌نمایش",
+    "release": "انتشار رسمی",
+    "back": "بازگشت",
+    "loading": "در حال بارگذاری",
+    "yes": "بله",
+    "no": "خیر",
+    "close": "بستن",
+    "empty": "داده‌ای نیست",
+    "browse": "مرور...",
+    "processing": "در حال پردازش...",
+    "done": "انجام شد",
+    "wait": "لطفاً صبر کنید...",
+    "updating": "در حال به‌روزرسانی",
+    "expand": "باز کردن",
+    "collapse": "جمع کردن",
+    "save": "ذخیره",
+    "add": "افزودن",
+    "save_failed": "ذخیره ناموفق بود",
+    "load_failed": "بارگذاری ناموفق بود",
+    "view_all": "مشاهدهٔ همه",
+    "confirm_delete": "تأیید حذف",
+    "no_results": "نتیجه‌ای یافت نشد",
+    "hide": "پنهان کردن",
+    "edit": "ویرایش",
+    "backup": "پشتیبان‌گیری",
+    "date": "تاریخ",
+    "version": "نسخه",
+    "details": "جزئیات",
+    "disable": "غیرفعال کردن",
+    "enable": "فعال کردن",
+    "open_folder": "باز کردن پوشه",
+    "remove": "برداشتن",
+    "tip": "نکته",
+    "feature_unavailable": "این قابلیت موقتاً در دسترس نیست",
+    "unknown": "نامشخص"
+  },
+  "useravatar": {
+    "no_login_retry": "ورود به Xbox شناسایی نشد (برای تلاش مجدد کلیک کنید)",
+    "xbox_live": "Xbox Live",
+    "refresh_session_aria": "بازخوانی نشست Xbox",
+    "xuid": "XUID: {{xuid}}",
+    "stats": {
+      "minutes_played": "زمان بازی",
+      "blocks_broken": "بلوک‌های شکسته‌شده",
+      "mobs_defeated": "موب‌های شکست‌داده‌شده",
+      "distance_travelled": "مسافت پیموده‌شده",
+      "time_format": "{{days}} روز {{hours}} ساعت {{minutes}} دقیقه"
+    }
+  },
+  "content": {
+    "count": {
+      "worlds": "دنیاها",
+      "resource_packs": "بسته‌های منبع",
+      "behavior_packs": "بسته‌های رفتاری"
+    }
+  },
+  "contentpage": {
+    "current_version": "نمونه فعلی",
+    "none": "هیچ‌کدام",
+    "isolation": "جداسازی نمونه",
+    "worlds": "دنیاها",
+    "worlds_list": "فهرست دنیاها",
+    "select_player": "انتخاب بازیکن",
+    "no_players": "بازیکنی وجود ندارد",
+    "backup_success": "پشتیبان‌گیری موفق بود",
+    "backup_failed": "پشتیبان‌گیری ناموفق بود",
+    "resource_packs": "بسته‌های منبع",
+    "no_resource_packs": "بستهٔ منبعی وجود ندارد",
+    "behavior_packs": "بسته‌های رفتاری",
+    "no_behavior_packs": "بستهٔ رفتاری وجود ندارد",
+    "skin_packs": "بسته‌های اسکین",
+    "no_skin_packs": "بستهٔ اسکینی وجود ندارد",
+    "shader_chip": "شیدر",
+    "only_show_updates": "شیدرهای ناسازگار",
+    "update_material_bin": "به‌روزرسانی ‎.material.bin",
+    "update_material_bin_desc": "برای سازگاری، به‌روزرسانی لازم است",
+    "update_material_bin_modal_title": "به‌روزرسانی ‎.material.bin",
+    "update_material_bin_modal_content": "با این کار هدر ‎.material.bin در بستهٔ شیدر به‌روزرسانی می‌شود تا Minecraft بتواند آن را به‌درستی بارگذاری کند.",
+    "update_material_bin_risk_title": "هشدار ریسک:",
+    "update_material_bin_risk_content": "بستهٔ منبع به‌روزشده ممکن است در نسخه‌های قدیمی‌تر Minecraft درست کار نکند؛ توصیه می‌شود ابتدا از دنیاهای خود پشتیبان بگیرید یا بستهٔ منبع را خارج کنید.",
+    "update_material_bin_success": "به‌روزرسانی Material کامل شد",
+    "update_material_bin_failed": "به‌روزرسانی Material ناموفق بود",
+    "update_material_bin_stat_updated": "به‌روزشده: {{count}}",
+    "update_material_bin_stat_failed": "ناموفق: {{count}}",
+    "servers": "سرورها",
+    "error_resolve_paths": "شناسایی مسیرهای محتوا ناموفق بود.",
+    "open_users_dir": "باز کردن پوشهٔ ذخیره‌سازی",
+    "players_aria": "بازیکنان",
+    "sort_time": "زمان",
+    "sort_asc": "صعودی",
+    "sort_desc": "نزولی",
+    "drop_hint": "برای وارد کردن، فایل‌های .mcworld/.mcpack/.mcaddon را بکشید و رها کنید",
+    "import_button": "وارد کردن",
+    "transfer_resources_button": "انتقال منابع",
+    "transfer_resources_title": "انتقال منابع به نمونه‌های جداسازی‌شده",
+    "transfer_resources_body_overview": "تمام بسته‌های منبع، رفتاری، اسکین و دنیاها از نمونهٔ فعلی به نمونهٔ مقصد منتقل می‌شوند؛ لطفاً نمونهٔ مقصد را انتخاب کنید.",
+    "transfer_resources_body_simple": "لطفاً نمونهٔ مقصد را برای انتقال انتخاب کنید.",
+    "transfer_no_targets": "نمونهٔ جداسازی‌شدهٔ دیگری در دسترس نیست",
+    "transfer_target_placeholder": "انتخاب نمونهٔ مقصد",
+    "transfer_progress_title": "در حال انتقال منابع...",
+    "transfer_progress_body": "لطفاً تا پایان انتقال منابع به نمونه‌های انتخاب‌شده صبر کنید.",
+    "require_player_for_world_import": "پیش از وارد کردن دنیا (.mcworld)، ابتدا یک بازیکن انتخاب کنید",
+    "no_player_selected": "بازیکنی انتخاب نشده است",
+    "world_leveldat_editor": "ویرایشگر level.dat دنیا",
+    "version": "نسخه",
+    "add_field": "افزودن فیلد",
+    "field_name": "نام",
+    "initial_value": "مقدار اولیه",
+    "select_player_title": "انتخاب بازیکن",
+    "select_player_for_import": "لطفاً بازیکنی را که قرار است محتوا برای او وارد شود انتخاب کنید",
+    "no_items": "موردی یافت نشد",
+    "delete_pack_confirm": "آیا از حذف {{name}} مطمئن هستید؟",
+    "delete_warning": "این عملیات قابل بازگشت نیست!",
+    "delete_selected_confirm": "آیا از حذف {{count}} مورد انتخاب‌شده مطمئن هستید؟",
+    "deleted_name": "{{name}} حذف شد",
+    "deleted_count": "{{count}} مورد حذف شد",
+    "delete_world_confirm": "آیا از حذف دنیای {{name}} مطمئن هستید؟",
+    "basic_info": "اطلاعات پایه",
+    "level_name": "نام دنیا",
+    "screenshots": "تصاویر صفحه",
+    "no_screenshots": "تصویری وجود ندارد",
+    "delete_screenshot_confirm": "آیا از حذف تصویر {{name}} مطمئن هستید؟",
+    "preview_screenshot": "مشاهده با اندازهٔ بزرگ‌تر",
+    "screenshot_viewer_hint": "پیش‌نمایش بزرگ",
+    "screenshot_viewer_nav_hint": "برای جابه‌جایی میان تصاویر از کلیدها یا دکمه‌های ← / → استفاده کنید"
+  },
+  "skinpack": {
+    "studio": "استودیو بسته اسکین",
+    "create_title": "ساخت بسته اسکین",
+    "edit_title": "ویرایش بسته اسکین",
+    "beta": "بتا",
+    "description": "اسکین‌های PNG با اندازه 64x32، 64x64 یا 128x128 را اضافه کنید و بسته را در نمونه انتخاب‌شده نصب کنید.",
+    "pack_name": "نام بسته",
+    "skin_name": "نام اسکین",
+    "model": "مدل",
+    "classic": "کلاسیک (Steve)",
+    "slim": "باریک (Alex)",
+    "height": "ارتفاع",
+    "height_normal": "عادی",
+    "height_short": "کوتاه",
+    "height_tall": "بلند",
+    "add_skins": "افزودن اسکین‌های PNG",
+    "choose_replacement": "انتخاب PNG جایگزین",
+    "replace": "جایگزینی",
+    "remove": "حذف اسکین",
+    "no_skins": "هنوز اسکینی انتخاب نشده است.",
+    "build_install": "ساخت و نصب",
+    "save_install": "ذخیره و نصب",
+    "edit_tooltip": "ویرایش بسته اسکین",
+    "default_name": "بسته اسکین سفارشی",
+    "not_editable": "این بسته اسکین قابل ویرایش نیست",
+    "open_failed": "باز کردن بسته اسکین ممکن نیست",
+    "installed": "بسته اسکین نصب شد",
+    "operation_failed": "عملیات بسته اسکین ناموفق بود"
+  },
+  "versions": {
+    "info": {
+      "name": "نام"
+    },
+    "edit": {
+      "tabs": {
+        "general": "عمومی",
+        "launch": "گزینه‌های اجرا",
+        "features": "قابلیت‌ها",
+        "manage": "مدیریت",
+        "loader": "لودر"
+      },
+      "title": "تنظیمات نمونه",
+      "mc_version": "نسخهٔ بازی",
+      "new_name": "نام جدید",
+      "placeholder": "نام جدید را وارد کنید",
+      "hint": "فقط نام پوشه تغییر می‌کند؛ نسخه و نوع بازی تغییری نمی‌کنند.",
+      "enable_isolation": "فعال کردن جداسازی",
+      "enable_console": "فعال کردن کنسول",
+      "enable_render_dragon": "بارگذاری شیدرهای RenderDragon",
+      "enable_ctrl_r_reload_resources": "بارگذاری مجدد منابع با Ctrl+R",
+      "enable_editor_mode": "فعال کردن حالت ویرایشگر",
+      "launch_args": "آرگومان‌های اجرا",
+      "launch_args_placeholder": "آرگومان‌های اجرا (مثلاً -Editor true)",
+      "launch_args_hint": "آرگومان‌های اجرای بازی را تعیین می‌کند.",
+      "env_vars": "متغیرهای محیطی",
+      "env_vars_placeholder": "متغیرهای محیطی (KEY=VALUE)، هر کدام در یک خط",
+      "env_vars_hint": "متغیرهای محیطی هنگام اجرای بازی را تعیین می‌کند.",
+      "delete_hint": "این نمونه به‌طور دائمی از دستگاه شما حذف می‌شود؛ شامل دنیاها، پیکربندی‌ها و محتوای نصب‌شده. این عملیات قابل بازگشت نیست.",
+      "danger_title": "منطقهٔ خطر",
+      "danger_hint": "این عملیات‌ها بر ثبت نمونه در سیستم یا فایل‌های محلی اثر می‌گذارند؛ پیش از ادامه دو بار بررسی کنید.",
+      "backup": {
+        "title": "پشتیبان‌گیری از نمونه",
+        "hint": "پیش از تغییر تنظیمات، نصب مادها یا امتحان چیزهای جدید، از این نمونه نسخهٔ پشتیبان تهیه کنید",
+        "section_body": "محتوای بازی و مادهایی را که می‌خواهید همراه هم حفظ شوند انتخاب کنید؛ خودِ برنامهٔ لانچر شامل نمی‌شود",
+        "experimental_badge": "آزمایشی",
+        "experimental_disabled": "پیش از استفاده از پشتیبان‌گیری و بازیابی نمونه، آن را در {{settingsPath}} فعال کنید.",
+        "button": "پشتیبان‌گیری از نمونه",
+        "dialog_title": "انتخاب موارد پشتیبان‌گیری",
+        "dialog_body": "آنچه را می‌خواهید در این نسخهٔ پشتیبان حفظ شود انتخاب کنید",
+        "path_label": "محل",
+        "size_label": "حجم تقریبی",
+        "shared_tag": "محتوای مشترک",
+        "missing_tag": "یافت نشد",
+        "empty_tag": "در حال حاضر خالی است",
+        "shared_warning": "این نمونه داده‌های بازی خود را با نصب پیش‌فرض سیستم مشترک دارد؛ بنابراین اگر داده‌های بازی را شامل کنید، همان محتوای مشترک نیز پشتیبان‌گیری می‌شود",
+        "no_scope_selected": "لطفاً دست‌کم یک مورد را برای پشتیبان‌گیری انتخاب کنید",
+        "confirm": "شروع پشتیبان‌گیری",
+        "progress_title": "در حال پشتیبان‌گیری از نمونه",
+        "progress_body": "در حال بسته‌بندی موارد انتخاب‌شده؛ لطفاً صبر کنید...",
+        "success_title": "پشتیبان‌گیری نمونه کامل شد",
+        "success_body": "فایل پشتیبان شما آماده است",
+        "archive_label": "فایل پشتیبان",
+        "location_label": "ذخیره‌شده در",
+        "open_dir": "باز کردن پوشه",
+        "lip_summary": "{{count}} بستهٔ مدیریت‌شده توسط lip شناسایی شد: {{summary}}",
+        "mode": {
+          "safe": {
+            "label": "حالت ایمن"
+          },
+          "full": {
+            "label": "حالت کامل",
+            "warning": "پشتیبان کامل شامل محتوای خارج از فهرست مجاز Users است و ممکن است حاوی حافظهٔ نهان حساب، داده‌های حساس حریم خصوصی یا فایل‌هایی باشد که نباید با دیگران به اشتراک گذاشته شوند."
+          }
+        },
+        "restore": {
+          "button": "بازیابی پشتیبان",
+          "file_picker_title": "انتخاب فایل پشتیبان نمونه",
+          "dialog_title": "تأیید بازیابی پشتیبان نمونه",
+          "dialog_body": "موارد قابل بازیابی از این پشتیبان را انتخاب کنید. در صورت وجود تداخل، پیش از بازیابی فهرست می‌شوند تا برای هر مورد راه‌حل دلخواه را برگزینید.",
+          "confirm": "شروع بازیابی",
+          "scope_section_title": "محدوده‌های بازیابی",
+          "created_at": "تاریخ ایجاد",
+          "lip_summary": "{{count}} بستهٔ مدیریت‌شده توسط lip شناسایی شد. در بازیابی، تلاش می‌شود به‌طور خودکار دوباره نصب شوند.",
+          "conflict_loading": "در حال بررسی تداخل‌های بازیابی؛ لطفاً صبر کنید...",
+          "conflict_summary": "{{count}} تداخل با نمونهٔ فعلی یافت شد. برای هر مورد انتخاب کنید که نسخهٔ پشتیبان حفظ شود یا نسخهٔ فعلی.",
+          "conflict_empty": "برای محدوده‌های انتخاب‌شده هیچ تداخلی یافت نشد؛ می‌توانید مستقیماً بازیابی کنید.",
+          "conflict_choice_placeholder": "روش رفع این تداخل را انتخاب کنید",
+          "conflict_choice_backup": "استفاده از نسخهٔ پشتیبان",
+          "conflict_choice_current": "حفظ نسخهٔ فعلی",
+          "conflict_choice_pending": "نیازمند انتخاب",
+          "conflict_group_count": "{{count}} تداخل",
+          "conflict_group_unresolved": "{{count}} انتخاب معلق",
+          "conflict_group_resolved": "انتخاب‌ها کامل شد",
+          "conflict_group_apply_backup": "اعمال نسخهٔ پشتیبان برای گروه",
+          "conflict_group_apply_current": "حفظ نسخهٔ فعلی برای گروه",
+          "conflict_unresolved": "لطفاً پیش از بازیابی، برای همهٔ تداخل‌ها روش حل را مشخص کنید.",
+          "conflict_details_toggle": "مشاهدهٔ مسیرها و تفاوت‌های تفصیلی",
+          "conflict_item_fallback": "محتوای بی‌نام",
+          "identity_key_label": "شناسهٔ تداخل",
+          "backup_side_label": "نسخهٔ پشتیبان",
+          "current_side_label": "نسخهٔ فعلی",
+          "backup_path_label": "مسیر در پشتیبان",
+          "current_path_label": "مسیر فعلی",
+          "conflict_category": {
+            "mods": "مادها",
+            "skin_packs": "بسته‌های اسکین",
+            "behavior_packs": "بسته‌های رفتاری",
+            "resource_packs": "بسته‌های منبع",
+            "worlds": "دنیاها",
+            "dev_behavior_packs": "بسته‌های رفتاری توسعه‌ای",
+            "dev_resource_packs": "بسته‌های منبع توسعه‌ای",
+            "templates": "قالب‌های دنیا",
+            "files": "فایل‌های دیگر",
+            "other": "محتوای دیگر"
+          },
+          "identity_kind": {
+            "pack_uuid": "بسته",
+            "world_folder": "پوشهٔ دنیا",
+            "mod_folder": "پوشهٔ ماد",
+            "file_path": "مسیر فایل"
+          },
+          "conflict_type": {
+            "file": "فایل",
+            "dir": "پوشه"
+          },
+          "diff_field": {
+            "folder": "پوشه",
+            "uuid": "UUID",
+            "name": "نام",
+            "version": "نسخه",
+            "min_engine_version": "حداقل نسخهٔ موتور",
+            "level_name": "نام دنیا",
+            "entry": "ورودی",
+            "type": "نوع"
+          },
+          "progress_title": "در حال بازیابی پشتیبان نمونه",
+          "progress_body": "در حال اعمال محتوای پشتیبان؛ لطفاً صبر کنید...",
+          "progress_preparing": "در حال آماده‌سازی محتوای بازیابی...",
+          "progress_extracting": "در حال استخراج محتوای پشتیبان...",
+          "progress_scope": "در حال بازیابی {{scope}}...",
+          "progress_finalizing": "در حال نهایی‌سازی نتایج بازیابی...",
+          "progress_step": "مرحله {{current}} / {{total}}",
+          "success_title": "بازیابی نمونه کامل شد",
+          "partial_title": "بازیابی نمونه ناقص انجام شد",
+          "failed_title": "بازیابی نمونه ناموفق بود",
+          "success_body": "محتوای انتخاب‌شده بازیابی شد.",
+          "partial_body": "بخشی از محتوا بازیابی شد، اما چند مورد هنوز نیاز به رسیدگی دستی دارند.",
+          "failed_body": "این بازیابی کامل نشد؛ نتایج زیر را بررسی کنید.",
+          "status": {
+            "success": "موفق",
+            "partial": "ناقص",
+            "failed": "ناموفق"
+          }
+        }
+      },
+      "unregister_button": "لغو ثبت",
+      "unregister_hint": "این نمونه از سیستم لغو ثبت می‌شود تا در فهرست برنامه‌های سیستم نمایش داده نشود؛ هیچ فایلی حذف نمی‌شود.",
+      "unregister_progress": {
+        "title": "در حال لغو ثبت",
+        "body": "در حال انجام لغو ثبت سیستمی؛ لطفاً صبر کنید…"
+      },
+      "unregister_success": {
+        "title": "لغو ثبت موفق بود",
+        "body": "لغو ثبت با موفقیت انجام شد؛ اکنون می‌توانید این نسخه را حذف کنید."
+      },
+      "loader": {
+        "ll_not_installed": "نصب نشده",
+        "ll_select_version": "نسخهٔ LeviLamina",
+        "ll_select_placeholder": "یک نسخه از LeviLamina انتخاب کنید",
+        "ll_select_guidance": "نسخهٔ LeviLamina مورد نظر برای نصب، ارتقا، تنزل یا نصب مجدد را انتخاب کنید.",
+        "ll_remove_confirm_title": "تأیید حذف LeviLamina",
+        "ll_remove_confirm_body": "LeviLamina از این نمونه حذف خواهد شد.",
+        "ll_remove_confirm_warning": "این عملیات قابل بازگشت نیست."
+      }
+    },
+    "logo": {
+      "title": "آیکن سفارشی (باید مربعی باشد)",
+      "change": "برای تغییر کلیک کنید",
+      "clear": "پاک کردن",
+      "hint": "با نام LargeLogo.png در پوشهٔ نسخه ذخیره می‌شود؛ برای تغییر روی آیکن کلیک کنید."
+    },
+    "unsaved": {
+      "body": "تغییرات ذخیره‌نشده‌ای در تنظیمات نمونه دارید؛ پیش از خروج ذخیره شود؟"
+    },
+    "sort": {
+      "name": "نام (الف-ی)",
+      "name_za": "نام (ی-الف)",
+      "version": "نسخه (جدیدترین)",
+      "version_old_new": "نسخه (قدیمی‌ترین)"
+    },
+    "tab": {
+      "all": "همه",
+      "preview": "پیش‌نمایش",
+      "release": "انتشار رسمی"
+    }
+  },
+  "mirror": {
+    "target": "نمونه مقصد"
+  },
+  "errors": {
+    "ERR_GAME_ALREADY_RUNNING": "نمونهٔ فعلی Minecraft از قبل در حال اجراست. لطفاً پیش از اجرا آن را ببندید یا به نمونهٔ دیگری سوئیچ کنید.",
+    "ERR_TARGET_DIR_NOT_SPECIFIED": "پوشهٔ مقصد مشخص نشده است",
+    "ERR_CREATE_TARGET_DIR": "ساخت پوشهٔ مقصد ناموفق بود",
+    "ERR_NOT_FOUND_GAME_DIR": "پوشهٔ محتوای بازی یافت نشد",
+    "ERR_NOT_FOUND_EXE": "فایل اجرایی یافت نشد",
+    "ERR_WRITE_TARGET": "نوشتن پیکربندی مقصد ناموفق بود",
+    "ERR_LAUNCH_GAME": "بازی به‌درستی اجرا نشد",
+    "ERR_LAUNCH_TIMEOUT": "بازی Minecraft در مهلت شروع ظاهر نشد. ثبت بودن نمونهٔ انتخاب‌شده و اجرای عادی Minecraft را بررسی کنید.",
+    "ERR_GAME_CRASH_DURING_LAUNCH": "بازی حین اجرا کرش کرد",
+    "ERR_WAIT_KERNEL_TIMEOUT": "مهلت آماده‌سازی هسته به پایان رسید",
+    "ERR_COPY_WALK": "پیمایش فایل‌ها ناموفق بود",
+    "ERR_COPY_FAILED": "کپی ناموفق بود",
+    "ERR_NAME_REQUIRED": "نام الزامی است",
+    "ERR_NAME_TOO_LONG": "نام بیش از حد طولانی است",
+    "ERR_NAME_TRAILING_DOT_SPACE": "نام نمی‌تواند با نقطه یا فاصله تمام شود",
+    "ERR_NAME_INVALID_CHAR": "نام دارای نویسه‌های غیرمجاز است: <>:\"/\\|?*",
+    "ERR_NAME_CONTROL_CHAR": "نام دارای نویسه‌های کنترلی است",
+    "ERR_NAME_RESERVED": "نام یکی از واژه‌های رزروشدهٔ ویندوز است",
+    "ERR_ACCESS_VERSIONS_DIR": "دسترسی به پوشهٔ نسخه‌ها ممکن نیست",
+    "ERR_ACCESS_INSTALLERS_DIR": "دسترسی به پوشهٔ نصب‌کننده‌ها ممکن نیست",
+    "ERR_READ_VERSIONS_DIR": "خواندن پوشهٔ نسخه‌ها ناموفق بود",
+    "ERR_LL_VERSION_UNSUPPORTED": "نسخهٔ انتخاب‌شدهٔ LeviLamina برای این نسخه از بازی پشتیبانی نمی‌شود",
+    "ERR_LL_NOT_SUPPORTED": "LeviLamina برای این نسخه از بازی پشتیبانی نمی‌شود",
+    "ERR_FETCH_LL_DB": "دریافت پایگاه دادهٔ نسخه‌های LeviLamina ناموفق بود",
+    "ERR_INVALID_VERSION_FORMAT": "قالب نسخهٔ بازی نامعتبر است",
+    "ERR_LIP_INSTALL_FAILED": "نصب LeviLamina از طریق lip ناموفق بود",
+    "ERR_NAME_EXISTS": "این نام از قبل وجود دارد",
+    "ERR_INVALID_NAME": "نام نامعتبر است",
+    "ERR_ICON_DECODE": "رمزگشایی آیکن ناموفق بود",
+    "ERR_ICON_NOT_SQUARE": "آیکن باید مربعی باشد",
+    "ERR_NOT_FOUND_OLD": "پوشهٔ اصلی یافت نشد",
+    "ERR_RENAME_FAILED": "تغییر نام ناموفق بود؛ احتمالاً فایل در حال استفاده است یا دسترسی لازم وجود ندارد",
+    "ERR_MSIXVC_NOT_SPECIFIED": "بستهٔ نصب‌کننده مشخص نشده است",
+    "ERR_MSIXVC_NOT_FOUND": "بستهٔ نصب‌کننده یافت نشد",
+    "ERR_APPX_UNINSTALL_FAILED": "حذف نصب قبلی بازی ناموفق بود",
+    "ERR_APPX_INSTALL_FAILED": "نصب ناموفق بود؛ لطفاً دوباره تلاش کنید.",
+    "ERR_MC_NOT_AUTHORIZED": "لطفاً مطمئن شوید مجوز قانونی {{typeLabel}} از Minecraft را دارید؛ با حسابی که محصول را دارد وارد شوید، آن را خریداری کنید و دوباره تلاش کنید.",
+    "ERR_INHERIT_SOURCE_NOT_FOUND": "نسخهٔ مبدأ ارث‌بری یافت نشد",
+    "ERR_DELETE_FAILED": "حذف ناموفق بود؛ احتمالاً فایل در حال استفاده است یا اجازهٔ دسترسی وجود ندارد",
+    "ERR_INHERIT_TARGET_NOT_FOUND": "نسخهٔ مقصد یافت نشد",
+    "ERR_INHERIT_TYPE_MISMATCH": "نوع نسخه‌ها هم‌خوانی ندارد و امکان ارث‌بری نیست",
+    "ERR_INHERIT_COPY_FAILED": "کپی داده‌های ارث‌بری‌شده ناموفق بود",
+    "ERR_NO_GAME_DATA": "برای مبدأ انتخاب‌شده هیچ داده‌ای از بازی یافت نشد",
+    "ERR_VCRUNTIME_MISSING": "پیش‌نیاز زمان‌اجرای سیستم وجود ندارد؛ لطفاً Microsoft Visual C++ Runtime را نصب کنید و دوباره تلاش کنید",
+    "ERR_SHORTCUT_CREATE_FAILED": "ساخت میانبر دسکتاپ ناموفق بود",
+    "ERR_PATCH_RUN_FAILED": "اجرای اسکریپت پچ ناموفق بود",
+    "ERR_UNREGISTER_FAILED": "لغو ثبت ناموفق بود",
+    "ERR_NOT_REGISTERED_THIS_VERSION": "این نسخه ثبت نشده است",
+    "ERR_DEV_MODE_REQUIRED": "حالت توسعه‌دهنده فعال نیست و فعال‌سازی خودکار هم ناموفق بود؛ لطفاً حالت توسعه‌دهنده را به‌صورت دستی فعال کنید و دوباره تلاش کنید.",
+    "ERR_LIP_PACKAGE_INVALID_IDENTIFIER": "شناسهٔ بستهٔ lip نامعتبر است",
+    "ERR_LIP_PACKAGE_VERSION_REQUIRED": "تعیین نسخهٔ بستهٔ lip الزامی است",
+    "ERR_LIP_PACKAGE_INSTALL_FAILED": "نصب بستهٔ lip ناموفق بود",
+    "ERR_LIP_PACKAGE_UNINSTALL_FAILED": "حذف بستهٔ lip ناموفق بود",
+    "ERR_LIP_PACKAGE_QUERY_FAILED": "استعلام وضعیت بستهٔ lip ناموفق بود",
+    "ERR_LIP_CACHE_CLEAN_FAILED": "پاک کردن حافظهٔ نهان lip ناموفق بود",
+    "ERR_LIP_PACKAGE_REQUIRED_BY_DEPENDENTS": "این بسته توسط مادهای نصب‌شدهٔ دیگری لازم است و اکنون قابل حذف نیست",
+    "ERR_LIP_PACKAGE_DEMOTED_TO_DEPENDENCY": "این بسته هنوز توسط مادهای نصب‌شدهٔ دیگری لازم است و به‌طور کامل حذف نمی‌شود؛ به‌طور خودکار به حالت «وابستگی» تغییر وضعیت داد.",
+    "ERR_LL_MANAGED_IN_VERSION_SETTINGS": "مدیریت LeviLamina فقط از طریق تنظیمات نسخه امکان‌پذیر است",
+    "ERR_LIP_NOT_INSTALLED": "lip نصب نشده است؛ برای نصب یا به‌روزرسانی دستی به تنظیمات > مؤلفه‌ها بروید.",
+    "ERR_INSTANCE_BACKUP_INSTANCE_NOT_FOUND": "نمونهٔ مورد نظر برای پشتیبان‌گیری یافت نشد",
+    "ERR_INSTANCE_BACKUP_NO_SCOPE": "لطفاً دست‌کم یک محدوده برای پشتیبان‌گیری انتخاب کنید",
+    "ERR_INSTANCE_BACKUP_INVALID_SCOPE": "درخواست شامل محدودهٔ پشتیبان‌گیری نامعتبری است",
+    "ERR_INSTANCE_BACKUP_INVALID_SCOPE_MODE": "حالت پشتیبان‌گیری انتخاب‌شده نامعتبر است",
+    "ERR_INSTANCE_BACKUP_GAME_DATA_NOT_FOUND": "پوشهٔ داده‌های Minecraft Bedrock یافت نشد",
+    "ERR_INSTANCE_BACKUP_CREATE_DIR": "ساخت پوشهٔ پشتیبان نمونه ناموفق بود",
+    "ERR_INSTANCE_BACKUP_CREATE_ARCHIVE": "ساخت آرشیو پشتیبان نمونه ناموفق بود",
+    "ERR_INSTANCE_BACKUP_READ_SOURCE": "خواندن پوشهٔ مبدأ پشتیبان ناموفق بود",
+    "ERR_INSTANCE_BACKUP_WRITE_ARCHIVE": "نوشتن آرشیو پشتیبان نمونه ناموفق بود",
+    "ERR_INSTANCE_BACKUP_ARCHIVE_OPEN": "باز کردن آرشیو پشتیبان نمونه ناموفق بود",
+    "ERR_INSTANCE_BACKUP_INVALID_ARCHIVE": "قالب آرشیو پشتیبان نمونه نامعتبر است",
+    "ERR_INSTANCE_BACKUP_MODS_STATE_UNAVAILABLE": "وضعیت مادها/LiP قابل بررسی نبود. وضعیت نمونه را بازخوانی کنید و دوباره پشتیبان بگیرید.",
+    "ERR_INSTANCE_BACKUP_RESTORE_EXTRACT_ARCHIVE": "استخراج آرشیو پشتیبان نمونه ناموفق بود",
+    "ERR_INSTANCE_BACKUP_RESTORE_WRITE_TARGET": "بازگردانی محتوای پشتیبان به نمونهٔ مقصد ناموفق بود",
+    "ERR_INSTANCE_BACKUP_RESTORE_CONFLICT_UNRESOLVED": "برخی تداخل‌های بازیابی همچنان بدون حل مانده‌اند؛ ابتدا برای هر تداخل راه‌حل را انتخاب کنید.",
+    "ERR_INSTANCE_BACKUP_RESTORE_INVALID_CONFLICT_RESOLUTION": "روش حل تداخل انتخاب‌شده نامعتبر است؛ لطفاً انتخاب‌های خود را بازبینی کنید.",
+    "ERR_INSTANCE_BACKUP_RESTORE_FULL_REQUIRES_EMPTY_TARGET": "پشتیبان کامل Minecraft Bedrock فقط در یک پوشهٔ مقصد خالی قابل بازیابی است",
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_INSTALL_FAILED": "نصب برخی بسته‌های مدیریت‌شده توسط lip ناموفق بود",
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_MISSING": "برخی بسته‌های مدیریت‌شده توسط lip بازیابی نشدند",
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "نسخهٔ برخی بسته‌های مدیریت‌شده توسط lip با نسخهٔ پشتیبان مطابقت ندارد"
+  },
+  "filemanager": {
+    "sort": {
+      "name": "نام"
+    }
+  },
+  "file": {
+    "types": {
+      "folder": "پوشه",
+      "executable": "فایل اجرایی",
+      "library": "کتابخانه",
+      "archive": "آرشیو",
+      "image": "تصویر",
+      "text": "متنی",
+      "json": "JSON",
+      "jar": "JAR",
+      "mcpack": "بستهٔ MC",
+      "mcaddon": "افزونهٔ MC",
+      "file": "فایل"
+    }
+  },
+  "mods": {
+    "import_button": "وارد کردن .zip/.dll",
+    "importing_title": "در حال وارد کردن...",
+    "importing_body": "لطفاً تا پردازش فایل‌های انتخاب‌شده صبر کنید.",
+    "summary_title_done": "وارد کردن کامل شد",
+    "summary_title_partial": "وارد کردن کامل شد (با شکست‌های جزئی)",
+    "summary_success": "موفق",
+    "summary_failed": "ناموفق",
+    "details_title": "جزئیات ماد",
+    "field_name": "نام",
+    "field_version": "نسخه",
+    "field_type": "نوع",
+    "field_entry": "ورودی",
+    "field_author": "سازنده",
+    "confirm_delete_body": "آیا از حذف این {{type}} مطمئن هستید؟ این عملیات قابل بازگشت نیست.",
+    "dll_modal_title": "وارد کردن افزونهٔ DLL",
+    "dll_name": "نام افزونه",
+    "dll_type": "نوع",
+    "dll_version": "نسخه",
+    "err_invalid_name": "نام نسخه یا ماژول نامعتبر است",
+    "err_access_versions_dir": "دسترسی به پوشهٔ نسخه‌ها ممکن نیست",
+    "err_create_target_dir": "ساخت پوشهٔ مقصد ناموفق بود",
+    "err_open_zip": "باز کردن فایل ZIP ممکن نیست",
+    "err_manifest_not_found": "manifest.json یافت نشد",
+    "err_invalid_package": "ساختار بسته نامعتبر است",
+    "err_duplicate_folder": "پوشهٔ ماژولی با همین نام از قبل وجود دارد",
+    "err_read_zip_entry": "خواندن مدخل ZIP ناموفق بود",
+    "err_write_file": "نوشتن فایل ناموفق بود",
+    "err_unknown": "خطای ناشناخته",
+    "overwrite_modal_title": "مورد تکراری شناسایی شد",
+    "overwrite_modal_body": "پوشهٔ ماژولی با همین نام وجود دارد؛ جایگزین (به‌روزرسانی) شود؟",
+    "toggle_label": "فعال بودن ماد",
+    "toggle_on": "فعال",
+    "toggle_off": "غیرفعال",
+    "toggle_desc_on": "ماد فعال است و هنگام اجرای بازی بارگذاری می‌شود.",
+    "toggle_desc_off": "ماد غیرفعال است و هنگام اجرای بازی بارگذاری نمی‌شود.",
+    "only_enabled": "فقط نمایش مادهای فعال",
+    "drop_hint": "برای وارد کردن مادها/افزونه‌ها فایل‌های .zip یا .dll را رها کنید",
+    "err_lip_install_failed_suggestion": "نصب ناموفق بود؛ لطفاً Minecraft را دوباره نصب کنید",
+    "rc_warning": {
+      "title": "هشدار نسخهٔ آزمایشی",
+      "body_1": "نسخهٔ LeviLamina ({{version}}) که می‌خواهید نصب کنید از نوع Release Candidate (RC) است.",
+      "body_2": "این یک نسخهٔ آزمایشی است و ممکن است ناپایدار باشد؛ بیشتر برای توسعه‌دهندگان یا کاربران حرفه‌ای توصیه می‌شود.",
+      "body_3": "آیا می‌خواهید ادامه دهید؟"
+    },
+    "action_update": "به‌روزرسانی",
+    "action_uninstall": "حذف نصب",
+    "action_promote_install": "تبدیل به نصب مستقل",
+    "action_promote_install_success": "{{name}} به نصب مستقل تبدیل شد",
+    "action_promote_install_failed_no_version": "نسخهٔ نصب‌شده‌ای برای این بسته یافت نشد",
+    "batch_update_title": "به‌روزرسانی گروهی مادها",
+    "batch_update_body": "{{selected}} ماد انتخاب شده است. {{updatable}} مورد از طریق lip قابل به‌روزرسانی‌اند. ادامه؟",
+    "batch_uninstall_title": "حذف گروهی مادها",
+    "batch_uninstall_body": "{{count}} ماد حذف خواهد شد. ادامه؟",
+    "update_available": "به‌روزرسانی به {{version}}",
+    "update_latest": "از قبل آخرین نسخه است",
+    "no_update_source": "منبع به‌روزرسانی lip وجود ندارد",
+    "err_ll_managed_in_version_settings": "مدیریت LeviLamina فقط از طریق تنظیمات نسخه امکان‌پذیر است",
+    "action_result_title_done": "عملیات کامل شد",
+    "action_result_title_partial": "عملیات کامل شد (با شکست‌های جزئی)",
+    "action_result_title_failed": "عملیات ناموفق بود",
+    "tab_all": "همه",
+    "tab_normal": "مادهای معمولی",
+    "tab_lip": "مادهای lip",
+    "lip_children_summary": "شامل: {{children}} (+{{count}})",
+    "lip_open_package": "باز کردن بسته",
+    "lip_sync_loading": "مادهای محلی آماده است؛ در حال تکمیل اطلاعات lip...",
+    "lip_sync_error": "اطلاعات lip موقتاً در دسترس نیست؛ فعلاً فقط مادهای محلی نشان داده می‌شود."
+  },
+  "terms": {
+    "title": "توافق‌نامهٔ مجوز Bedrock Nexus",
+    "body": "به Bedrock Nexus خوش آمدید\n\nبا استفاده از این نرم‌افزار می‌پذیرید که:\n• این یک لانچر غیررسمی برای Minecraft است\n• باید نسخهٔ دارای مجوز قانونی Minecraft را داشته باشید؛ در غیر این صورت حالت آزمایشی به‌طور خودکار استفاده می‌شود\n• هرگونه دزدی نرم‌افزاری یا تقلب ممنوع است\n• استفاده از مادها/بسته‌های منبع بر عهدهٔ خود شماست\n• هیچ وابستگی‌ای به Mojang/Microsoft وجود ندارد\n\nادامهٔ استفاده به معنای پذیرش این شرایط است",
+    "agree": "موافقم و ادامه",
+    "decline": "نمی‌پذیرم و خارج می‌شوم"
+  },
+  "contentdownload": {
+    "title": "دانلود محتوا"
+  },
+  "marketplace": {
+    "title": "مارکت‌پلیس",
+    "search_placeholder": "جستجوی آیتم‌های مارکت‌پلیس...",
+    "search": "جستجو",
+    "refresh": "بازخوانی",
+    "index_source": "منبع ایندکس",
+    "apply": "اعمال",
+    "type": "نوع",
+    "select_type": "انتخاب نوع",
+    "all_types": "همهٔ انواع",
+    "tag": "برچسب",
+    "select_tag": "انتخاب برچسب",
+    "all_tags": "همهٔ برچسب‌ها",
+    "sort_by": "مرتب‌سازی",
+    "select_sort": "انتخاب مرتب‌سازی",
+    "sort": {
+      "newest": "جدیدترین",
+      "name": "نام (الف تا ی)"
+    },
+    "no_results": "آیتمی پیدا نشد",
+    "load_error": "بارگذاری ایندکس مارکت‌پلیس ناموفق بود، دوباره تلاش کنید",
+    "no_description": "توضیحی موجود نیست.",
+    "by_author": "ساختهٔ {{author}}",
+    "by": "ساختهٔ",
+    "version": "نسخه",
+    "updated": "به‌روزرسانی",
+    "updated_date": "به‌روزرسانی {{date}}",
+    "item_not_found": "آیتم پیدا نشد",
+    "go_back": "بازگشت",
+    "install_action": "نصب",
+    "homepage": "صفحهٔ خانگی",
+    "item_details_aria_label": "جزئیات آیتم مارکت‌پلیس",
+    "tabs": {
+      "description": "توضیحات",
+      "files": "فایل‌ها"
+    },
+    "types": {
+      "mcaddon": "ادان",
+      "mcpack": "پک",
+      "mcworld": "دنیا",
+      "skinpack": "پک اسکین",
+      "dll": "مود LeviLamina",
+      "lip": "پکیج lip"
+    },
+    "files": {
+      "title": "همهٔ نسخه‌ها",
+      "table_aria_label": "جدول فایل‌های آیتم مارکت‌پلیس",
+      "columns": {
+        "version": "نسخه",
+        "date": "تاریخ",
+        "size": "حجم",
+        "changelog": "تغییرات",
+        "actions": "عملیات"
+      }
+    },
+    "no_files_found": "فایلی پیدا نشد",
+    "install": {
+      "downloading_title": "دانلود محتوا",
+      "select_version_title": "انتخاب نسخهٔ بازی",
+      "select_player_title": "انتخاب بازیکن",
+      "importing_title": "در حال ایمپورت محتوا",
+      "success_title": "موفق",
+      "error_title": "خطا",
+      "downloading_body": "در حال دانلود فایل...",
+      "select_version_body": "لطفاً نسخهٔ بازی موردنظر برای ایمپورت را انتخاب کنید:",
+      "local_installation": "نسخهٔ محلی",
+      "select_version_placeholder": "یک نسخه انتخاب کنید",
+      "registered": "ثبت‌شده",
+      "select_player_body": "این محتوا نیاز به انتخاب بازیکن دارد:",
+      "player_label": "بازیکن",
+      "select_player_placeholder": "یک بازیکن انتخاب کنید",
+      "importing_body": "در حال ایمپورت محتوا...",
+      "success_msg": "ایمپورت با موفقیت انجام شد",
+      "success_desc": "محتوا با موفقیت در نسخهٔ انتخاب‌شده ایمپورت شد.",
+      "failed_msg": "ایمپورت ناموفق بود",
+      "next": "بعدی",
+      "close": "بستن"
+    }
+  },
+  "curseforge": {
+    "title": "CurseForge",
+    "search_placeholder": "جست‌وجوی منابع بازی...",
+    "search": "جست‌وجو",
+    "minecraft_version": "نسخهٔ Minecraft",
+    "select_version": "انتخاب نسخه",
+    "all_versions": "همهٔ نسخه‌ها",
+    "load_error": "بارگذاری داده‌ها ناموفق بود؛ لطفاً دوباره تلاش کنید",
+    "search_error": "جست‌وجو ناموفق بود؛ لطفاً دوباره تلاش کنید",
+    "class": "دستهٔ اصلی",
+    "select_class": "انتخاب دستهٔ اصلی",
+    "all_classes": "همهٔ دسته‌ها",
+    "category": "دسته",
+    "select_category": "انتخاب دسته",
+    "sort_by": "مرتب‌سازی بر اساس",
+    "select_sort": "انتخاب ترتیب",
+    "no_results": "نتیجه‌ای یافت نشد",
+    "by_author": "اثر {{author}}",
+    "no_description": "توضیحی موجود نیست.",
+    "downloads": "دانلودها",
+    "updated": "آخرین به‌روزرسانی",
+    "created": "تاریخ انتشار",
+    "size": "حجم",
+    "game_version": "نسخهٔ Minecraft",
+    "mod_not_found": "ماد یافت نشد",
+    "go_back": "بازگشت",
+    "by": "اثر",
+    "updated_date": "به‌روزشده در {{date}}",
+    "download_count": "{{count}} دانلود",
+    "install_action": "نصب",
+    "website": "وب‌سایت",
+    "source": "کد منبع",
+    "issues": "مشکلات",
+    "share": "هم‌رسانی",
+    "no_download_url": "لینک دانلودی موجود نیست",
+    "no_files_found": "فایلی یافت نشد",
+    "sort": {
+      "featured": "برگزیده",
+      "popularity": "محبوبیت",
+      "last_updated": "جدیدترین به‌روزرسانی",
+      "creation_date": "تاریخ انتشار",
+      "total_downloads": "کل دانلودها"
+    },
+    "install": {
+      "downloading_title": "در حال دانلود محتوا",
+      "select_version_title": "انتخاب نمونهٔ بازی",
+      "select_player_title": "انتخاب بازیکن",
+      "importing_title": "در حال وارد کردن محتوا",
+      "success_title": "موفق",
+      "error_title": "خطا",
+      "downloading_body": "در حال دانلود فایل...",
+      "select_version_body": "لطفاً نمونهٔ بازی مورد نظر برای وارد کردن را انتخاب کنید:",
+      "local_installation": "نمونهٔ محلی",
+      "select_version_placeholder": "یک نمونه انتخاب کنید",
+      "registered": "ثبت‌شده",
+      "select_player_body": "این محتوا نیازمند انتخاب بازیکن است:",
+      "player_label": "بازیکن",
+      "select_player_placeholder": "انتخاب بازیکن",
+      "importing_body": "در حال وارد کردن محتوا...",
+      "success_msg": "وارد کردن موفق بود",
+      "success_desc": "محتوا با موفقیت به نمونهٔ انتخاب‌شده وارد شد.",
+      "failed_msg": "وارد کردن ناموفق بود",
+      "next": "بعدی",
+      "close": "بستن"
+    },
+    "mod_details_aria_label": "جزئیات ماد",
+    "loading_description": "در حال بارگذاری توضیحات...",
+    "mod_tabs": {
+      "description": "توضیحات",
+      "files": "فایل‌ها"
+    },
+    "mod_files": {
+      "title": "همهٔ فایل‌ها",
+      "table_aria_label": "جدول فایل‌های ماد",
+      "columns": {
+        "type": "نوع",
+        "name": "نام",
+        "uploaded": "تاریخ بارگذاری",
+        "size": "حجم",
+        "downloads": "دانلودها",
+        "actions": "عملیات"
+      }
+    }
+  },
+  "lip": {
+    "search_placeholder": "جست‌وجوی بسته‌ها...",
+    "sort_by": "مرتب‌سازی بر اساس",
+    "select_sort": "انتخاب ترتیب",
+    "order_by": "ترتیب",
+    "select_order": "انتخاب ترتیب",
+    "no_description": "توضیحی موجود نیست",
+    "ll_version_label": "نسخهٔ LeviLamina",
+    "ll_version_placeholder": "انتخاب نسخهٔ LeviLamina",
+    "ll_all_versions": "همهٔ نسخه‌های LeviLamina",
+    "game_version_label": "نسخهٔ بازی",
+    "game_version_placeholder": "انتخاب نسخهٔ بازی",
+    "game_all_versions": "همهٔ نسخه‌های بازی",
+    "mapping_unavailable_hint": "نگاشت نسخه‌های LeviLamina به نسخه‌های بازی در دسترس نیست؛ برای جلوگیری از تطبیق اشتباه، فیلترهای مربوط به نسخه غیرفعال شده‌اند.",
+    "files": {
+      "game_versions_label": "نسخه‌های بازی",
+      "game_versions_unrestricted": "بدون محدودیت نسخهٔ بازی",
+      "game_versions_unavailable": "نگاشت نسخهٔ بازی در دسترس نیست",
+      "ll_requirement": "نیازمندی LeviLamina",
+      "dependencies": "وابستگی‌ها",
+      "action": "عملیات",
+      "dependencies_count": "{{count}} وابستگی",
+      "install": "نصب",
+      "upgrade": "ارتقا",
+      "downgrade": "تنزل",
+      "reinstall": "نصب مجدد",
+      "redirect": "رفتن به لودر",
+      "instance_game_version_label": "نسخهٔ بازی",
+      "select_instance_title": "انتخاب نمونهٔ مقصد",
+      "installing_version_label": "نسخهٔ بستهٔ در حال نصب",
+      "variant_label": "واریانت",
+      "variant_hint_keep_default": "معمولاً نیازی به تغییر نیست",
+      "variant_placeholder": "انتخاب واریانت",
+      "variant_default": "پیش‌فرض",
+      "select_version_incompatible_hint": "نسخهٔ {{version}} با نسخهٔ بازی {{gameVersion}} سازگار نیست.",
+      "checking_ll_state": "در حال بررسی وضعیت LeviLamina...",
+      "mapping_unavailable_blocked_hint": "نگاشت LeviLamina به نسخهٔ بازی در دسترس نیست؛ برای جلوگیری از نصب بستهٔ اشتباه، این نصب مسدود شده است.",
+      "ll_missing_redirect_hint": "LeviLamina برای این نمونه نصب نشده است. با کلیک روی «رفتن به لودر»، زبانهٔ لودر در تنظیمات نمونه باز می‌شود تا ابتدا آن را به‌صورت دستی نصب کنید.",
+      "ll_missing_redirect_to_loader": "LeviLamina نصب نشده است؛ در حال انتقال به زبانهٔ لودر در تنظیمات نمونه.",
+      "ll_installed_incompatible_hint": "نسخهٔ نصب‌شدهٔ LeviLamina ({{installedVersion}}) با این بسته سازگار نیست؛ لطفاً ابتدا LeviLamina را به‌صورت دستی تنظیم کنید.",
+      "action_failed": "عملیات ناموفق بود: {{error}}",
+      "tab_label": "فایل‌ها",
+      "table_aria_label": "جدول فایل‌های بسته",
+      "install_success": "نصب با موفقیت کامل شد",
+      "upgrade_success": "ارتقا با موفقیت کامل شد",
+      "downgrade_success": "تنزل با موفقیت کامل شد",
+      "reinstall_success": "نصب مجدد با موفقیت کامل شد",
+      "current_installed_version_label": "نسخهٔ نصب‌شدهٔ فعلی",
+      "checking_current_installed_version": "در حال بررسی نسخهٔ نصب‌شدهٔ فعلی..."
+    },
+    "guide": {
+      "open_button": "راهنمای توسعه‌دهندگان",
+      "title": "راهنمای توسعه‌دهندگان LIP",
+      "description": "اگر می‌خواهید ماد شما در صفحهٔ LIP لوحظهٔ Bedrock Nexus نمایش داده شود، آن را طبق مشخصات package_manifest بسته‌های LIP منتشر کنید.",
+      "manifest_hint": "این گفت‌وگو فقط مروری سریع برای توسعه‌دهندگان است؛ نام فیلدها، موارد الزامی، مثال‌ها و قواعد اعتبارسنجی در مستندات رسمی تعریف شده‌اند.",
+      "variant_hint": "یک واریانت تنها زمانی توسط لانچر ایندکس می‌شود که برچسب آن شامل client باشد. به‌طور پیش‌فرض از \"label\": \"client\" استفاده کنید؛ برای افزونه‌های فرعی از \"label\": \"client_xxxx\" یا \"label\": \"client\\xxxx\".",
+      "docs_button": "مشاهدهٔ مستندات کامل",
+      "close_button": "بستن"
+    },
+    "guard": {
+      "title": "lipd نصب نشده است",
+      "description": "lipd هنوز نصب نشده است. برای ادامهٔ استفاده از صفحات مربوط به lip یا نصب LeviLamina، ابتدا به تنظیمات > مؤلفه‌های شخص ثالث بروید و آن را نصب کنید."
+    },
+    "title": "محتوای lip",
+    "sort_options": {
+      "hotness": "محبوب‌ترین",
+      "updated": "جدیدترین به‌روزرسانی",
+      "name": "نام"
+    },
+    "order_options": {
+      "desc": "نزولی",
+      "asc": "صعودی"
+    },
+    "by_author_inline": "| اثر {{author}}",
+    "package_details_aria_label": "جزئیات بسته",
+    "task_console": {
+      "title_install": "در حال نصب",
+      "title_upgrade": "در حال ارتقا",
+      "title_downgrade": "در حال تنزل",
+      "title_reinstall": "در حال نصب مجدد",
+      "title_update": "در حال به‌روزرسانی",
+      "title_uninstall": "در حال حذف نصب",
+      "title_generic": "وظیفهٔ lip",
+      "status_running": "در حال اجرا",
+      "status_success": "موفق",
+      "status_failed": "ناموفق",
+      "target_label": "مقصد",
+      "progress_label": "پیشرفت",
+      "log_title": "خروجی گزارش",
+      "no_output": "هنوز خروجی‌ای نیست",
+      "waiting_start": "در انتظار خروجی lipd...",
+      "copy_logs": "کپی گزارش‌ها",
+      "copy_success": "گزارش‌ها کپی شد",
+      "close": "بستن",
+      "stage_install_pkg": "در حال نصب بستهٔ مقصد",
+      "stage_fallback_delete": "حذف بسته از طریق lip ممکن نیست؛ به حذف پوشهٔ دستی بازگشته شد"
+    },
+    "package": {
+      "confirm_install_title": "تأیید نصب",
+      "confirm_install_body": "آیا مطمئنید که می‌خواهید {{package}} {{version}} را با عملیات «{{action}}» برای {{instance}} اجرا کنید؟"
+    },
+    "bedrinth_fallback_hint": "نمایش نتایج از فال‌بک بدرینت (آزمایشی) — برای این موارد فیلتر سازگاری نسخه در دسترس نیست."
+  },
+  "server": {
+    "offline": "آفلاین / عدم امکان اتصال",
+    "players": "بازیکنان آنلاین",
+    "delay": "تأخیر",
+    "online": "آنلاین",
+    "version": "نسخه"
+  },
+  "installpage": {
+    "error": {
+      "dll_dependency_missing": "زمان‌اجرای VC++ موجود نیست",
+      "name_required": "نام الزامی است",
+      "msixvc_not_specified": "بستهٔ نصب‌کننده مشخص نشده است",
+      "lip_not_installed": "lip نصب نشده است؛ برای نصب یا به‌روزرسانی دستی به تنظیمات > مؤلفه‌ها بروید.",
+      "unknown": "خطای ناشناخته",
+      "nh_err_unknown": "خطای ناشناخته",
+      "nh_err_exception": "استثنای مهارنشده یا خطای دسته‌بندی‌ناشده",
+      "nh_err_invalid_params": "پارامترها نامعتبرند",
+      "nh_err_key_not_found": "اعتبارسنجی بستهٔ نصب بازی ناموفق بود؛ لطفاً نصب‌کننده را حذف و دوباره تلاش کنید.",
+      "nh_err_unauthorized_caller": "لطفاً مطمئن شوید نام فایل اجرایی لانچر تغییر نکرده باشد (BedrockNexus.exe)",
+      "nh_err_pipe_open_failed": "باز کردن لولهٔ پیشرفت ناموفق بود",
+      "nh_err_input_not_found": "فایل ورودی یافت نشد",
+      "nh_err_output_dir_invalid": "پوشهٔ خروجی نامعتبر است",
+      "nh_err_parse_failed": "تجزیهٔ بسته ناموفق بود",
+      "nh_err_extract_failed": "خارج‌سازی فایل‌ها ناموفق بود"
+    }
+  },
+  "reportProblem": {
+    "button": "گزارش مشکل",
+    "settings_title": "گزارش مشکل",
+    "settings_desc": "باگی پیدا کرده‌اید یا چیزی درست کار نمی‌کند؟ گزارش ساختارمند همراه با اطلاعات فنی برای مخزن Issues گیت‌هاب بفرستید.",
+    "title": "گزارش مشکل",
+    "description_label": "چه اتفاقی افتاده؟",
+    "description_placeholder": "مشکل، کاری که انجام دادید و نتیجهٔ مورد انتظار را توضیح دهید…",
+    "include_diagnostics": "پیوست اطلاعات فنی (نسخهٔ برنامه، سیستم‌عامل، لاگ راه‌اندازی)",
+    "diagnostics_preview": "اطلاعات فنی پیوست‌شده به گزارش",
+    "copy": "کپی",
+    "copied": "اطلاعات فنی کپی شد",
+    "copy_failed": "کپی ناموفق بود — لطفاً متن را دستی انتخاب و کپی کنید",
+    "loading": "در حال جمع‌آوری اطلاعات فنی…",
+    "search_issues": "جستجوی گزارش‌های موجود",
+    "open_issue": "ادامه در گیت‌هاب",
+    "open_tracker": "باز کردن مخزن Issues",
+    "privacy_note": "هیچ‌چیز به‌صورت خودکار ارسال نمی‌شود؛ گزارش در گیت‌هاب باز می‌شود تا خودتان بازبینی و ارسال کنید.",
+    "too_long_note": "لاگ برای پیش‌پر کردن فرم طولانی است — با دکمهٔ کپی آن را بردارید و در گیت‌هاب در قسمت Logs بچسبانید.",
+    "error": "جمع‌آوری اطلاعات فنی ناموفق بود؛ همچنان می‌توانید گزارش را بفرستید.",
+    "default_title": "گزارش باگ",
+    "import_failure_prefill": "عملیات ایمپورت برای موارد زیر ناموفق بود:"
+  },
+  "elevation": {
+    "title": "دسترسی مدیر",
+    "description": "برای اعمال اسکریپت پچ، Bedrock Nexus به دسترسی مدیر نیاز دارد. این کار باعث می‌شود مادها و پچ‌ها به‌درستی کار کنند.",
+    "accept": "اجرا با دسترسی مدیر",
+    "decline": "ادامه بدون دسترسی مدیر",
+    "retry": "تلاش دوباره",
+    "restarting": "در حال راه‌اندازی مجدد با دسترسی مدیر…",
+    "failed": "درخواست دسترسی مدیر لغو شد یا ناموفق بود. می‌توانید دوباره تلاش کنید یا بدون دسترسی مدیر ادامه دهید.",
+    "note": "بعداً می‌توانید پچ را به‌صورت دستی از تنظیمات اجرا کنید."
+  },
+  "mcpedl": {
+    "title": "MCPEDL",
+    "desc": "جستجوی کاتالوگ اجتماعی MCPEDL برای ادان، مپ و تکستچرهای بدراک.",
+    "search_placeholder": "جستجو در MCPEDL…",
+    "search": "جستجو",
+    "experimental_badge": "آزمایشی",
+    "experimental_note": "ادغام آزمایشی: فایل‌ها از طریق مدیر دانلود دریافت و مثل فایل‌های معمولی mcpack./mcaddon. ایمپورت می‌شوند.",
+    "no_results": "نتیجه‌ای یافت نشد",
+    "load_failed": "بارگذاری ناموفق بود",
+    "load_more": "بیشتر",
+    "files": "فایل‌ها ({{count}})",
+    "download": "دانلود",
+    "open_page": "باز کردن صفحه",
+    "download_started": "دانلود شروع شد"
+  }
+}
