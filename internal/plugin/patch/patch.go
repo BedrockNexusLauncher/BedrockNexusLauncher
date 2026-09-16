@@ -1,14 +1,11 @@
-package main
+package patch
 
 import (
-	"embed"
 	"fmt"
-	"io/fs"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
-	"sync/atomic"
 	"time"
 	"unsafe"
 
@@ -16,14 +13,12 @@ import (
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/config"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/gdk"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/mcservice"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/plugin"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/registry"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/utils"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/versions"
 	"golang.org/x/sys/windows"
 )
-
-//go:embed all:Patch
-var patcherAssets embed.FS
 
 const (
 	patchTempDirPrefix    = "BedrockNexus_Patch_"
@@ -35,67 +30,22 @@ const (
 var (
 	shell32           = windows.NewLazySystemDLL("shell32.dll")
 	procShellExecuteW = shell32.NewProc("ShellExecuteW")
-
-	// patchAutoRunDeclined وقتی true باشد، کاربر درخواست ارتقای دسترسی هنگام استارت را رد کرده
-	// و اجرای خودکار پچ در همین نشست نادیده گرفته می‌شود.
-	patchAutoRunDeclined atomic.Bool
-
-	// elevationConsentPending وقتی true باشد، درخواست ارتقای دسترسی هنوز در رابط گرافیکی
-	// (صفحه ElevationConsentPage) بی‌پاسخ است و اجرای خودکار پچ تا تصمیم کاربر به تعویق می‌افتد.
-	elevationConsentPending atomic.Bool
 )
 
-// SetPatchAutoRunDeclined وضعیت «رد کردن ارتقای دسترسی» را ثبت می‌کند
-func SetPatchAutoRunDeclined() { patchAutoRunDeclined.Store(true) }
-
-// extractEmbeddedPatch پوشه امبد شده را در دایرکتوری موقت استخراج می‌کند
-func extractEmbeddedPatch() (string, error) {
-	tempDir := os.TempDir()
-	patchDir := filepath.Join(tempDir, patchTempDirPrefix+fmt.Sprintf("%d", time.Now().UnixNano()))
-
-	if err := os.MkdirAll(patchDir, 0755); err != nil {
-		return "", fmt.Errorf("failed to create patch temp directory: %w", err)
+func ResolveDir() (string, error) {
+	dir := plugin.PatchDir()
+	if st, err := os.Stat(dir); err != nil || !st.IsDir() {
+		return "", fmt.Errorf("patch plugin not installed at %s", dir)
 	}
-
-	walkFn := func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-
-		relPath, err := filepath.Rel("Patch", path)
-		if err != nil {
-			return err
-		}
-
-		targetPath := filepath.Join(patchDir, relPath)
-
-		if d.IsDir() {
-			return os.MkdirAll(targetPath, 0755)
-		}
-
-		data, err := fs.ReadFile(patcherAssets, path)
-		if err != nil {
-			return fmt.Errorf("failed to read embedded file %s: %w", path, err)
-		}
-
-		if err := os.WriteFile(targetPath, data, 0755); err != nil {
-			return fmt.Errorf("failed to write file %s: %w", targetPath, err)
-		}
-
-		return nil
+	if _, err := os.Stat(filepath.Join(dir, patchScriptName)); err != nil {
+		return "", fmt.Errorf("patch script not found in plugin: %w", err)
 	}
-
-	if err := fs.WalkDir(patcherAssets, "Patch", walkFn); err != nil {
-		_ = os.RemoveAll(patchDir)
-		return "", fmt.Errorf("failed to extract embedded patch: %w", err)
+	if _, err := os.Stat(filepath.Join(dir, patchRunnerName)); err != nil {
+		return "", fmt.Errorf("patch runner not found in plugin: %w", err)
 	}
-
-	return patchDir, nil
+	return dir, nil
 }
 
-// executePatchScriptWithAdmin اسکریپت‌های پچ را با دسترسی ادمین (UAC) ویندوز اجرا می‌کند.
-// ابتدا patch.bat و سپس wrapper قابل‌اعتماد run_patch.cmd را در همان cmd.exe اجرا
-// می‌کند تا نصب GDK از مسیر wrapper انجام شود و فقط یک بار UAC نمایش داده شود.
 func executePatchScriptWithAdmin(patchDir string) error {
 	scriptPath := filepath.Join(patchDir, patchScriptName)
 
@@ -130,7 +80,6 @@ func executePatchScriptWithAdmin(patchDir string) error {
 
 	log.Printf("[patcher] Requesting Administrator privileges (UAC) for %s...", patchScriptName)
 
-	// اجرای اسکریپت در حالت ادمین با پنجره کاملا مخفی (بدون نمایش ترمینال)
 	r1, _, err := procShellExecuteW.Call(
 		0,
 		uintptr(unsafe.Pointer(verbPtr)),
@@ -140,7 +89,6 @@ func executePatchScriptWithAdmin(patchDir string) error {
 		windows.SW_HIDE,
 	)
 
-	// در توابع ویندوز مقادیر بزرگتر از ۳۲ به معنی موفقیت است
 	if r1 <= 32 {
 		log.Printf("[patcher] UAC elevation was rejected or failed: %v", err)
 		return err
@@ -149,8 +97,6 @@ func executePatchScriptWithAdmin(patchDir string) error {
 	return nil
 }
 
-// isMinecraftPackageRegistered بررسی می‌کند پکیج ماینکرفت (نصب Store/Xbox App یا
-// نسخهٔ ثبت‌شده توسط لانچر) از قبل در سیستم موجود باشد
 func isMinecraftPackageRegistered() bool {
 	for _, pkg := range []string{"MICROSOFT.MINECRAFTUWP", "Microsoft.MinecraftWindowsBeta"} {
 		if info, err := registry.GetAppxInfo(pkg); err == nil && info != nil {
@@ -160,8 +106,6 @@ func isMinecraftPackageRegistered() bool {
 	return false
 }
 
-// pickPatchRegisterVersion بر اساس حالت انتخابی کاربر، نام نسخهٔ کاندید برای
-// ثبت خودکار را برمی‌گرداند (جدیدترین نسخهٔ Release/Preview یا آخرین نسخهٔ اجرا شده)
 func pickPatchRegisterVersion(mode string) string {
 	vdir, err := apppath.VersionsDir()
 	if err != nil || strings.TrimSpace(vdir) == "" {
@@ -199,10 +143,6 @@ func pickPatchRegisterVersion(mode string) string {
 	return strings.TrimSpace(best.Name)
 }
 
-// ensureMinecraftRegistered قبل از اجرای اسکریپت‌های پچ، اگر پکیج ماینکرفت در سیستم
-// ثبت نشده باشد، بر اساس تنظیمات کاربر یک نسخه را ثبت می‌کند (payload خصوصی برای پیدا
-// کردن پوشهٔ Content بازی به پکیج ثبت‌شده یا نصب Xbox App نیاز دارد). ثبت AppX
-// per-user است و به دسترسی ادمین نیازی ندارد.
 func ensureMinecraftRegistered() {
 	if isMinecraftPackageRegistered() {
 		return
@@ -235,7 +175,6 @@ func ensureMinecraftRegistered() {
 	log.Printf("[patcher] version %q registered successfully before patch", name)
 }
 
-// cleanupOldPatches پاکسازی پوشه‌های پچ قدیمی
 func cleanupOldPatches() {
 	tempDir := os.TempDir()
 	entries, err := os.ReadDir(tempDir)
@@ -266,21 +205,18 @@ func cleanupOldPatches() {
 	}
 }
 
-// runEmbeddedPatch اجرای فرآیند کلی پچ (فقط برای اجرای خودکار هنگام استارت)
-func runEmbeddedPatch() {
+func RunAuto() {
 	defer func() {
 		if recovered := recover(); recovered != nil {
 			log.Printf("[patcher] panic in embedded patch execution: %v", recovered)
 		}
 	}()
 
-	// اگر کاربر ارتقای دسترسی هنگام استارت را رد کرده باشد، پچ خودکار اجرا نمی‌شود
-	if patchAutoRunDeclined.Load() {
+	if plugin.IsAutoRunDeclined() {
 		log.Printf("[patcher] auto-run skipped: elevation declined by user at startup")
 		return
 	}
 
-	// اگر گزینه «اجرای خودکار هنگام استارت» در تنظیمات خاموش باشد، اجرا نمی‌شود
 	if config.GetAutoPatchDisabled() {
 		log.Printf("[patcher] auto-run disabled in settings, skipping")
 		return
@@ -288,14 +224,12 @@ func runEmbeddedPatch() {
 
 	cleanupOldPatches()
 
-	patchDir, err := extractEmbeddedPatch()
+	patchDir, err := ResolveDir()
 	if err != nil {
-		log.Printf("[patcher] failed to extract embedded patch: %v", err)
+		log.Printf("[patcher] patch plugin not present, skipping auto-run: %v", err)
 		return
 	}
 
-	// قبل از اجرای اسکریپت‌ها، اگر پکیج ماینکرفت ثبت نباشد طبق تنظیمات کاربر
-	// یک نسخه به‌صورت خودکار ثبت می‌شود (پیش‌نیاز payload خصوصی)
 	ensureMinecraftRegistered()
 
 	if err := executePatchScriptWithAdmin(patchDir); err != nil {
@@ -306,16 +240,14 @@ func runEmbeddedPatch() {
 	log.Printf("[patcher] patch executed successfully with Administrator rights.")
 }
 
-// RunPatchScriptManual اجرای دستی اسکریپت پچ به درخواست کاربر از رابط گرافیکی
-func RunPatchScriptManual() error {
+func RunManual() error {
 	cleanupOldPatches()
 
-	patchDir, err := extractEmbeddedPatch()
+	patchDir, err := ResolveDir()
 	if err != nil {
-		return fmt.Errorf("ERR_PATCH_EXTRACT_FAILED: %w", err)
+		return fmt.Errorf("ERR_PATCH_PLUGIN_MISSING: %w", err)
 	}
 
-	// مثل اجرای خودکار، قبل از پچ ثبت خودکار نسخه انجام می‌شود
 	ensureMinecraftRegistered()
 
 	if err := executePatchScriptWithAdmin(patchDir); err != nil {
@@ -326,7 +258,6 @@ func RunPatchScriptManual() error {
 	return nil
 }
 
-// runEmbeddedPatchAsync اجرای ناهمگام در پس‌زمینه
-func runEmbeddedPatchAsync() {
-	go runEmbeddedPatch()
+func RunAutoAsync() {
+	go RunAuto()
 }

@@ -74,6 +74,8 @@ export const useSettings = (i18n: { language: string }) => {
   const [patchAutoRun, setPatchAutoRunState] = useState<boolean>(true);
   const [patchRegisterMode, setPatchRegisterModeState] =
     useState<string>("latest_release");
+  const [patchPluginPresent, setPatchPluginPresentState] =
+    useState<boolean>(false);
   const [
     experimentalInstanceBackupEnabled,
     setExperimentalInstanceBackupEnabledState,
@@ -513,6 +515,12 @@ export const useSettings = (i18n: { language: string }) => {
               const mode = String(registerMode || "").trim();
               if (mode) setPatchRegisterModeState(mode);
             } catch {}
+            try {
+              const present = await callMinecraftByName<boolean>(
+                "IsPatchPluginPresent",
+              );
+              setPatchPluginPresentState(!!present);
+            } catch {}
           }
         } catch {}
       })
@@ -727,6 +735,7 @@ export const useSettings = (i18n: { language: string }) => {
     setPatchAutoRun: setPatchAutoRunState,
     patchRegisterMode,
     setPatchRegisterMode: setPatchRegisterModeState,
+    patchPluginPresent,
     experimentalInstanceBackupEnabled,
     setExperimentalInstanceBackupEnabled,
     mcpedlExperimentalEnabled,

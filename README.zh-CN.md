@@ -43,4 +43,6 @@ npm run docs:dev
 
 ## 许可证
 
-本项目的非闭源部分使用 LGPL-3.0 License。详情见 `COPYING` 与 `COPYING.LESSER`。
+本项目使用 GPL-3.0-only License。详情见 `COPYING` 与 `THIRD_PARTY_NOTICES`。
+
+Bedrock Nexus 是 [LiteLDev/LeviLauncher](https://github.com/LiteLDev/LeviLauncher)（GPL-3.0-only）的一个 fork，已做定制与 rebrand。

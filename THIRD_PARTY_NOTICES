@@ -1,0 +1,75 @@
+Bedrock Nexus third-party notices
+
+Bedrock Nexus is licensed under GPL-3.0-only; the full text is in COPYING. The
+components listed below are distributed with the launcher under the terms
+stated for each of them.
+
+Bedrock Nexus is a fork of LiteLDev/LeviLauncher
+(https://github.com/LiteLDev/LeviLauncher), which is also licensed under
+GPL-3.0-only, and has been customized and rebranded.
+
+
+== Copyleft components ==
+
+github.com/axrona/go-discordrpc v1.1.0-1
+  GNU GPL version 3. Used by internal/discord.
+
+This component requires the launcher as a whole to be conveyed under
+GPL version 3.
+
+
+== Go modules ==
+
+  github.com/Masterminds/semver/v3 v3.4.0                MIT
+  github.com/Microsoft/go-winio v0.6.2                   MIT
+  github.com/coder/websocket v1.8.14                     ISC
+  github.com/goccy/go-json v0.10.5                       MIT
+  github.com/go-ole/go-ole v1.3.0                        MIT
+  github.com/godbus/dbus/v5 v5.2.2                       BSD-2-Clause
+  github.com/google/go-github/v30 v30.1.0                Apache-2.0
+  github.com/jchv/go-winloader                            ISC
+  github.com/joho/godotenv v1.5.1                        MIT
+  github.com/mattn/go-colorable v0.1.14                  MIT
+  github.com/mattn/go-isatty v0.0.20                     MIT
+  github.com/mouuff/go-rocket-update v1.5.6              MIT
+  github.com/wailsapp/wails/v3 v3.0.0-alpha.77           MIT
+  golang.org/x/crypto v0.47.0                            BSD-3-Clause
+  golang.org/x/sys v0.40.0                               BSD-3-Clause
+  gopkg.in/natefinch/npipe.v2                            MIT
+
+Retain the license files distributed with those modules. The full
+dependency list with versions is in go.mod and go.sum.
+
+The WebView2 loader bindings inside github.com/wailsapp/wails/v3
+(internal/webview2/webviewloader) are covered by the ISC license of John
+Chadwick (2020) and the Wails Project Developers (2022).
+
+
+== Frontend packages ==
+
+The web UI bundles npm packages licensed under MIT, Apache-2.0, ISC,
+BSD-2-Clause, BSD-3-Clause, MPL-2.0 and 0BSD. The authoritative per-package
+data is in frontend/package-lock.json.
+
+
+== Components under their own terms ==
+
+The following files are bundled with the launcher and are licensed by their
+respective owners. The GPL-3.0-only grant covers Bedrock Nexus's own code and
+does not extend to them.
+
+internal/gameinput/GameInputRedist.msi
+  GameInput redistributable, Copyright (c) Microsoft Corporation. Redistributed
+  under the Microsoft license accompanying the GameInput package.
+
+frontend/src/assets/fonts/MiSans-Medium.woff2
+  MiSans, Copyright (c) Xiaomi Inc., used under the MiSans Font Intellectual
+  Property License Agreement (https://hyperos.mi.com/font/). This software uses
+  the MiSans font.
+
+frontend/src/assets/images/world-preview-default.jpg
+  Minecraft screenshot, Copyright (c) Mojang Studios and Microsoft Corporation.
+
+Minecraft is a trademark of Mojang Studios. Bedrock Nexus is an unofficial tool
+and is not affiliated with, endorsed by or sponsored by Mojang Studios or
+Microsoft Corporation.

@@ -132,6 +132,7 @@ export const SettingsPage: React.FC = () => {
     setPatchAutoRun,
     patchRegisterMode,
     setPatchRegisterMode,
+    patchPluginPresent,
     experimentalInstanceBackupEnabled,
     setExperimentalInstanceBackupEnabled,
     mcpedlExperimentalEnabled,
@@ -2205,13 +2206,15 @@ export const SettingsPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <Divider className="bg-default-200/50" />
+                  {patchPluginPresent && (
+                    <>
+                      <Divider className="bg-default-200/50" />
 
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex flex-col gap-1">
-                        <p className="font-medium">
-                          {t("settings.patch.title")}
+                      <div className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex flex-col gap-1">
+                            <p className="font-medium">
+                              {t("settings.patch.title")}
                         </p>
                         <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
                           {t("settings.patch.desc")}
@@ -2227,10 +2230,14 @@ export const SettingsPage: React.FC = () => {
                       </p>
                       <Select
                         size="sm"
-                        className="mt-2 max-w-md"
+                        className="mt-2 w-full max-w-xl"
                         aria-label={t("settings.patch.register_mode")}
                         disallowEmptySelection
-                        classNames={COMPONENT_STYLES.select}
+                        classNames={{
+                          ...COMPONENT_STYLES.select,
+                          popoverContent: `${COMPONENT_STYLES.select.popoverContent} w-max min-w-full max-w-[90vw]`,
+                          listbox: `${COMPONENT_STYLES.select.listbox} [&_li]:whitespace-normal [&_li]:break-words [&_li]:text-wrap`,
+                        }}
                         selectedKeys={new Set([patchRegisterMode])}
                         onSelectionChange={(keys) => {
                           const val = Array.from(keys)[0] as string;
@@ -2336,7 +2343,9 @@ export const SettingsPage: React.FC = () => {
                         </Button>
                       </div>
                     </div>
-                  </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
 

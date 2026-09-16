@@ -135,9 +135,17 @@ export default function AboutPage() {
                     >
                       {t("about.github_repo")}
                     </Button>
+                    <Button
+                      variant="flat"
+                      className="bg-default-100 dark:bg-white/10"
+                      startContent={<FaGithub className="text-lg" />}
+                      onPress={() => Browser.OpenURL("https://github.com/LiteLDev/LeviLauncher")}
+                    >
+                      LiteLDev/LeviLauncher (upstream)
+                    </Button>
                   </div>
                   <p className="rtl-paragraph text-small text-default-500 dark:text-zinc-400">
-                    {t("about.license.tip")}
+                    GPL-3.0-only — {t("about.license.tip")} Forked from LiteLDev/LeviLauncher.
                   </p>
                 </div>
 
