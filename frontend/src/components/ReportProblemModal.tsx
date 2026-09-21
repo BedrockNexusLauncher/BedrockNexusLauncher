@@ -171,7 +171,7 @@ export const ReportProblemModal: React.FC<ReportProblemModalProps> = ({
         {includeDiagnostics && (
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between gap-2">
-              <p className="text-tiny text-default-500 dark:text-zinc-400">
+              <p className="text-tiny text-default-600 dark:text-zinc-300">
                 {t("reportProblem.diagnostics_preview")}
               </p>
               <Button
@@ -197,7 +197,7 @@ export const ReportProblemModal: React.FC<ReportProblemModalProps> = ({
           </div>
         )}
 
-        <p className="text-tiny text-default-500 dark:text-zinc-400">
+        <p className="text-tiny text-default-600 dark:text-zinc-300">
           {t("reportProblem.privacy_note")}
         </p>
       </div>

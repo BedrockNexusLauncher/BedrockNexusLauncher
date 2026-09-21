@@ -266,6 +266,7 @@ export const UnifiedModal: React.FC<UnifiedModalProps> = ({
                     )}
                     {showConfirmButton && (
                       <Button
+                        autoFocus
                         {...confirmButtonProps}
                         color={resolvedConfirmButtonProps.color}
                         radius="full"

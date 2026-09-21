@@ -184,11 +184,11 @@ const MarketplaceItemPage: React.FC = () => {
               </div>
 
               <div className="flex flex-col grow gap-3">
-                <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-default-900 dark:text-zinc-100 pb-1">
+                <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-default-900 dark:text-zinc-100 pb-1">
                   {item.name}
-                </h1>
+                </h2>
 
-                <div className="flex items-center gap-3 text-default-500 dark:text-zinc-400 text-sm flex-wrap">
+                <div className="flex items-center gap-3 text-default-600 dark:text-zinc-300 text-sm flex-wrap">
                   <span className="flex items-center gap-1">
                     {t("marketplace.by")}
                     <span className="text-default-700 dark:text-zinc-200 font-medium">
@@ -289,7 +289,7 @@ const MarketplaceItemPage: React.FC = () => {
                   "gap-6 w-full relative rounded-none p-0 border-b border-default-200 mb-6",
                 cursor:
                   "w-full bg-linear-to-r from-primary-500 to-primary-400 h-[3px]",
-                tab: "max-w-fit px-0 h-12 text-base font-medium text-default-500 dark:text-zinc-400",
+                tab: "max-w-fit px-0 h-12 text-base font-medium text-default-600 dark:text-zinc-300",
                 tabContent:
                   "group-data-[selected=true]:text-primary-600 dark:group-data-[selected=true]:text-primary-500 font-bold",
               }}
@@ -358,17 +358,17 @@ const MarketplaceItemPage: React.FC = () => {
                               </Chip>
                             </TableCell>
                             <TableCell>
-                              <span className="text-default-500 dark:text-zinc-400">
+                              <span className="text-default-600 dark:text-zinc-300">
                                 {formatDateStr(file.date)}
                               </span>
                             </TableCell>
                             <TableCell>
-                              <span className="text-default-500 dark:text-zinc-400">
+                              <span className="text-default-600 dark:text-zinc-300">
                                 {file.size > 0 ? formatFileSize(file.size) : "-"}
                               </span>
                             </TableCell>
                             <TableCell>
-                              <span className="text-default-500 dark:text-zinc-400 line-clamp-2 max-w-xs">
+                              <span className="text-default-600 dark:text-zinc-300 line-clamp-2 max-w-xs">
                                 {file.changelog || "-"}
                               </span>
                             </TableCell>
@@ -378,7 +378,7 @@ const MarketplaceItemPage: React.FC = () => {
                                   isIconOnly
                                   variant="light"
                                   size="sm"
-                                  className="text-default-500 dark:text-zinc-400 hover:text-primary"
+                                  className="text-default-600 dark:text-zinc-300 hover:text-primary"
                                   onPress={() => handleInstall(file)}
                                 >
                                   <LuDownload size={20} />
@@ -508,7 +508,7 @@ const MarketplaceItemPage: React.FC = () => {
       >
         {installer.step === "downloading" && (
           <div className="flex flex-col items-center gap-4 py-4 w-full">
-            <p className="text-default-500 dark:text-zinc-400">
+            <p className="text-default-600 dark:text-zinc-300">
               {t("marketplace.install.downloading_body")}
             </p>
             {installer.downloadProgress ? (
@@ -540,7 +540,7 @@ const MarketplaceItemPage: React.FC = () => {
 
         {installer.step === "version_select" && (
           <div className="flex flex-col gap-4">
-            <p className="text-small text-default-500 dark:text-zinc-400">
+            <p className="text-small text-default-600 dark:text-zinc-300">
               {t("marketplace.install.select_version_body")}
             </p>
             <Select
@@ -594,7 +594,7 @@ const MarketplaceItemPage: React.FC = () => {
 
         {installer.step === "player_select" && (
           <div className="flex flex-col gap-4">
-            <p className="text-small text-default-500 dark:text-zinc-400">
+            <p className="text-small text-default-600 dark:text-zinc-300">
               {t("marketplace.install.select_player_body")}
             </p>
             <Select
@@ -618,7 +618,7 @@ const MarketplaceItemPage: React.FC = () => {
         {installer.step === "importing" && (
           <div className="flex flex-col items-center gap-4 py-4">
             <Spinner size="lg" color="primary" />
-            <p className="text-default-500 dark:text-zinc-400">
+            <p className="text-default-600 dark:text-zinc-300">
               {t("marketplace.install.importing_body")}
             </p>
           </div>
@@ -630,7 +630,7 @@ const MarketplaceItemPage: React.FC = () => {
               <p className="text-xl font-bold text-default-900 dark:text-white">
                 {t("marketplace.install.success_msg")}
               </p>
-              <p className="text-default-500 dark:text-zinc-400 mt-1">
+              <p className="text-default-600 dark:text-zinc-300 mt-1">
                 {t("marketplace.install.success_desc")}
               </p>
             </div>
@@ -643,7 +643,7 @@ const MarketplaceItemPage: React.FC = () => {
               <p className="text-xl font-bold text-danger-600 dark:text-danger-500 mb-2">
                 {t("marketplace.install.failed_msg")}
               </p>
-              <div className="text-default-500 dark:text-zinc-400 px-4 bg-default-100 dark:bg-zinc-800 rounded-lg py-3 font-mono text-xs break-all mx-auto max-w-[90%]">
+              <div className="text-default-600 dark:text-zinc-300 px-4 bg-default-100 dark:bg-zinc-800 rounded-lg py-3 font-mono text-xs break-all mx-auto max-w-[90%]">
                 {installer.installError}
               </div>
             </div>

@@ -655,7 +655,7 @@ export const LipTaskConsoleProvider: React.FC<{
         <div className="flex h-[min(44vh,26rem)] min-h-[15rem] flex-col gap-3">
           <div className="shrink-0 space-y-3">
             <div className="flex items-center gap-2 text-small">
-              <span className="text-default-500 dark:text-zinc-400">
+              <span className="text-default-600 dark:text-zinc-300">
                 {t("lip.task_console.target_label")}:
               </span>
               <span className="font-mono">{target || "-"}</span>
@@ -665,7 +665,7 @@ export const LipTaskConsoleProvider: React.FC<{
             </div>
 
             <div className="space-y-1">
-              <div className="text-xs text-default-500 dark:text-zinc-400">
+              <div className="text-xs text-default-600 dark:text-zinc-300">
                 {t("lip.task_console.progress_label")}
                 {progress?.message ? ` - ${progress.message}` : ""}
               </div>

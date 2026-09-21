@@ -160,7 +160,7 @@ const McpedlPage: React.FC = () => {
                 {t("mcpedl.search")}
               </Button>
             </div>
-            <p className="text-tiny text-default-500 dark:text-zinc-400">
+            <p className="text-tiny text-default-600 dark:text-zinc-300">
               {t("mcpedl.experimental_note")}
             </p>
           </CardBody>
@@ -173,7 +173,7 @@ const McpedlPage: React.FC = () => {
             <Spinner size="lg" color="primary" />
           </div>
         ) : items.length === 0 ? (
-          <div className="flex-1 flex items-center justify-center text-default-500 dark:text-zinc-400">
+          <div className="flex-1 flex items-center justify-center text-default-600 dark:text-zinc-300">
             {t("mcpedl.no_results")}
           </div>
         ) : (
@@ -228,11 +228,11 @@ const McpedlPage: React.FC = () => {
                           )}
                         </div>
                         {item.summary && (
-                          <p className="text-tiny text-default-500 dark:text-zinc-400 line-clamp-3 leading-relaxed">
+                          <p className="text-tiny text-default-600 dark:text-zinc-300 line-clamp-3 leading-relaxed">
                             {item.summary}
                           </p>
                         )}
-                        <div className="flex items-center gap-3 text-xs text-default-500 dark:text-zinc-400">
+                        <div className="flex items-center gap-3 text-xs text-default-600 dark:text-zinc-300">
                           <span className="flex items-center gap-1">
                             <FaDownload className="text-[10px]" />
                             {formatCount(item.downloadCount)}

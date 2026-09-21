@@ -741,7 +741,7 @@ export default function InstallPage() {
                       <h2 className="text-xl font-bold text-default-900 dark:text-white">
                         {t("downloadmodal.installing.title")}
                       </h2>
-                      <p className="text-small text-default-500 dark:text-zinc-400">
+                      <p className="text-small text-default-600 dark:text-zinc-300">
                         {t("downloadpage.install.hint")}
                       </p>
                     </div>
@@ -749,7 +749,7 @@ export default function InstallPage() {
                     <div className="w-full max-w-lg flex flex-col gap-2">
                       {installingVersion && (
                         <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-default-100/50 dark:bg-zinc-800/50">
-                          <span className="text-small font-medium text-default-500 dark:text-zinc-400">
+                          <span className="text-small font-medium text-default-600 dark:text-zinc-300">
                             {t("downloadpage.install.version_label")}
                           </span>
                           <span className="text-small font-bold text-default-700 dark:text-zinc-300">
@@ -795,7 +795,7 @@ export default function InstallPage() {
 
                         {typeof extractInfo?.bytes === "number" &&
                         extractInfo.bytes > 0 ? (
-                          <div className="flex justify-between text-tiny text-default-500 dark:text-zinc-400 font-medium">
+                          <div className="flex justify-between text-tiny text-default-600 dark:text-zinc-300 font-medium">
                             <span>
                               {extractInfo.totalBytes
                                 ? (() => {
@@ -908,7 +908,7 @@ export default function InstallPage() {
                           {installingVersion}
                         </Chip>
                       )}
-                      <p className="text-default-500 dark:text-zinc-400 text-sm mt-2 max-w-xs">
+                      <p className="text-default-600 dark:text-zinc-300 text-sm mt-2 max-w-xs">
                         {t("downloadpage.install.success")}
                       </p>
                     </div>
@@ -987,7 +987,7 @@ export default function InstallPage() {
                         <div className="text-small font-medium">
                           {t("downloadpage.install.custom_installer.label")}
                         </div>
-                        <div className="text-tiny text-default-500 dark:text-zinc-400">
+                        <div className="text-tiny text-default-600 dark:text-zinc-300">
                           {customInstallerPath
                             ? customInstallerPath
                             : (t(
@@ -1035,7 +1035,7 @@ export default function InstallPage() {
                         <div className="text-small font-medium">
                           {t("downloadpage.install.levilamina_label")}
                         </div>
-                        <div className="text-tiny text-default-500 dark:text-zinc-400">
+                        <div className="text-tiny text-default-600 dark:text-zinc-300">
                           {t("downloadpage.install.levilamina_desc")}
                         </div>
                       </div>
@@ -1086,7 +1086,7 @@ export default function InstallPage() {
                       <div className="text-small font-medium">
                         {t("downloadpage.install_folder.enable_isolation")}
                       </div>
-                      <div className="text-tiny text-default-500 dark:text-zinc-400">
+                      <div className="text-tiny text-default-600 dark:text-zinc-300">
                         {t("downloadpage.install_folder.enable_isolation_desc")}
                       </div>
                     </div>
@@ -1103,7 +1103,7 @@ export default function InstallPage() {
                         <div className="text-small font-medium">
                           {t("downloadpage.install_folder.inherit_label")}
                         </div>
-                        <div className="text-tiny text-default-500 dark:text-zinc-400">
+                        <div className="text-tiny text-default-600 dark:text-zinc-300">
                           {t("downloadpage.install_folder.inherit_hint")}
                         </div>
                       </div>

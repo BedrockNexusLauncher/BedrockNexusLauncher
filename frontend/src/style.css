@@ -232,14 +232,22 @@ body,
 html {
   touch-action: pan-x pan-y;
 
+  /* Interactive chrome stays non-selectable; page/body text is selectable
+     so errors, hashes, paths and versions can be copied. */
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+#wails-draggable,
+.wails-draggable,
+aside[class*="sidebar"],
+nav[class*="sidebar"] {
   -webkit-user-select: none;
-  /* Chrome, Safari, Opera */
   -moz-user-select: none;
-  /* Firefox */
   -ms-user-select: none;
-  /* Internet Explorer/Edge */
   user-select: none;
-  /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
 
 img {
@@ -253,18 +261,17 @@ html,
 body,
 #root {
   height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-  /* reserve space for scrollbar to avoid layout shift during content height changes */
-  scrollbar-gutter: stable both-edges;
-  /* hide scrollbar while keeping scroll */
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  width: 100%;
+  max-width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
-html::-webkit-scrollbar,
-body::-webkit-scrollbar,
-#root::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+html body {
+  background-color: #fafafa;
+}
+html.dark body {
+  background-color: #09090b;
 }
 
 #wails-draggable,
@@ -366,11 +373,15 @@ body::-webkit-scrollbar,
   background-color: rgba(161, 161, 170, 0.25);
 }
 
-/* Hide scrollbars but keep scrolling (for scrollable panes like version lists) */
+/* Hide scrollbars but keep scrolling (for scrollable panes like version lists).
+   overflow stays `auto` so wheel / touch / keyboard scrolling keeps working;
+   only the visual scrollbar is removed, so there is no layout shift. */
 .no-scrollbar,
 .scrollbar-hide {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+  /* Keep nested wheel/touch scroll from chaining to the parent page. */
+  overscroll-behavior: contain;
 }
 .no-scrollbar::-webkit-scrollbar,
 .scrollbar-hide::-webkit-scrollbar {
@@ -439,18 +450,23 @@ html.rtl-locale h4,
 html.rtl-locale h5,
 html.rtl-locale h6,
 html.rtl-locale a,
-html.rtl-locale label,
-html.rtl-locale button,
-html.rtl-locale div {
+html.rtl-locale label {
   unicode-bidi: plaintext;
+}
+/* LTR content (code, paths, logs) stays LTR even in RTL locales */
+html.rtl-locale .ltr-content {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: isolate;
 }
 /* HeroUI's Card component hard-codes `text-left` on its body
    (@heroui/theme/dist/components/card.js → CardBody), which would otherwise
    override body's inherited `text-align: right` for fa_IR and leave card
    text (e.g. the "About / درباره ما" page) left-aligned in RTL.
-   Neutralize that utility for RTL locales only; elements that intentionally
-   pass `text-center` / `text-start` / `text-right` keep their own alignment. */
-html.rtl-locale .text-left {
+   Scoped to card/heroes only — intentional LTR content keeps LTR. */
+html.rtl-locale .card-body .text-left,
+html.rtl-locale .heroui-card .text-left,
+html.rtl-locale .hero-card .text-left {
   text-align: right;
 }
 /* جمله‌های فارسیِ مخلوط با واژه‌های لاتین (مثل متن‌های صفحه «درباره» که با
@@ -470,6 +486,17 @@ html.rtl-locale .rtl-paragraph {
 html.rtl-locale .settings-rtl-lock {
   direction: rtl;
   text-align: right;
+}
+/* Engine/LTR content inside settings (paths, code, numbers, inputs)
+   stays LTR even though the settings wrapper is RTL. */
+html.rtl-locale .settings-rtl-lock input,
+html.rtl-locale .settings-rtl-lock textarea,
+html.rtl-locale .settings-rtl-lock code,
+html.rtl-locale .settings-rtl-lock .font-mono,
+html.rtl-locale .settings-rtl-lock [dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: isolate;
 }
 
 /* ---- RTL typography polish ----
@@ -576,13 +603,52 @@ html.themed-strokes {
 html.dark.themed-strokes {
   --theme-stroke-alpha: 0.32;
 }
-html.themed-strokes *,
+html.themed-strokes *:not([data-focus="true"]):not([data-invalid="true"]):not(:focus-visible):not(:focus-within),
 html.themed-strokes *::before,
 html.themed-strokes *::after {
   border-color: hsl(
     var(--theme-stroke-hsl, 258.9 90.2% 66.1%) /
       var(--theme-stroke-alpha, 0.4)
   ) !important;
+}
+
+/* Gradient titles with solid fallback: base color shows if background-clip:text unsupported */
+.gradient-title {
+  color: rgb(var(--theme-600, 124, 58, 237));
+}
+.dark .gradient-title {
+  color: rgb(var(--theme-400, 167, 139, 250));
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .gradient-title {
+    background-image: linear-gradient(
+      90deg,
+      rgb(var(--theme-600, 124, 58, 237)),
+      rgb(var(--theme-400, 167, 139, 250))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+}
+
+/* Navbar center scroller edge fade cue */
+.navbar-scroll-cue {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 24px,
+    #000 calc(100% - 24px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 24px,
+    #000 calc(100% - 24px),
+    transparent 100%
+  );
 }
 
 /* ---- Launcher "Ignition Deck" motion system ----

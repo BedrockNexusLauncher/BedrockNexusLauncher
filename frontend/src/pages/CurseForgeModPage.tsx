@@ -610,11 +610,11 @@ const CurseForgeModPage: React.FC = () => {
               </div>
 
               <div className="flex flex-col grow gap-3">
-                <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-default-900 dark:text-zinc-100 pb-1">
+                <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-default-900 dark:text-zinc-100 pb-1">
                   {mod.name}
-                </h1>
+                </h2>
 
-                <div className="flex items-center gap-3 text-default-500 dark:text-zinc-400 text-sm flex-wrap">
+                <div className="flex items-center gap-3 text-default-600 dark:text-zinc-300 text-sm flex-wrap">
                   <span className="flex items-center gap-1">
                     {t("curseforge.by")}
                     {mod.authors?.map((author: any, idx: number) => (
@@ -759,7 +759,7 @@ const CurseForgeModPage: React.FC = () => {
                     "gap-6 w-full relative rounded-none p-0 border-b border-default-200 mb-6",
                   cursor:
                     "w-full bg-linear-to-r from-primary-500 to-primary-400 h-[3px]",
-                  tab: "max-w-fit px-0 h-12 text-base font-medium text-default-500 dark:text-zinc-400",
+                  tab: "max-w-fit px-0 h-12 text-base font-medium text-default-600 dark:text-zinc-300",
                   tabContent:
                     "group-data-[selected=true]:text-primary-600 dark:group-data-[selected=true]:text-primary-500 font-bold",
                 }}
@@ -877,12 +877,12 @@ const CurseForgeModPage: React.FC = () => {
                                   </span>
                                 </TableCell>
                                 <TableCell>
-                                  <span className="text-default-500 dark:text-zinc-400">
+                                  <span className="text-default-600 dark:text-zinc-300">
                                     {formatDateStr(file.fileDate)}
                                   </span>
                                 </TableCell>
                                 <TableCell>
-                                  <span className="text-default-500 dark:text-zinc-400">
+                                  <span className="text-default-600 dark:text-zinc-300">
                                     {formatFileSize(file.fileLength)}
                                   </span>
                                 </TableCell>
@@ -902,7 +902,7 @@ const CurseForgeModPage: React.FC = () => {
                                                   .map((v) => (
                                                     <span
                                                       key={v}
-                                                      className="text-xs bg-default-50 dark:bg-zinc-800 text-default-500 dark:text-zinc-400 px-1.5 py-0.5 rounded border border-default-100 dark:border-zinc-700"
+                                                      className="text-xs bg-default-50 dark:bg-zinc-800 text-default-600 dark:text-zinc-300 px-1.5 py-0.5 rounded border border-default-100 dark:border-zinc-700"
                                                     >
                                                       {v}
                                                     </span>
@@ -924,7 +924,7 @@ const CurseForgeModPage: React.FC = () => {
                                   </div>
                                 </TableCell>
                                 <TableCell>
-                                  <span className="text-default-500 dark:text-zinc-400">
+                                  <span className="text-default-600 dark:text-zinc-300">
                                     {formatNumber(file.downloadCount)}
                                   </span>
                                 </TableCell>
@@ -933,7 +933,7 @@ const CurseForgeModPage: React.FC = () => {
                                     isIconOnly
                                     variant="light"
                                     size="sm"
-                                    className="text-default-500 dark:text-zinc-400 hover:text-primary"
+                                    className="text-default-600 dark:text-zinc-300 hover:text-primary"
                                     onPress={() => handleInstall(file)}
                                   >
                                     <LuDownload size={20} />
@@ -1071,7 +1071,7 @@ const CurseForgeModPage: React.FC = () => {
       >
         {installStep === "downloading" && (
           <div className="flex flex-col items-center gap-4 py-4 w-full">
-            <p className="text-default-500 dark:text-zinc-400">
+            <p className="text-default-600 dark:text-zinc-300">
               {t("curseforge.install.downloading_body")}
             </p>
             {downloadProgress ? (
@@ -1101,7 +1101,7 @@ const CurseForgeModPage: React.FC = () => {
 
         {installStep === "version_select" && (
           <div className="flex flex-col gap-4">
-            <p className="text-small text-default-500 dark:text-zinc-400">
+            <p className="text-small text-default-600 dark:text-zinc-300">
               {t("curseforge.install.select_version_body")}
             </p>
             <Select
@@ -1153,7 +1153,7 @@ const CurseForgeModPage: React.FC = () => {
 
         {installStep === "player_select" && (
           <div className="flex flex-col gap-4">
-            <p className="text-small text-default-500 dark:text-zinc-400">
+            <p className="text-small text-default-600 dark:text-zinc-300">
               {t("curseforge.install.select_player_body")}
             </p>
             <Select
@@ -1175,7 +1175,7 @@ const CurseForgeModPage: React.FC = () => {
         {installStep === "importing" && (
           <div className="flex flex-col items-center gap-4 py-4">
             <Spinner size="lg" color="primary" />
-            <p className="text-default-500 dark:text-zinc-400">
+            <p className="text-default-600 dark:text-zinc-300">
               {t("curseforge.install.importing_body")}
             </p>
           </div>
@@ -1187,7 +1187,7 @@ const CurseForgeModPage: React.FC = () => {
               <p className="text-xl font-bold text-default-900 dark:text-white">
                 {t("curseforge.install.success_msg")}
               </p>
-              <p className="text-default-500 dark:text-zinc-400 mt-1">
+              <p className="text-default-600 dark:text-zinc-300 mt-1">
                 {t("curseforge.install.success_desc")}
               </p>
             </div>
@@ -1200,7 +1200,7 @@ const CurseForgeModPage: React.FC = () => {
               <p className="text-xl font-bold text-danger-600 dark:text-danger-500 mb-2">
                 {t("curseforge.install.failed_msg")}
               </p>
-              <div className="text-default-500 dark:text-zinc-400 px-4 bg-default-100 dark:bg-zinc-800 rounded-lg py-3 font-mono text-xs break-all mx-auto max-w-[90%]">
+              <div className="text-default-600 dark:text-zinc-300 px-4 bg-default-100 dark:bg-zinc-800 rounded-lg py-3 font-mono text-xs break-all mx-auto max-w-[90%]">
                 {installError}
               </div>
             </div>

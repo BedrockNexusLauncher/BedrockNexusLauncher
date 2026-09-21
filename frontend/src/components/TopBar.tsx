@@ -8,7 +8,6 @@ import { useLocation, Link } from "react-router-dom";
 import { NexusIcon } from "@/icons/NexusIcon";
 import { useTranslation } from "react-i18next";
 import { useNavigationHistory } from "@/utils/NavigationHistoryContext";
-import { LAYOUT } from "@/constants/layout";
 import { ROUTES } from "@/constants/routes";
 
 interface TopBarProps {
@@ -48,7 +47,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       <div
         id="wails-draggable"
         dir="ltr"
-        className={`fixed top-0 inset-x-0 h-14 z-[60] flex items-center justify-between pe-4 ${LAYOUT.NAVBAR_BG}`}
+        className="fixed top-0 inset-x-0 h-14 z-[60] flex items-center justify-between pe-4 bg-white dark:bg-zinc-950"
       >
         {/* Gap for the start-side sidebar column (engine is always LTR). */}
         <div className="topbar-border-line absolute bottom-0 right-0 left-[calc(3.5rem+20px)] h-px bg-default-200/50 dark:bg-zinc-800/50" />
@@ -71,8 +70,8 @@ export const TopBar: React.FC<TopBarProps> = ({
                 radius="lg"
                 onPress={() => tryNavigate(-1)}
                 isDisabled={navLocked || !canGoBack}
-                className="wails-no-drag text-default-500 dark:text-zinc-400"
-                aria-label="Go back"
+                className="wails-no-drag text-default-600 dark:text-zinc-300"
+                aria-label={t("nav.back")}
               >
                 <IoArrowBack size={20} />
               </Button>
@@ -90,8 +89,8 @@ export const TopBar: React.FC<TopBarProps> = ({
                 radius="lg"
                 onPress={() => tryNavigate(1)}
                 isDisabled={navLocked || !canGoForward}
-                className="wails-no-drag text-default-500 dark:text-zinc-400"
-                aria-label="Go forward"
+                className="wails-no-drag text-default-600 dark:text-zinc-300"
+                aria-label={t("nav.forward")}
               >
                 <IoArrowForward size={20} />
               </Button>
@@ -105,8 +104,8 @@ export const TopBar: React.FC<TopBarProps> = ({
               <span
                 className={`${
                   pathnames.length === 0
-                    ? "font-bold text-lg bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent"
-                    : "text-default-500 dark:text-zinc-400"
+                    ? "font-bold text-lg gradient-title"
+                    : "text-default-600 dark:text-zinc-300"
                 }`}
               >
                 {pathnames.length === 0 ? "Bedrock Nexus" : "Home"}
@@ -120,8 +119,8 @@ export const TopBar: React.FC<TopBarProps> = ({
                 }}
                 className={`transition-colors hover:opacity-80 ${
                   pathnames.length === 0
-                    ? "font-bold text-lg bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent"
-                    : "text-default-500 dark:text-zinc-400 hover:text-default-900 dark:hover:text-zinc-200"
+                    ? "font-bold text-lg gradient-title"
+                    : "text-default-600 dark:text-zinc-300 hover:text-default-900 dark:hover:text-zinc-200"
                 }`}
               >
                 {pathnames.length === 0 ? "Bedrock Nexus" : "Home"}
@@ -141,8 +140,9 @@ export const TopBar: React.FC<TopBarProps> = ({
                       className={`${
                         isLast
                           ? "font-bold text-default-900 dark:text-zinc-100"
-                          : "text-default-500 dark:text-zinc-400"
+                          : "text-default-600 dark:text-zinc-300"
                       } truncate`}
+                      title={name}
                     >
                       {name}
                     </span>
@@ -153,7 +153,8 @@ export const TopBar: React.FC<TopBarProps> = ({
                         e.preventDefault();
                         tryNavigate(to);
                       }}
-                      className="text-default-500 dark:text-zinc-400 hover:text-default-900 dark:hover:text-zinc-200 transition-colors truncate"
+                      className="text-default-600 dark:text-zinc-300 hover:text-default-900 dark:hover:text-zinc-200 transition-colors truncate"
+                      title={name}
                     >
                       {name}
                     </Link>
@@ -171,22 +172,9 @@ export const TopBar: React.FC<TopBarProps> = ({
             <UserAvatar />
           </div>
 
-          <div className="opacity-0 pointer-events-none" aria-hidden="true">
-            <WindowControls
-              navLocked={navLocked}
-              isOnboardingMode={isOnboardingMode}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Window chrome overlay: pinned to the physical top-right in every
-          locale (standard Windows arrangement), always LTR. */}
-      <div
-        dir="ltr"
-        className="fixed top-0 right-0 h-14 z-[80] flex items-center justify-end pr-4 pointer-events-none"
-      >
-        <div className="pointer-events-auto">
+          {/* Window controls inline (same flex row, always LTR via parent
+              dir="ltr"): avatar can never slide under the buttons, and no
+              fixed overlay / spacer width to keep in sync with button size. */}
           <WindowControls
             navLocked={navLocked}
             isOnboardingMode={isOnboardingMode}

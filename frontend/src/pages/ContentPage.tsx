@@ -78,7 +78,7 @@ export default function ContentPage() {
                       titleClassName="pb-1"
                     />
                   </div>
-                  <div className="mt-2 text-default-500 dark:text-zinc-400 text-sm flex flex-wrap items-center gap-2">
+                  <div className="mt-2 text-default-600 dark:text-zinc-300 text-sm flex flex-wrap items-center gap-2">
                     <span>{t("contentpage.current_version")}:</span>
                     <span className="font-medium text-default-700 dark:text-zinc-200 bg-default-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md">
                       {cp.currentVersionName || t("contentpage.none")}
@@ -700,7 +700,7 @@ export default function ContentPage() {
                 </Button>
               ))
             ) : (
-              <div className="text-sm text-default-500 dark:text-zinc-400">
+              <div className="text-sm text-default-600 dark:text-zinc-300">
                 {t("contentpage.no_players")}
               </div>
             )}

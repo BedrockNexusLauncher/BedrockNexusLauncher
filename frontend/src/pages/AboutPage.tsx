@@ -75,7 +75,7 @@ export default function AboutPage() {
                       {t("about.author")}
                     </span>
                   </div>
-                  <p className="rtl-paragraph text-small text-default-500 dark:text-zinc-400 leading-relaxed">
+                  <p className="rtl-paragraph text-small text-default-600 dark:text-zinc-300 leading-relaxed">
                     {t("about.creator_desc")}
                   </p>
                 </div>
@@ -144,7 +144,7 @@ export default function AboutPage() {
                       LiteLDev/LeviLauncher (upstream)
                     </Button>
                   </div>
-                  <p className="rtl-paragraph text-small text-default-500 dark:text-zinc-400">
+                  <p className="rtl-paragraph text-small text-default-600 dark:text-zinc-300">
                     GPL-3.0-only — {t("about.license.tip")} Forked from LiteLDev/LeviLauncher.
                   </p>
                 </div>

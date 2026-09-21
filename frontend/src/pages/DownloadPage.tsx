@@ -1002,7 +1002,7 @@ export const DownloadPage: React.FC = () => {
 
               {/* Footer Pagination */}
               <div className="flex items-center justify-between px-4 py-3 border-t border-default-200 dark:border-white/10 bg-transparent shrink-0 z-10">
-                <div className="text-small text-default-500 dark:text-zinc-400">
+                <div className="text-small text-default-600 dark:text-zinc-300">
                   {t("downloadpage.bottomcontent.total", {
                     count: filtered.length,
                   })}
@@ -1039,7 +1039,7 @@ export const DownloadPage: React.FC = () => {
           footer={
             <div className="flex w-full justify-end gap-2">
               <Button
-                className="font-medium text-default-500 dark:text-zinc-400 hover:text-default-700 dark:hover:text-zinc-200"
+                className="font-medium text-default-600 dark:text-zinc-300 hover:text-default-700 dark:hover:text-zinc-200"
                 variant="light"
                 onPress={onClose}
               >
@@ -1202,7 +1202,7 @@ export const DownloadPage: React.FC = () => {
                           className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
                             selectedUrl === bestMirror.url
                               ? "bg-primary-500 text-white"
-                              : "bg-default-200 dark:bg-zinc-700 text-default-500 dark:text-zinc-400"
+                              : "bg-default-200 dark:bg-zinc-700 text-default-600 dark:text-zinc-300"
                           }`}
                         >
                           <FaDownload size={16} />
@@ -1211,14 +1211,14 @@ export const DownloadPage: React.FC = () => {
                           <div className="font-bold text-medium text-default-900 dark:text-white truncate">
                             {bestMirror.label}
                           </div>
-                          <div className="text-tiny text-default-500 dark:text-zinc-400 truncate font-mono opacity-70">
+                          <div className="text-tiny text-default-600 dark:text-zinc-300 truncate font-mono opacity-70">
                             {bestMirror.url}
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-3 shrink-0 z-10">
                         <div className="flex flex-col items-end">
-                          <span className="text-tiny text-default-500 dark:text-zinc-400 font-medium">
+                          <span className="text-tiny text-default-600 dark:text-zinc-300 font-medium">
                             延迟
                           </span>
                           <span
@@ -1254,7 +1254,7 @@ export const DownloadPage: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="p-8 rounded-2xl border border-dashed border-default-300 dark:border-zinc-700 flex flex-col items-center justify-center text-default-500 dark:text-zinc-400 gap-2">
+                    <div className="p-8 rounded-2xl border border-dashed border-default-300 dark:border-zinc-700 flex flex-col items-center justify-center text-default-600 dark:text-zinc-300 gap-2">
                       <span>{t("downloadpage.mirror.no_recommended")}</span>
                     </div>
                   )}

@@ -262,13 +262,13 @@ export const UserAvatar = () => {
 
           <User
             name={
-              <span className="font-bold text-lg bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+              <span className="font-bold text-lg gradient-title">
                 {gamertag}
               </span>
             }
             description={
               <div className="flex flex-col gap-1">
-                <span className="text-xs text-default-500 dark:text-zinc-400">
+                <span className="text-xs text-default-600 dark:text-zinc-300">
                   {t("useravatar.xuid", {
                     xuid,
                   })}

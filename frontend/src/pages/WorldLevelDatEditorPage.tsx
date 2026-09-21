@@ -255,7 +255,7 @@ export default function WorldLevelDatEditorPage() {
                       <label className="text-sm text-default-600 dark:text-zinc-400">
                         {t("contentpage.version")}
                       </label>
-                      <div className="h-10 px-3 flex items-center rounded-lg bg-default-100 dark:bg-zinc-800/50 text-default-500 dark:text-zinc-400 text-sm font-mono border border-transparent dark:border-zinc-700/50">
+                      <div className="h-10 px-3 flex items-center rounded-lg bg-default-100 dark:bg-zinc-800/50 text-default-600 dark:text-zinc-300 text-sm font-mono border border-transparent dark:border-zinc-700/50">
                         {typedVersion}
                       </div>
                     </div>
@@ -575,7 +575,7 @@ export default function WorldLevelDatEditorPage() {
                     out.push(
                       <div key={`c-${k}`} className="mt-3">
                         <div className="flex items-center justify-between">
-                          <div className="text-xs text-default-500 dark:text-zinc-400">
+                          <div className="text-xs text-default-600 dark:text-zinc-300">
                             {String(k)}
                           </div>
                           <div className="flex items-center gap-2">

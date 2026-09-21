@@ -30,8 +30,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   themeMode,
   tryNavigate,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
+  const isRTL = (i18n.language || "").startsWith("fa");
+  const tooltipPlacement = isRTL ? "left" : "right";
   const mcpedlEnabled = useExperimentalFeature(readExperimentalMcpedlEnabled);
 
   const navItems = [
@@ -113,7 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <Tooltip
               key={item.key}
               content={item.label}
-              placement="right"
+              placement={tooltipPlacement}
               delay={0}
               closeDelay={0}
             >
@@ -134,6 +136,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   variant={isActive ? "flat" : "light"}
                   color={isActive ? "success" : "default"}
                   aria-label={item.label}
+                  title={navLocked ? (t("common.feature_unavailable") as string) : item.label}
                   isDisabled={navLocked}
                   onPress={(e) => {
                     tryNavigate(item.path);
@@ -159,7 +162,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           themeMode !== "system" && (
             <Tooltip
               content={t("theme.toggle")}
-              placement="right"
+              placement={tooltipPlacement}
               delay={0}
               closeDelay={0}
             >

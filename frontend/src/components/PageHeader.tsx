@@ -26,13 +26,13 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           {startContent}
           <div>
             <h1
-              className={`text-start text-3xl font-black tracking-tight pb-1 bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-600 rtl:bg-gradient-to-l bg-clip-text text-transparent ${titleClassName}`}
+              className={`text-start text-3xl font-black tracking-tight pb-1 gradient-title ${titleClassName}`}
             >
               {title}
             </h1>
             {description && (
               <div
-                className={`mt-1 text-base sm:text-lg font-medium text-default-500 dark:text-zinc-400 ${descriptionClassName}`}
+                className={`mt-1 text-base sm:text-lg font-medium text-default-600 dark:text-zinc-300 ${descriptionClassName}`}
               >
                 {description}
               </div>
@@ -81,7 +81,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
       </div>
       {description && (
         <p
-          className={`text-sm text-default-500 dark:text-zinc-400 ${icon ? "ms-12" : ""}`}
+          className={`text-sm text-default-600 dark:text-zinc-300 ${icon ? "ms-12" : ""}`}
         >
           {description}
         </p>

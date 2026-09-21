@@ -148,7 +148,7 @@ const ServerRow = React.memo(({ server }: { server: Server }) => {
         </div>
 
         {info?.motd && (
-          <div className="text-sm text-default-500 dark:text-zinc-400 line-clamp-1 w-full font-mono mb-1">
+          <div className="text-sm text-default-600 dark:text-zinc-300 line-clamp-1 w-full font-mono mb-1">
             <McText text={info.motd} />
           </div>
         )}
@@ -461,7 +461,7 @@ export default function ServersPage() {
             </div>
           </div>
 
-          <div className="mt-2 text-default-500 dark:text-zinc-400 text-sm flex flex-wrap items-center gap-2">
+          <div className="mt-2 text-default-600 dark:text-zinc-300 text-sm flex flex-wrap items-center gap-2">
             <span>{t("contentpage.current_version")}:</span>
             <span className="font-medium text-default-700 dark:text-zinc-200 bg-default-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md">
               {currentVersionName || t("contentpage.none")}
@@ -478,7 +478,7 @@ export default function ServersPage() {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-4">
           <Spinner size="lg" />
-          <span className="text-default-500 dark:text-zinc-400">
+          <span className="text-default-600 dark:text-zinc-300">
             {t("common.loading")}
           </span>
         </div>

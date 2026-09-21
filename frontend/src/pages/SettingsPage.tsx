@@ -463,7 +463,7 @@ export const SettingsPage: React.FC = () => {
                       <div className="grid grid-cols-1 gap-2 pt-2">
                         <div className="p-3 rounded-xl bg-default-100/50 dark:bg-zinc-800/30 border border-default-200/50 dark:border-white/5">
                           <div
-                            className="text-tiny text-default-500 dark:text-zinc-400 flex items-center gap-2 truncate"
+                            className="text-tiny text-default-600 dark:text-zinc-300 flex items-center gap-2 truncate"
                             title={installerDir || "-"}
                           >
                             <LuHardDrive size={14} />
@@ -477,7 +477,7 @@ export const SettingsPage: React.FC = () => {
                         </div>
                         <div className="p-3 rounded-xl bg-default-100/50 dark:bg-zinc-800/30 border border-default-200/50 dark:border-white/5">
                           <div
-                            className="text-tiny text-default-500 dark:text-zinc-400 flex items-center gap-2 truncate"
+                            className="text-tiny text-default-600 dark:text-zinc-300 flex items-center gap-2 truncate"
                             title={versionsDir || "-"}
                           >
                             <LuHardDrive size={14} />
@@ -501,7 +501,7 @@ export const SettingsPage: React.FC = () => {
                       <p className="font-medium">
                         {t("settings.body.language.name")}
                       </p>
-                      <p className="text-tiny text-default-500 dark:text-zinc-400">
+                      <p className="text-tiny text-default-600 dark:text-zinc-300">
                         {langNames.find((l) => l.code === selectedLang)
                           ?.language || selectedLang}
                       </p>
@@ -562,7 +562,7 @@ export const SettingsPage: React.FC = () => {
                       <p className="font-medium">
                         {t("settings.discord_rpc.title")}
                       </p>
-                      <p className="text-tiny text-default-500 dark:text-zinc-400">
+                      <p className="text-tiny text-default-600 dark:text-zinc-300 rtl-paragraph">
                         {t("settings.discord_rpc.desc")}
                       </p>
                     </div>
@@ -599,7 +599,7 @@ export const SettingsPage: React.FC = () => {
                             <p className="font-medium text-default-700 dark:text-zinc-200">
                               {t("settings.appearance.theme_mode")}
                             </p>
-                            <p className="text-tiny text-default-500 dark:text-zinc-400">
+                            <p className="text-tiny text-default-600 dark:text-zinc-300">
                               {t("settings.appearance.theme_mode_desc")}
                             </p>
                           </div>
@@ -860,7 +860,7 @@ export const SettingsPage: React.FC = () => {
                           <p className="font-medium text-default-700 dark:text-zinc-200">
                             {t("settings.layout.title_navbar")}
                           </p>
-                          <p className="text-tiny text-default-500 dark:text-zinc-400">
+                          <p className="text-tiny text-default-600 dark:text-zinc-300">
                             {t("settings.layout.desc_navbar")}
                           </p>
                         </div>
@@ -888,7 +888,7 @@ export const SettingsPage: React.FC = () => {
                           <p className="font-medium text-default-700 dark:text-zinc-200">
                             {t("settings.appearance.disable_animations")}
                           </p>
-                          <p className="text-tiny text-default-500 dark:text-zinc-400">
+                          <p className="text-tiny text-default-600 dark:text-zinc-300">
                             {t("settings.appearance.disable_animations_desc")}
                           </p>
                         </div>
@@ -918,7 +918,7 @@ export const SettingsPage: React.FC = () => {
                           <p className="font-medium text-default-700 dark:text-zinc-200">
                             {t("settings.appearance.themed_strokes")}
                           </p>
-                          <p className="text-tiny text-default-500 dark:text-zinc-400">
+                          <p className="text-tiny text-default-600 dark:text-zinc-300">
                             {t("settings.appearance.themed_strokes_desc")}
                           </p>
                         </div>
@@ -1250,7 +1250,7 @@ export const SettingsPage: React.FC = () => {
                                     <div className="flex items-center">
                                       <input
                                         type="number"
-                                        className="w-10 bg-transparent text-tiny font-mono text-primary-500 text-right outline-none border-none p-0 [appearance:textfield]"
+                                        className="w-10 bg-transparent text-tiny font-mono text-primary-500 text-right border-none p-0 [appearance:textfield] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-500 focus-visible:rounded"
                                         value={backgroundBlur}
                                         onChange={(e) => {
                                           const val = Math.min(
@@ -1313,7 +1313,7 @@ export const SettingsPage: React.FC = () => {
                                     <div className="flex items-center">
                                       <input
                                         type="number"
-                                        className="w-10 bg-transparent text-tiny font-mono text-primary-500 text-right outline-none border-none p-0 [appearance:textfield]"
+                                        className="w-10 bg-transparent text-tiny font-mono text-primary-500 text-right border-none p-0 [appearance:textfield] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-500 focus-visible:rounded"
                                         value={backgroundBrightness}
                                         onChange={(e) => {
                                           const val = Math.min(
@@ -1380,7 +1380,7 @@ export const SettingsPage: React.FC = () => {
                                     <div className="flex items-center">
                                       <input
                                         type="number"
-                                        className="w-10 bg-transparent text-tiny font-mono text-primary-500 text-right outline-none border-none p-0 [appearance:textfield]"
+                                        className="w-10 bg-transparent text-tiny font-mono text-primary-500 text-right border-none p-0 [appearance:textfield] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-500 focus-visible:rounded"
                                         value={backgroundOpacity}
                                         onChange={(e) => {
                                           const val = Math.min(
@@ -1947,7 +1947,7 @@ export const SettingsPage: React.FC = () => {
                     <div className="flex flex-col gap-1 min-w-0">
                       <p className="font-medium">{t("settings.lip.title")}</p>
                       <p
-                        className="text-tiny text-default-500 dark:text-zinc-400 truncate"
+                        className="text-tiny text-default-600 dark:text-zinc-300 truncate"
                         title={lipSummaryText}
                       >
                         {lipSummaryText}
@@ -2051,7 +2051,7 @@ export const SettingsPage: React.FC = () => {
                       <p className="font-medium">
                         {t("settings.resource_rules.title")}
                       </p>
-                      <p className="text-tiny text-default-500 dark:text-zinc-400">
+                      <p className="text-tiny text-default-600 dark:text-zinc-300">
                         {resourceRulesChecking
                           ? t("settings.resource_rules.status.checking")
                           : resourceRulesError
@@ -2124,7 +2124,7 @@ export const SettingsPage: React.FC = () => {
                       <p className="font-medium">
                         {t("settings.process.title")}
                       </p>
-                      <p className="text-tiny text-default-500 dark:text-zinc-400">
+                      <p className="text-tiny text-default-600 dark:text-zinc-300">
                         {t("settings.process.desc")}
                       </p>
                     </div>
@@ -2144,7 +2144,7 @@ export const SettingsPage: React.FC = () => {
                       <p className="font-medium">
                         {t("settings.experimental.title")}
                       </p>
-                      <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                      <p className="text-tiny text-default-600 dark:text-zinc-300 max-w-2xl">
                         {t("settings.experimental.desc")}
                       </p>
                     </div>
@@ -2153,7 +2153,7 @@ export const SettingsPage: React.FC = () => {
                         <p className="font-medium">
                           {t("settings.experimental.instance_backup.title")}
                         </p>
-                        <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                        <p className="text-tiny text-default-600 dark:text-zinc-300 max-w-2xl">
                           {t("settings.experimental.instance_backup.desc")}
                         </p>
                       </div>
@@ -2172,7 +2172,7 @@ export const SettingsPage: React.FC = () => {
                         <p className="font-medium">
                           {t("settings.experimental.mcpedl.title")}
                         </p>
-                        <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                        <p className="text-tiny text-default-600 dark:text-zinc-300 max-w-2xl">
                           {t("settings.experimental.mcpedl.desc")}
                         </p>
                       </div>
@@ -2191,7 +2191,7 @@ export const SettingsPage: React.FC = () => {
                         <p className="font-medium">
                           {t("settings.experimental.lip_bedrinth.title")}
                         </p>
-                        <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                        <p className="text-tiny text-default-600 dark:text-zinc-300 max-w-2xl">
                           {t("settings.experimental.lip_bedrinth.desc")}
                         </p>
                       </div>
@@ -2216,7 +2216,7 @@ export const SettingsPage: React.FC = () => {
                             <p className="font-medium">
                               {t("settings.patch.title")}
                         </p>
-                        <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                        <p className="text-tiny text-default-600 dark:text-zinc-300 max-w-2xl">
                           {t("settings.patch.desc")}
                         </p>
                       </div>
@@ -2225,7 +2225,7 @@ export const SettingsPage: React.FC = () => {
                       <p className="font-medium text-small">
                         {t("settings.patch.register_mode")}
                       </p>
-                      <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                      <p className="text-tiny text-default-600 dark:text-zinc-300 max-w-2xl">
                         {t("settings.patch.register_mode_desc")}
                       </p>
                       <Select
@@ -2284,7 +2284,7 @@ export const SettingsPage: React.FC = () => {
                           <p className="font-medium text-small">
                             {t("settings.patch.auto_run")}
                           </p>
-                          <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                          <p className="text-tiny text-default-600 dark:text-zinc-300 max-w-2xl">
                             {t("settings.patch.auto_run_desc")}
                           </p>
                         </div>
@@ -2301,7 +2301,7 @@ export const SettingsPage: React.FC = () => {
                         />
                       </div>
                       <div className="flex items-center justify-between gap-4 mt-2 flex-wrap">
-                        <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-xl">
+                        <p className="text-tiny text-default-600 dark:text-zinc-300 max-w-xl">
                           {t("settings.patch.run_desc")}
                         </p>
                         <Button
@@ -2359,7 +2359,7 @@ export const SettingsPage: React.FC = () => {
                       <p className="font-medium">
                         {t("reportProblem.settings_title")}
                       </p>
-                      <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
+                      <p className="text-tiny text-default-600 dark:text-zinc-300 max-w-2xl">
                         {t("reportProblem.settings_desc")}
                       </p>
                     </div>
@@ -2398,7 +2398,7 @@ export const SettingsPage: React.FC = () => {
                       <p className="font-medium">
                         {t("settings.beta_updates.title")}
                       </p>
-                      <p className="text-tiny text-default-500 dark:text-zinc-400">
+                      <p className="text-tiny text-default-600 dark:text-zinc-300">
                         {t("settings.beta_updates.desc")}
                       </p>
                     </div>
@@ -2422,7 +2422,7 @@ export const SettingsPage: React.FC = () => {
                       <p className="font-medium text-large">
                         {t("settings.body.version.name")}
                       </p>
-                      <p className="text-tiny text-default-500 dark:text-zinc-400">
+                      <p className="text-tiny text-default-600 dark:text-zinc-300">
                         v{appVersion}
                       </p>
                     </div>
@@ -2471,12 +2471,12 @@ export const SettingsPage: React.FC = () => {
                               <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 components={{
-                                  h1: ({ children }) => (
-                                    <h1 className="text-base font-bold my-1">
+                                  h2: ({ children }: any) => (
+                                    <h2 className="text-base font-bold my-1">
                                       {children}
-                                    </h1>
+                                    </h2>
                                   ),
-                                  h2: ({ children }) => (
+                                  h3: ({ children }) => (
                                     <h2 className="text-sm font-bold my-1">
                                       {children}
                                     </h2>
@@ -2567,7 +2567,7 @@ export const SettingsPage: React.FC = () => {
         title={
           <div className="flex flex-col gap-1">
             <span>{t("settings.process.title")}</span>
-            <span className="text-small font-normal text-default-500 dark:text-zinc-400">
+            <span className="text-small font-normal text-default-600 dark:text-zinc-300">
               {t("settings.process.desc")}
             </span>
           </div>
@@ -2602,7 +2602,7 @@ export const SettingsPage: React.FC = () => {
         </div>
         <div className="flex flex-col gap-4">
           {processes.length === 0 ? (
-            <div className="text-center py-8 text-default-500 dark:text-zinc-400">
+            <div className="text-center py-8 text-default-600 dark:text-zinc-300">
               {t("settings.process.no_process")}
             </div>
           ) : (
@@ -2742,7 +2742,7 @@ export const SettingsPage: React.FC = () => {
                 style={{ width: `${lipProgress.percentage}%` }}
               />
             </div>
-            <div className="text-small text-default-500 dark:text-zinc-400">
+            <div className="text-small text-default-600 dark:text-zinc-300">
               {t(`settings.lip.status.${lipStatus}`)}
               {lipProgress.total > 0 ? (
                 <span className="ms-2">

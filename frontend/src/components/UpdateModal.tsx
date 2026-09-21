@@ -73,7 +73,7 @@ export const UpdateModal: React.FC<UpdateModalProps> = ({
                     <div className="text-small font-semibold text-default-700 dark:text-zinc-200">
                       {t("downloadpage.changelog.title")}
                     </div>
-                    <div className="mt-0.5 text-tiny text-default-500 dark:text-zinc-400">
+                    <div className="mt-0.5 text-tiny text-default-600 dark:text-zinc-300">
                       {version}
                     </div>
                   </div>

@@ -615,6 +615,8 @@
     "updating": "Updating",
     "expand": "Expand",
     "collapse": "Collapse",
+    "minimize": "Minimize",
+    "restore": "Restore",
     "save": "Save",
     "add": "Add",
     "save_failed": "Save failed",

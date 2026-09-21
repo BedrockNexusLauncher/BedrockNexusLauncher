@@ -23,7 +23,6 @@ import {
 } from "react-icons/fa";
 import { IoArrowBack } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
-import { LAYOUT } from "@/constants/layout";
 import { COMPONENT_STYLES } from "@/constants/componentStyles";
 import { ROUTES, isRouteActive } from "@/constants/routes";
 import {
@@ -113,7 +112,7 @@ export const GlobalNavbar: React.FC<GlobalNavbarProps> = ({
 
   const moreButtonClass = React.useMemo(() => {
     const base =
-      "min-w-0 px-3 h-10 rounded-xl transition-colors duration-200 outline-none data-[focus-visible=true]:outline-none";
+      "min-w-0 px-3 h-10 rounded-xl transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500";
     const inactive =
       "text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white font-medium";
     const active =
@@ -136,7 +135,7 @@ export const GlobalNavbar: React.FC<GlobalNavbarProps> = ({
       className="fixed top-0 left-0 right-0 z-50 flex justify-center"
     >
       <div
-        className={`pointer-events-auto w-full ${LAYOUT.NAVBAR_BG} border-b border-default-200/50 dark:border-zinc-800/50 shadow-sm dark:shadow-zinc-950/20 px-4 py-2 flex items-center gap-4`}
+        className={`pointer-events-auto w-full bg-white dark:bg-zinc-950 border-b border-default-200/50 dark:border-zinc-800/50 shadow-sm dark:shadow-zinc-950/20 px-4 py-2 flex items-center gap-4`}
       >
         <div className="flex items-center gap-3 shrink-0">
           <Button
@@ -146,7 +145,7 @@ export const GlobalNavbar: React.FC<GlobalNavbarProps> = ({
             radius="lg"
             onPress={() => tryNavigate(-1)}
             isDisabled={navLocked}
-            className="wails-no-drag text-default-500 dark:text-zinc-400"
+            className="wails-no-drag text-default-600 dark:text-zinc-300"
           >
             <IoArrowBack size={20} />
           </Button>
@@ -154,7 +153,7 @@ export const GlobalNavbar: React.FC<GlobalNavbarProps> = ({
             <NexusIcon width={28} height={28} />
           </div>
           <div className="hidden sm:flex flex-col leading-none gap-0.5">
-            <p className="font-bold text-[16px] tracking-tight bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+            <p className="font-bold text-[16px] tracking-tight gradient-title">
               Bedrock Nexus
             </p>
             {isBeta && (
@@ -165,7 +164,7 @@ export const GlobalNavbar: React.FC<GlobalNavbarProps> = ({
           </div>
         </div>
 
-        <div className="flex-1 flex items-center justify-center gap-1 sm:gap-2 whitespace-nowrap overflow-x-auto px-2 scrollbar-hide">
+        <div className="flex-1 flex items-center justify-center gap-1 sm:gap-2 whitespace-nowrap overflow-x-auto px-2 scrollbar-hide navbar-scroll-cue">
           {navItems.map((item) => {
             const isActive = isRouteActive(location.pathname, item.path);
             return (
@@ -179,12 +178,13 @@ export const GlobalNavbar: React.FC<GlobalNavbarProps> = ({
                   variant={isActive ? "flat" : "light"}
                   color="default"
                   aria-label={item.label}
+                  title={navLocked ? (t("common.feature_unavailable") as string) : item.label}
                   isDisabled={navLocked}
                   onPress={(e) => {
                     tryNavigate(item.path);
                     (e.target as HTMLElement).blur();
                   }}
-                  className={`min-w-0 px-3 h-10 rounded-xl transition-colors duration-200 outline-none data-[focus-visible=true]:outline-none ${item.navbarClass} ${
+                  className={`min-w-0 px-3 h-10 rounded-xl transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 ${item.navbarClass} ${
                     isActive
                       ? "bg-primary-500/10 text-primary-600 dark:text-primary-400 font-medium"
                       : "text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white font-medium"

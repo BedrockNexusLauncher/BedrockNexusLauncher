@@ -413,7 +413,7 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
                       </Button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-default-500 dark:text-zinc-400 shrink-0 text-sm">
+                  <div className="flex items-center gap-2 text-default-600 dark:text-zinc-300 shrink-0 text-sm">
                     {(() => {
                       const u = logoMap.get(it.name);
                       return u ? (
