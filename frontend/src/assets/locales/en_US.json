@@ -314,6 +314,10 @@
     }
   },
   "settings": {
+    "search": {
+      "placeholder": "Search settings",
+      "count": "{{count}} matching sections"
+    },
     "layout": {
       "title_navbar": "Use Top Navigation Bar",
       "desc_navbar": "Enable to use the top navigation bar instead of the default vertical sidebar"

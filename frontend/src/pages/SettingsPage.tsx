@@ -30,6 +30,7 @@ import {
   FaDownload,
   FaCogs,
   FaList,
+  FaSearch,
 } from "react-icons/fa";
 import {
   LuHardDrive,
@@ -240,6 +241,65 @@ export const SettingsPage: React.FC = () => {
     React.useState(false);
   const [runningPatch, setRunningPatch] = React.useState(false);
   const [reportOpen, setReportOpen] = React.useState(false);
+  const [settingsQuery, setSettingsQuery] = React.useState("");
+  const pageRef = React.useRef<HTMLDivElement>(null);
+  const searchEntries: { tab: string; keys: string[] }[] = [
+    {
+      tab: "general",
+      keys: [
+        "settings.body.paths.title",
+        "settings.body.paths.base_root",
+        "settings.body.language.name",
+        "settings.discord_rpc.title",
+      ],
+    },
+    {
+      tab: "personalization",
+      keys: [
+        "settings.appearance.theme_mode",
+        "settings.appearance.theme_light",
+        "settings.appearance.theme_dark",
+        "settings.appearance.background_image",
+        "settings.appearance.background_blur",
+        "settings.appearance.background_brightness",
+        "settings.appearance.background_opacity",
+        "settings.appearance.themed_strokes",
+        "settings.appearance.material.title",
+      ],
+    },
+    {
+      tab: "components",
+      keys: ["settings.lip.title", "settings.resource_rules.title"],
+    },
+    {
+      tab: "others",
+      keys: [
+        "settings.process.title",
+        "settings.experimental.title",
+        "settings.experimental.instance_backup.title",
+        "settings.experimental.mcpedl.title",
+        "settings.patch.title",
+      ],
+    },
+    {
+      tab: "help",
+      keys: [
+        "reportProblem.settings_title",
+        "reportProblem.settings_desc",
+        "reportProblem.button",
+      ],
+    },
+    {
+      tab: "updates",
+      keys: ["settings.beta_updates.title"],
+    },
+  ];
+  const searchResults = searchEntries.filter((entry) =>
+    [t(`settings.tabs.${entry.tab}`), ...entry.keys.map((key) => t(key))]
+      .join(" ")
+      .toLocaleLowerCase()
+      .includes(settingsQuery.trim().toLocaleLowerCase()),
+  );
   const [instanceBackupWarningCountdown, setInstanceBackupWarningCountdown] =
     React.useState(0);
 
@@ -297,7 +357,7 @@ export const SettingsPage: React.FC = () => {
     getColorLuminance(activeCustomThemeColor) > 0.6 ? "#111827" : "#ffffff";
 
   return (
-    <PageContainer className="relative" animate={false}>
+    <PageContainer ref={pageRef} className="relative" animate={false}>
       {/* settings-rtl-lock: whole page (header Tabs + all tab sections)
          stays right-aligned under fa_IR even with the engine locked to LTR
          (rule in style.css, scoped to html.rtl-locale; LTR locales unaffected). */}
@@ -313,7 +373,50 @@ export const SettingsPage: React.FC = () => {
               <PageHeader
                 title={t("settings.header.title")}
                 description={t("settings.header.content")}
+                endContent={
+                  <div className="w-full sm:w-64">
+                    <Input
+                      value={settingsQuery}
+                      onValueChange={setSettingsQuery}
+                      onClear={() => setSettingsQuery("")}
+                      isClearable
+                      placeholder={t("settings.search.placeholder") as string}
+                      startContent={<FaSearch className="text-default-400" />}
+                      radius="full"
+                      variant="flat"
+                      size="sm"
+                      aria-label={t("settings.search.placeholder") as string}
+                      classNames={COMPONENT_STYLES.input}
+                    />
+                  </div>
+                }
               />
+              {settingsQuery.trim() && (
+                <div className="mt-4 space-y-2">
+                  <p role="status" className="text-sm text-default-500">
+                    {t("settings.search.count", {
+                      count: searchResults.length,
+                    })}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {searchResults.map((entry) => (
+                      <Button
+                        key={entry.tab}
+                        size="sm"
+                        variant="flat"
+                        color="primary"
+                        onPress={() => {
+                          setSelectedTab(entry.tab);
+                          setSettingsQuery("");
+                          pageRef.current?.scrollTo({ top: 0 });
+                        }}
+                      >
+                        {t(`settings.tabs.${entry.tab}`)}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <Tabs
                 aria-label={t("settings.header.title")}
                 selectedKey={selectedTab}
