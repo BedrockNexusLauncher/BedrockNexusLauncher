@@ -35,6 +35,7 @@ import (
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/peeditor"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/resourcerules"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/types"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/tray"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/update"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/vcruntime"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/versionlaunch"
@@ -47,6 +48,9 @@ import (
 
 //go:embed all:frontend/dist
 var assets embed.FS
+
+//go:embed build/appicon.png
+var trayIcon []byte
 
 var singleInstanceGuard win.Handle
 
@@ -860,6 +864,7 @@ func main() {
 		_ = config.Save(c)
 	}
 	windows := app.Window.NewWithOptions(application.WebviewWindowOptions{
+		Name:      "main",
 		Title:     "Bedrock Nexus",
 		Width:     w,
 		Height:    h,
@@ -877,6 +882,7 @@ func main() {
 		EnableFileDrop: true,
 	})
 	startup.Mark("window created")
+	tray.Setup(app, trayIcon)
 	userService.Attach(windows)
 	reapplyWindowMinConstraints := func() {
 		windows.SetMinSize(minWindowWidth, minWindowHeight)
@@ -977,7 +983,7 @@ func main() {
 			}()
 		})
 	})
-	windows.RegisterHook(events.Common.WindowClosing, func(event *application.WindowEvent) {
+	saveWindowSize := func() {
 		w := windows.Width()
 		h := windows.Height()
 
@@ -996,6 +1002,16 @@ func main() {
 			c.WindowHeight = h
 			_ = config.Save(c)
 		}
+	}
+	windows.RegisterHook(events.Common.WindowClosing, func(event *application.WindowEvent) {
+		if launch.QuitRequested() {
+			saveWindowSize()
+			return
+		}
+		saveWindowSize()
+		event.Cancel()
+		launch.MarkLauncherHiddenByUser()
+		windows.Hide()
 	})
 	err = app.Run()
 
