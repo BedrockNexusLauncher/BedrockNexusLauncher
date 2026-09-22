@@ -31,6 +31,29 @@ func TestUwpGetPrereqsShape(t *testing.T) {
 	_ = p.DeveloperMode
 }
 
+func TestUwpPrepareInstallRejectsBadName(t *testing.T) {
+	s := &VersionService{}
+	plan := s.UwpPrepareInstall("985D1EE4-0E9D-49DE-9A99-E208ADC08D0C", "bad/name")
+	if plan.Error == "" {
+		t.Fatal("expected error for invalid instance name")
+	}
+}
+
+func TestUwpPrepareInstallRejectsUnknownUpdate(t *testing.T) {
+	s := &VersionService{}
+	plan := s.UwpPrepareInstall("00000000-0000-0000-0000-000000000000", "fine-name")
+	if plan.Error != "ERR_UWP_INVALID_VERSION" {
+		t.Fatalf("expected ERR_UWP_INVALID_VERSION, got %q", plan.Error)
+	}
+}
+
+func TestUwpFinishInstallRejectsBadName(t *testing.T) {
+	s := &VersionService{}
+	if code := s.UwpFinishInstall("dest", "985D1EE4-0E9D-49DE-9A99-E208ADC08D0C", ""); code == "" {
+		t.Fatal("expected error for empty instance name")
+	}
+}
+
 func TestUwpInstanceDirTrims(t *testing.T) {
 	if uwpInstanceDir(" padded ") != uwpInstanceDir("padded") {
 		t.Fatalf("padded name must resolve to trimmed dir: %q", uwpInstanceDir(" padded "))

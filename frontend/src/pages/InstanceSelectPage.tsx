@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { compareVersions } from "@/utils/version";
 import { FaSearch, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
+import { UwpInstallModal } from "@/components/UwpInstallModal";
 import { ROUTES } from "@/constants/routes";
 import {
   readCurrentVersionName,
@@ -59,6 +60,8 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
   const [sortAsc, setSortAsc] = React.useState<boolean>(false);
   const [logoMap, setLogoMap] = React.useState<Map<string, string>>(new Map());
   const [isAnimating, setIsAnimating] = React.useState(true);
+  const [uwpOpen, setUwpOpen] = React.useState(false);
+  const [reloadToken, setReloadToken] = React.useState(0);
   const navigate = useNavigate();
   const { t } = useTranslation();
   const hasBackend = minecraft !== undefined;
@@ -75,6 +78,7 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
             const gameVersion = String(m?.gameVersion || "");
             const type = String(m?.type || "release");
             const isPreview = type.toLowerCase() === "preview";
+            const isBeta = type.toLowerCase() === "beta";
             const enableIsolation = !!m?.enableIsolation;
             const enableConsole = !!m?.enableConsole;
             const enableEditorMode = !!m?.enableEditorMode;
@@ -82,6 +86,7 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
               name,
               version: gameVersion,
               isPreview,
+              isBeta,
               type,
               packageType: String(m?.packageType || "gdk").toLowerCase(),
               enableIsolation,
@@ -131,7 +136,7 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
         });
       }
     }
-  }, [hasBackend]);
+  }, [hasBackend, reloadToken]);
 
   const flatItems = React.useMemo(() => {
     const list = (
@@ -139,6 +144,7 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
         name: string;
         version: string;
         isPreview: boolean;
+        isBeta: boolean;
         packageType: string;
       }>
     )
@@ -341,10 +347,28 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
                 <Chip variant="flat" color="default">
                   {flatItems.length}
                 </Chip>
+                <Button
+                  variant="flat"
+                  color="secondary"
+                  size="sm"
+                  onPress={() => setUwpOpen(true)}
+                >
+                  Install UWP
+                </Button>
               </div>
             </CardHeader>
           </Card>
         </motion.div>
+        <UwpInstallModal
+          isOpen={uwpOpen}
+          onOpenChange={setUwpOpen}
+          onInstalled={() => {
+            setReloadToken((t) => t + 1);
+            try {
+              props.refresh && props.refresh();
+            } catch {}
+          }}
+        />
 
         <motion.div
           className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
@@ -408,7 +432,16 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
                           GDK
                         </Chip>
                       )}
-                      {it.isPreview ? (
+                      {it.isBeta ? (
+                        <Chip
+                          size="sm"
+                          color="default"
+                          variant="flat"
+                          className="shrink-0"
+                        >
+                          Beta
+                        </Chip>
+                      ) : it.isPreview ? (
                         <Chip
                           size="sm"
                           color="warning"
