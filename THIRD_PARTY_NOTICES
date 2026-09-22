@@ -73,3 +73,7 @@ frontend/src/assets/images/world-preview-default.jpg
 Minecraft is a trademark of Mojang Studios. Bedrock Nexus is an unofficial tool
 and is not affiliated with, endorsed by or sponsored by Mojang Studios or
 Microsoft Corporation.
+
+LeviLauncher (https://github.com/LiteLDev/LeviLauncher) — GPL-3.0-only.
+UWP support (internal/uwp, internal/uwpdownload, internal/versions/uwp_package.go) mirrored from LeviLauncher v1.0.x with module-path adaptation.
+
