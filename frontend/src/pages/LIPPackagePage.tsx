@@ -60,6 +60,10 @@ import { useModIntelligence } from "@/utils/ModIntelligenceContext";
 import { formatDateStr } from "@/utils/formatting";
 import { useLipTaskConsole } from "@/utils/LipTaskConsoleContext";
 import { compareVersions } from "@/utils/version";
+import {
+  BedrinthVersionList,
+  type BedrinthFileState as FileGameVersionState,
+} from "@/components/BedrinthVersionList";
 import { ROUTES } from "@/constants/routes";
 import type { LIPPackageInstallState } from "@/utils/modIntelligenceResolver";
 import {
@@ -81,12 +85,6 @@ type GithubRepoRef = {
 type HeadingTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 type LipRuntimeStatus = {
   installed?: boolean;
-};
-
-type FileGameVersionState = {
-  file: LIPPackageFileInfo;
-  supportedGameVersions: string[];
-  hasLLRequirement: boolean;
 };
 
 type InstanceLLState = {
