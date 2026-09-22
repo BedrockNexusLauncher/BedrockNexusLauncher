@@ -21,6 +21,7 @@ type VersionMeta struct {
 	Name                       string    `json:"name"        `
 	GameVersion                string    `json:"gameVersion"`
 	Type                       string    `json:"type"       `
+	PackageType                string    `json:"packageType"`
 	EnableIsolation            bool      `json:"enableIsolation"`
 	EnableConsole              bool      `json:"enableConsole"`
 	EnableEditorMode           bool      `json:"enableEditorMode"`

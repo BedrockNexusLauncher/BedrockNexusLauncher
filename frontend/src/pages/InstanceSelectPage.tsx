@@ -51,6 +51,9 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
   const [activeTab, setActiveTab] = React.useState<
     "all" | "release" | "preview"
   >("all");
+  const [pkgFilter, setPkgFilter] = React.useState<"all" | "gdk" | "uwp">(
+    "all",
+  );
   const [query, setQuery] = React.useState("");
   const [sortBy, setSortBy] = React.useState<"version" | "name">("version");
   const [sortAsc, setSortAsc] = React.useState<boolean>(false);
@@ -80,6 +83,7 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
               version: gameVersion,
               isPreview,
               type,
+              packageType: String(m?.packageType || "gdk").toLowerCase(),
               enableIsolation,
               enableConsole,
               enableEditorMode,
@@ -135,11 +139,17 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
         name: string;
         version: string;
         isPreview: boolean;
+        packageType: string;
       }>
     )
       .filter((it) => {
         if (activeTab === "release") return !it.isPreview;
         if (activeTab === "preview") return it.isPreview;
+        return true;
+      })
+      .filter((it) => {
+        if (pkgFilter === "gdk") return it.packageType !== "uwp";
+        if (pkgFilter === "uwp") return it.packageType === "uwp";
         return true;
       })
       .filter((it) => {
@@ -163,7 +173,7 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
         return sortAsc ? cmp : -cmp;
       });
     return list;
-  }, [localVersionMap, activeTab, query, sortBy, sortAsc, compareVersions]);
+  }, [localVersionMap, activeTab, pkgFilter, query, sortBy, sortAsc, compareVersions]);
 
   const listVariants = React.useMemo(
     () => ({
@@ -238,6 +248,17 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
                   <Tab key="all" title={t("versions.tab.all")} />
                   <Tab key="release" title={t("versions.tab.release")} />
                   <Tab key="preview" title={t("versions.tab.preview")} />
+                </Tabs>
+                <Tabs
+                  aria-label="Filter package type"
+                  selectedKey={pkgFilter}
+                  onSelectionChange={(k) => setPkgFilter(k as any)}
+                  variant="solid"
+                  classNames={COMPONENT_STYLES.tabs}
+                >
+                  <Tab key="all" title="All" />
+                  <Tab key="gdk" title="GDK" />
+                  <Tab key="uwp" title="UWP" />
                 </Tabs>
                 <div className="flex-1 min-w-[200px]">
                   <Input
@@ -368,6 +389,25 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
                   <div className="flex items-center justify-between w-full">
                     <div className="font-bold text-lg truncate">{it.name}</div>
                     <div className="flex items-center gap-2">
+                      {it.packageType === "uwp" ? (
+                        <Chip
+                          size="sm"
+                          color="secondary"
+                          variant="flat"
+                          className="shrink-0"
+                        >
+                          UWP
+                        </Chip>
+                      ) : (
+                        <Chip
+                          size="sm"
+                          color="primary"
+                          variant="flat"
+                          className="shrink-0"
+                        >
+                          GDK
+                        </Chip>
+                      )}
                       {it.isPreview ? (
                         <Chip
                           size="sm"
