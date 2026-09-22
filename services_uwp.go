@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -47,6 +48,7 @@ func (s *VersionService) UwpInstallVersion(updateID string, instanceName string)
 	if msg := mcservice.ValidateVersionFolderName(instanceName); msg != "" {
 		return msg
 	}
+	instanceName = strings.TrimSpace(instanceName)
 	if !registry.IsDevModeEnabled() {
 		return "ERR_UWP_DEV_MODE"
 	}
@@ -65,7 +67,8 @@ func (s *VersionService) UwpInstallVersion(updateID string, instanceName string)
 	if entry == nil {
 		return "ERR_UWP_INVALID_VERSION"
 	}
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+	defer cancel()
 	pkg, err := uwpdownload.ResolvePackage(ctx, entry.UUID)
 	if err != nil {
 		return uwp.ErrorCode(err)
@@ -87,7 +90,7 @@ func (s *VersionService) UwpInstallVersion(updateID string, instanceName string)
 	if err := pkg.Verify(tmpPath); err != nil {
 		return "ERR_UWP_INTEGRITY"
 	}
-	vdir := filepath.Join(mcservice.GetVersionsDir(), instanceName)
+	vdir := uwpInstanceDir(instanceName)
 	manifest, err := uwp.Install(ctx, tmpPath, vdir, uwp.Options{})
 	if err != nil {
 		return uwp.ErrorCode(err)
@@ -110,16 +113,26 @@ func (s *VersionService) UwpInstallVersion(updateID string, instanceName string)
 }
 
 func (s *VersionService) UwpLaunchVersion(name string) (int, error) {
-	dir := filepath.Join(mcservice.GetVersionsDir(), strings.TrimSpace(name))
+	if msg := mcservice.ValidateVersionFolderName(name); msg != "" {
+		return 0, fmt.Errorf("%s", msg)
+	}
+	dir := uwpInstanceDir(name)
 	return uwp.Launch(context.Background(), dir)
 }
 
 func (s *VersionService) UwpUnregisterVersion(name string) string {
-	dir := filepath.Join(mcservice.GetVersionsDir(), strings.TrimSpace(name))
+	if msg := mcservice.ValidateVersionFolderName(name); msg != "" {
+		return msg
+	}
+	dir := uwpInstanceDir(name)
 	if err := uwp.Unregister(context.Background(), dir); err != nil {
 		return uwp.ErrorCode(err)
 	}
 	return ""
+}
+
+func uwpInstanceDir(name string) string {
+	return filepath.Join(mcservice.GetVersionsDir(), strings.TrimSpace(name))
 }
 
 func downloadURL(ctx context.Context, url string, dest string) error {
@@ -132,6 +145,9 @@ func downloadURL(ctx context.Context, url string, dest string) error {
 		return err
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("ERR_UWP_DOWNLOAD: HTTP %d", resp.StatusCode)
+	}
 	f, err := os.Create(dest)
 	if err != nil {
 		return err
