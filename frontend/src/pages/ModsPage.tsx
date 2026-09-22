@@ -328,7 +328,7 @@ export const ModsPage: React.FC = () => {
             onValueChange={mp.setOnlyEnabled}
             classNames={{
               base: "m-0",
-              label: "text-default-600 dark:text-zinc-300",
+              label: "text-default-500 dark:text-zinc-400",
             }}
           >
             {t("mods.only_enabled") as string}
@@ -386,7 +386,7 @@ export const ModsPage: React.FC = () => {
       </div>
 
       <div className="flex-1 overflow-hidden flex flex-col">
-        <div className="px-4 py-2 text-sm text-default-600 dark:text-zinc-300 font-semibold">
+        <div className="px-4 py-2 text-sm text-default-500 dark:text-zinc-400 font-semibold">
           {selectedCount > 0 ? (
             <div className="flex items-center gap-3 animate-in fade-in slide-in-from-left-2 duration-200">
               <div className="w-8 flex justify-center">
@@ -528,17 +528,17 @@ export const ModsPage: React.FC = () => {
                     </div>
 
                     <div className="col-start-2 row-span-2 md:row-span-1 min-w-0 flex items-start gap-3">
-                      <div className="w-11 h-11 rounded-xl bg-default-100 dark:bg-zinc-900 flex items-center justify-center text-default-600 dark:text-zinc-300 shrink-0">
+                      <div className="w-11 h-11 rounded-xl bg-default-100 dark:bg-zinc-900 flex items-center justify-center text-default-500 dark:text-zinc-400 shrink-0">
                         <FaPuzzlePiece className="w-5 h-5" />
                       </div>
                       <div className="min-w-0 flex flex-col justify-center">
                         <div className="font-bold text-default-900 dark:text-zinc-100 truncate text-base">
                           {mod.name}
                         </div>
-                        <div className="text-xs text-default-600 dark:text-zinc-300 truncate">
+                        <div className="text-xs text-default-500 dark:text-zinc-400 truncate">
                           by {mod.author || "Unknown"}
                         </div>
-                        <div className="text-xs text-default-600 dark:text-zinc-300 truncate font-mono opacity-80 mt-0.5">
+                        <div className="text-xs text-default-500 dark:text-zinc-400 truncate font-mono opacity-80 mt-0.5">
                           {mod.entry || mod.type}
                         </div>
                       </div>
@@ -685,17 +685,17 @@ export const ModsPage: React.FC = () => {
                   </div>
 
                   <div className="col-start-2 row-span-2 md:row-span-1 min-w-0 flex items-start gap-3">
-                    <div className="w-11 h-11 rounded-xl bg-default-100 dark:bg-zinc-900 flex items-center justify-center text-default-600 dark:text-zinc-300 shrink-0">
+                    <div className="w-11 h-11 rounded-xl bg-default-100 dark:bg-zinc-900 flex items-center justify-center text-default-500 dark:text-zinc-400 shrink-0">
                       <FaBoxOpen className="w-5 h-5" />
                     </div>
                     <div className="min-w-0 flex flex-col justify-center">
                       <div className="font-bold text-default-900 dark:text-zinc-100 truncate text-base">
                         {lipItem.packageName}
                       </div>
-                      <div className="text-xs text-default-600 dark:text-zinc-300 truncate font-mono">
+                      <div className="text-xs text-default-500 dark:text-zinc-400 truncate font-mono">
                         {lipItem.displayIdentifier}
                       </div>
-                      <div className="text-xs text-default-600 dark:text-zinc-300 truncate mt-0.5">
+                      <div className="text-xs text-default-500 dark:text-zinc-400 truncate mt-0.5">
                         {childrenSummary}
                       </div>
                     </div>
@@ -858,39 +858,39 @@ export const ModsPage: React.FC = () => {
         {mp.activeMod ? (
           <div className="space-y-2 text-sm dark:text-zinc-200">
             <div>
-              <span className="text-default-600 dark:text-zinc-300">
+              <span className="text-default-500 dark:text-zinc-400">
                 {t("mods.field_name")}:
               </span>
               {mp.activeMod.name}
             </div>
             <div>
-              <span className="text-default-600 dark:text-zinc-300">
+              <span className="text-default-500 dark:text-zinc-400">
                 {t("mods.field_version")}:
               </span>
               {mp.activeMod.version || "-"}
             </div>
             <div>
-              <span className="text-default-600 dark:text-zinc-300">
+              <span className="text-default-500 dark:text-zinc-400">
                 {t("mods.field_type")}:
               </span>
               {mp.activeMod.type || "-"}
             </div>
             <div>
-              <span className="text-default-600 dark:text-zinc-300">
+              <span className="text-default-500 dark:text-zinc-400">
                 {t("mods.field_entry")}:
               </span>
               {mp.activeMod.entry || "-"}
             </div>
             {mp.activeMod.author ? (
               <div>
-                <span className="text-default-600 dark:text-zinc-300">
+                <span className="text-default-500 dark:text-zinc-400">
                   {t("mods.field_author")}:
                 </span>
                 {mp.activeMod.author}
               </div>
             ) : null}
             <div>
-              <span className="text-default-600 dark:text-zinc-300">
+              <span className="text-default-500 dark:text-zinc-400">
                 {t("mods.action_update")}:
               </span>
               <span className="ms-2">
@@ -911,7 +911,7 @@ export const ModsPage: React.FC = () => {
             <div className="pt-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-default-600 dark:text-zinc-300">
+                  <span className="text-default-500 dark:text-zinc-400">
                     {t("mods.toggle_label")}
                   </span>
                   <Chip
@@ -944,7 +944,7 @@ export const ModsPage: React.FC = () => {
                   aria-label={t("mods.toggle_label") as string}
                 />
               </div>
-              <div className="text-default-600 dark:text-zinc-300 text-xs mt-1">
+              <div className="text-default-500 dark:text-zinc-400 text-xs mt-1">
                 {mp.enabledByFolder.get(mp.resolveModFolder(mp.activeMod!))
                   ? (t("mods.toggle_desc_on") as string)
                   : (t("mods.toggle_desc_off") as string)}

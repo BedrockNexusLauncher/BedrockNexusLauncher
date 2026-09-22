@@ -2,8 +2,7 @@ import "./polyfills/wails";
 import { Route, Routes, useLocation } from "react-router-dom";
 import React, { useEffect, useState, Suspense, lazy } from "react";
 import { Events } from "@wailsio/runtime";
-import { ToastProvider } from "@heroui/react";
-import { ListSkeleton } from "@/components/ListSkeleton";
+import { ToastProvider, Spinner } from "@heroui/react";
 import { GlobalNavbar } from "@/components/GlobalNavbar";
 import { Sidebar } from "@/components/Sidebar";
 import { TopBar } from "@/components/TopBar";
@@ -253,7 +252,7 @@ function App() {
                         toastOffset={80}
                         regionProps={{ className: "wails-no-drag z-[120]" }}
                         toastProps={{
-                          timeout: 5000,
+                          timeout: 2000,
                           classNames: {
                             motionDiv: "wails-no-drag z-[120]",
                             base: "wails-no-drag",
@@ -300,12 +299,12 @@ function App() {
                       <div
                         style={
                           {
-                            "--content-pt": "4rem",
+                            "--content-pt": "4.5rem",
                           } as React.CSSProperties
                         }
-                        className={`w-full h-dvh flex ${
+                        className={`w-full min-h-dvh flex ${
                           layoutMode === "sidebar" ? "flex-row" : "flex-col"
-                        } overflow-hidden ${
+                        } overflow-x-hidden ${
                           bgData ||
                           (resolvedTheme === "light"
                             ? lightBackgroundBaseMode
@@ -348,7 +347,13 @@ function App() {
                             layoutMode === "sidebar" ? "ps-14" : ""
                           }`}
                         >
-                          <Suspense fallback={<ListSkeleton rows={6} />}>
+                          <Suspense
+                            fallback={
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Spinner size="lg" />
+                              </div>
+                            }
+                          >
                             <Routes>
                               <Route
                                 path={ROUTES.home}

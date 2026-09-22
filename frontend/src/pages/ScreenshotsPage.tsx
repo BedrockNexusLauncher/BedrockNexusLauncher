@@ -271,7 +271,7 @@ export default function ScreenshotsPage() {
             }
           />
 
-          <div className="mt-2 text-default-600 dark:text-zinc-300 text-sm flex flex-wrap items-center gap-2">
+          <div className="mt-2 text-default-500 dark:text-zinc-400 text-sm flex flex-wrap items-center gap-2">
             <span>{t("contentpage.current_version")}:</span>
             <span className="font-medium text-default-700 dark:text-zinc-200 bg-default-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md">
               {currentVersionName || t("contentpage.none")}
@@ -296,7 +296,7 @@ export default function ScreenshotsPage() {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-4">
           <Spinner size="lg" />
-          <span className="text-default-600 dark:text-zinc-300">
+          <span className="text-default-500 dark:text-zinc-400">
             {t("common.loading")}
           </span>
         </div>
@@ -497,7 +497,7 @@ export default function ScreenshotsPage() {
         isDismissable={true}
         scrollBehavior="normal"
         classNames={{
-          base: "w-[min(94vw,1040px)] max-w-[1040px] max-h-[calc(100dvh-2.5rem)] overflow-hidden bg-white/80! dark:bg-zinc-900/80! backdrop-blur-2xl border-white/40! dark:border-zinc-700/50! shadow-2xl rounded-4xl",
+          base: "w-[min(94vw,1040px)] max-w-[1040px] max-h-[calc(100vh-2.5rem)] overflow-hidden bg-white/80! dark:bg-zinc-900/80! backdrop-blur-2xl border-white/40! dark:border-zinc-700/50! shadow-2xl rounded-4xl",
           wrapper: "overflow-hidden",
         }}
       >
@@ -510,7 +510,7 @@ export default function ScreenshotsPage() {
                     <h2 className="text-xl font-bold text-default-800 dark:text-zinc-100 truncate">
                       {activeShot?.name || t("contentpage.screenshots")}
                     </h2>
-                    <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-default-600 dark:text-zinc-300">
+                    <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-default-500 dark:text-zinc-400">
                       <span>
                         {activeShot?.captureTime
                           ? formatDate(activeShot.captureTime)
@@ -612,7 +612,7 @@ export default function ScreenshotsPage() {
               </BaseModalBody>
 
               <BaseModalFooter className="flex flex-col items-stretch justify-between gap-3 overflow-hidden pt-2 sm:flex-row sm:items-center">
-                <div className="text-sm text-default-600 dark:text-zinc-300">
+                <div className="text-sm text-default-500 dark:text-zinc-400">
                   {t("contentpage.screenshot_viewer_nav_hint")}
                 </div>
                 <div className="flex items-center justify-end gap-2">

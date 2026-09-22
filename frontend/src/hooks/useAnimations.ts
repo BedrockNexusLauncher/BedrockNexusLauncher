@@ -2,21 +2,13 @@ import { useState, useEffect } from "react";
 import { MotionGlobalConfig } from "framer-motion";
 
 export const useAnimations = () => {
-  const prefersReducedMotion = () =>
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const readDisabled = () => {
+  const [disableAnimations, setDisableAnimations] = useState<boolean>(() => {
     try {
-      if (localStorage.getItem("app.disableAnimations") === "true") return true;
+      return localStorage.getItem("app.disableAnimations") === "true";
     } catch {
-      /* ignore */
+      return false;
     }
-    return prefersReducedMotion();
-  };
-
-  const [disableAnimations, setDisableAnimations] = useState<boolean>(readDisabled);
+  });
 
   useEffect(() => {
     MotionGlobalConfig.skipAnimations = disableAnimations;

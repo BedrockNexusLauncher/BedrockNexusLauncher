@@ -28,8 +28,6 @@ import (
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/mcpedl"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/mcservice"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/packages"
-	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/plugin"
-	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/plugin/patch"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/registry"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/resourcerules"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/skinpack"
@@ -617,24 +615,18 @@ func (a *Minecraft) SetPatchRegisterMode(mode string) string {
 }
 
 func (a *Minecraft) RunPatchScript() string {
-	if err := patch.RunManual(); err != nil {
+	if err := RunPatchScriptManual(); err != nil {
 		log.Printf("[patcher] manual run failed: %v", err)
 		return "ERR_PATCH_RUN_FAILED"
 	}
 	return ""
 }
 
-// IsPatchPluginPresent reports whether the standalone patch plugin
-// (plugins/Patch with valid manifest) is installed. The Settings UI uses
-// this to show the patch section only when the plugin is present.
-func (a *Minecraft) IsPatchPluginPresent() bool { return plugin.IsPatchPresent() }
-
 // AcceptElevationConsent درخواست اجرای لانچر با دسترسی مدیر (UAC) را ارسال می‌کند.
-// متعلق به سیستم پچ است: فقط پاس‌ثرو به وضعیت پلاگین، خود relaunch در main می‌ماند.
 // خروجی: "OK_RESTARTING" (درخواست ارسال شد و پروسه فعلی بسته می‌شود)،
 // "ALREADY_ELEVATED" (لانچر همین حالا با دسترسی مدیر اجراست) یا "FAILED".
 func (a *Minecraft) AcceptElevationConsent() string {
-	plugin.ClearConsentPending()
+	elevationConsentPending.Store(false)
 	if isElevated() {
 		return "ALREADY_ELEVATED"
 	}
@@ -654,8 +646,8 @@ func (a *Minecraft) AcceptElevationConsent() string {
 
 // DeclineElevationConsent رد کردن اجرای با دسترسی مدیر را ثبت می‌کند؛ پچ خودکار در همین نشست اجرا نمی‌شود
 func (a *Minecraft) DeclineElevationConsent() {
-	plugin.ClearConsentPending()
-	plugin.SetAutoRunDeclined(true)
+	elevationConsentPending.Store(false)
+	SetPatchAutoRunDeclined()
 	log.Printf("[startup] administrator privileges declined via UI; auto-patch skipped for this session")
 }
 

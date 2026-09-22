@@ -75,7 +75,7 @@ export const ModCard = (args: {
       </CardHeader>
 
       <CardBody className="p-0 overflow-hidden relative">
-        <ScrollShadow className="h-[140px] w-full p-4 overflow-y-auto overscroll-contain rounded-[inherit] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <ScrollShadow className="h-[140px] w-full p-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
           {modsInfo.length > 0 ? (
             <div className="flex flex-col gap-2">
               <AnimatePresence>

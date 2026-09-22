@@ -253,10 +253,7 @@ export const LauncherPage = (args: any) => {
   return (
     <>
       <PageContainer
-        className={cn(
-          "relative no-scrollbar overscroll-contain",
-          isAnimating ? "overflow-hidden" : "",
-        )}
+        className={cn("relative", isAnimating ? "overflow-hidden" : "")}
         animate={false}
       >
         {/* Hero Launch Card */}
@@ -349,7 +346,7 @@ export const LauncherPage = (args: any) => {
                     )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-lg sm:text-xl font-medium text-default-600 dark:text-zinc-300">
+                    <span className="text-lg sm:text-xl font-medium text-default-500 dark:text-zinc-400">
                       {t("launcherpage.edition")}
                     </span>
                   </div>
@@ -377,13 +374,13 @@ export const LauncherPage = (args: any) => {
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
-                                <span className="text-base font-bold text-default-600 dark:text-zinc-300">
+                                <span className="text-base font-bold text-default-500 dark:text-zinc-400">
                                   M
                                 </span>
                               )}
                             </div>
                             <div className="flex flex-col hidden lg:flex">
-                              <span className="text-xs text-default-600 dark:text-zinc-300 font-medium">
+                              <span className="text-xs text-default-500 dark:text-zinc-400 font-medium">
                                 {t("launcherpage.currentVersion")}
                               </span>
                               <span className="text-sm font-bold text-default-900 dark:text-white leading-tight max-w-[120px] truncate">
@@ -408,7 +405,7 @@ export const LauncherPage = (args: any) => {
                         selectedKeys={
                           new Set(currentVersion ? [currentVersion] : [])
                         }
-                        className="max-h-[400px] overflow-y-auto no-scrollbar min-w-[300px] overscroll-contain rounded-[inherit]"
+                        className="max-h-[400px] overflow-y-auto no-scrollbar min-w-[300px]"
                         bottomContent={
                           isLoadingVersions ? (
                             <div className="p-2 flex justify-center items-center gap-2 text-default-400 text-xs border-t border-default-100 dark:border-white/5">
@@ -460,7 +457,7 @@ export const LauncherPage = (args: any) => {
                                       className="w-full h-full object-cover"
                                     />
                                   ) : (
-                                    <span className="text-sm font-bold text-default-600 dark:text-zinc-300">
+                                    <span className="text-sm font-bold text-default-500 dark:text-zinc-400">
                                       M
                                     </span>
                                   );
@@ -517,7 +514,7 @@ export const LauncherPage = (args: any) => {
                         >
                           <FaCogs
                             size={18}
-                            className="text-default-600 dark:text-zinc-300"
+                            className="text-default-500 dark:text-zinc-400"
                           />
                         </Button>
                       </DropdownTrigger>
@@ -601,7 +598,7 @@ export const LauncherPage = (args: any) => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
                       transition={{ duration: 0.25, ease: EASE_ENTER }}
-                      className="text-sm text-default-600 dark:text-zinc-300 font-medium truncate absolute inset-0"
+                      className="text-sm text-default-500 dark:text-zinc-400 font-medium truncate absolute inset-0"
                     >
                       {currentLaunchTip}
                     </motion.div>
@@ -648,7 +645,7 @@ export const LauncherPage = (args: any) => {
                 <Button
                   size="sm"
                   variant="light"
-                  className="text-xs text-default-600 dark:text-zinc-300 data-[hover=true]:text-default-800 dark:data-[hover=true]:text-zinc-200"
+                  className="text-xs text-default-500 dark:text-zinc-400 data-[hover=true]:text-default-800 dark:data-[hover=true]:text-zinc-200"
                   endContent={
                     <FaArrowRight size={10} className="rtl:-scale-x-100" />
                   }
@@ -777,7 +774,7 @@ export const LauncherPage = (args: any) => {
             <p className="text-lg font-semibold text-default-800 dark:text-zinc-100">
               {launchErrorMessage}
             </p>
-            <p className="text-sm leading-6 text-default-600 dark:text-zinc-300 max-w-[520px]">
+            <p className="text-sm leading-6 text-default-500 dark:text-zinc-400 max-w-[520px]">
               {t("launcherpage.launch.failed.content") as unknown as string}
             </p>
             {launchErrorCode && (
@@ -809,7 +806,7 @@ export const LauncherPage = (args: any) => {
             <div className="mt-4">
               {giTotal > 0 ? (
                 <div className="flex flex-col gap-2">
-                  <div className="flex justify-between text-small font-bold text-default-600 dark:text-zinc-300">
+                  <div className="flex justify-between text-small font-bold text-default-500 dark:text-zinc-400">
                     <span>
                       {Math.min(
                         100,
@@ -833,7 +830,7 @@ export const LauncherPage = (args: any) => {
                   />
                 </div>
               ) : (
-                <div className="flex items-center gap-3 text-default-600 dark:text-zinc-300">
+                <div className="flex items-center gap-3 text-default-500 dark:text-zinc-400">
                   <Spinner size="sm" color="primary" />
                   <span>
                     {t("launcherpage.gameinput.installing.preparing")}
@@ -892,7 +889,7 @@ export const LauncherPage = (args: any) => {
             <div className="mt-4">
               {vcTotal > 0 ? (
                 <div className="flex flex-col gap-2">
-                  <div className="flex justify-between text-small font-bold text-default-600 dark:text-zinc-300">
+                  <div className="flex justify-between text-small font-bold text-default-500 dark:text-zinc-400">
                     <span>
                       {Math.min(
                         100,
@@ -916,7 +913,7 @@ export const LauncherPage = (args: any) => {
                   />
                 </div>
               ) : (
-                <div className="flex items-center gap-3 text-default-600 dark:text-zinc-300">
+                <div className="flex items-center gap-3 text-default-500 dark:text-zinc-400">
                   <Spinner size="sm" color="primary" />
                   <span>
                     {t("launcherpage.vcruntime.installing.preparing")}

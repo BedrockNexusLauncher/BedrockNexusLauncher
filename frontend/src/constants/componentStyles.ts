@@ -5,11 +5,11 @@ export const COMPONENT_STYLES = {
     popoverContent:
       "bg-white dark:bg-zinc-900 backdrop-blur-sm backdrop-saturate-150 border border-black/5 dark:border-white/10 shadow-lg rounded-xl transform-gpu",
     listbox:
-      "[&_li[data-focus=true]]:bg-primary-500/15 dark:[&_li[data-focus=true]]:bg-primary-500/20 [&_li[data-focus=true]]:outline-none",
+      "[&_li[data-focus=true]]:!ring-0 [&_li[data-focus=true]]:!outline-none [&_li[data-focus=true]]:!border-transparent",
   },
   dropdown: {
     content:
-      "bg-white dark:bg-zinc-900 backdrop-blur-sm backdrop-saturate-150 border border-black/5 dark:border-white/10 shadow-lg rounded-xl transform-gpu [&_li[data-focus=true]]:bg-primary-500/15 dark:[&_li[data-focus=true]]:bg-primary-500/20",
+      "bg-white dark:bg-zinc-900 backdrop-blur-sm backdrop-saturate-150 border border-black/5 dark:border-white/10 shadow-lg rounded-xl transform-gpu [&_li[data-focus=true]]:!ring-0 [&_li[data-focus=true]]:!outline-none [&_li[data-focus=true]]:!border-transparent",
   },
   dropdownTriggerButton:
     "bg-default-100/50 dark:bg-zinc-800/50 data-[hover=true]:bg-default-200/50 dark:data-[hover=true]:bg-zinc-700/50 data-[focus=true]:border-primary-600 rounded-xl",
@@ -39,10 +39,10 @@ export const COMPONENT_STYLES = {
   },
   table: {
     thead: "rounded-none after:hidden",
-    th: "bg-default-100/55 dark:bg-zinc-900/55 text-default-600 dark:text-zinc-300 font-semibold border-b border-default-200/80 dark:border-white/10 h-12 first:rounded-s-none last:rounded-e-none",
+    th: "bg-default-100/55 dark:bg-zinc-900/55 text-default-500 dark:text-zinc-400 font-semibold border-b border-default-200/80 dark:border-white/10 h-12 first:rounded-s-none last:rounded-e-none",
   },
   tableSticky: {
     thead: "rounded-none after:hidden [&>tr]:first:!shadow-none",
-    th: "bg-default-100/60 dark:bg-zinc-900/60 text-default-600 dark:text-zinc-300 font-semibold border-b border-default-200/80 dark:border-white/10 h-12 first:rounded-s-none last:rounded-e-none backdrop-blur-none",
+    th: "bg-default-100/60 dark:bg-zinc-900/60 text-default-500 dark:text-zinc-400 font-semibold border-b border-default-200/80 dark:border-white/10 h-12 first:rounded-s-none last:rounded-e-none backdrop-blur-none",
   },
 };

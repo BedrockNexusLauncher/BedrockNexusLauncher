@@ -33,8 +33,6 @@ import (
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/mcservice"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/msixvc"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/peeditor"
-	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/plugin"
-	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/plugin/patch"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/resourcerules"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/types"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/update"
@@ -81,8 +79,6 @@ var (
 	procMessageBoxW              = user32.NewProc("MessageBoxW")
 	procShowWindow               = user32.NewProc("ShowWindow")
 	procSetForegroundWindow      = user32.NewProc("SetForegroundWindow")
-	shell32                      = win.NewLazySystemDLL("shell32.dll")
-	procShellExecuteW            = shell32.NewProc("ShellExecuteW")
 )
 
 type cursorPoint struct {
@@ -756,13 +752,13 @@ func main() {
 
 	_ = godotenv.Load()
 
-	// درخواست دسترسی مدیر هنگام استارت (متعلق به سیستم پچ — فقط وقتی پلاگین پچ نصب است)
+	// درخواست دسترسی مدیر هنگام استارت (برای اجرای اسکریپت پچ)
 	// فقط وقتی پچ خودکار فعال باشد و در حالت‌های خاص (debug/به‌روزرسانی/اجرای مستقیم بازی) نمایش داده نمی‌شود
 	// به‌جای MessageBox ویندوز، صفحه رضایت گرافیکی داخل اپ (ElevationConsentPage) با هش روت نمایش داده می‌شود
 	if !debugMode && !postUpdateRestart && autoLaunchVersion == "" && !isElevated() {
-		if cfg, cfgErr := config.Load(); cfgErr == nil && plugin.ShouldAskElevation(cfg.DisableAutoPatch, false) {
+		if cfg, cfgErr := config.Load(); cfgErr == nil && !cfg.DisableAutoPatch {
 			startup.Mark("elevation consent pending (in-app)")
-			plugin.SetConsentPending(true)
+			elevationConsentPending.Store(true)
 			initialURL = "/#/elevation-consent"
 		}
 	}
@@ -774,8 +770,8 @@ func main() {
 
 	// اجرای خودکار پچ فقط وقتی شروع می‌شود که رضایت کاربر برای ارتقای دسترسی مشخص شده باشد
 	// (پذیرش باعث ری‌استارت با دسترسی مدیر می‌شود؛ رد کردن یعنی پچ خودکار این نشست اجرا نشود)
-	if !plugin.IsConsentPending() {
-		patch.RunAutoAsync()
+	if !elevationConsentPending.Load() {
+		runEmbeddedPatchAsync()
 	}
 
 	c, err := config.Load()

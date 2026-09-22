@@ -1373,11 +1373,11 @@ const LIPPackagePage: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col grow gap-3">
-                  <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-default-900 dark:text-zinc-100 pb-1">
+                  <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-default-900 dark:text-zinc-100 pb-1">
                     {pkg.name}
-                  </h2>
+                  </h1>
 
-                  <div className="flex items-center gap-3 text-default-600 dark:text-zinc-300 text-sm flex-wrap">
+                  <div className="flex items-center gap-3 text-default-500 dark:text-zinc-400 text-sm flex-wrap">
                     <div className="flex items-center gap-1">
                       <LuUser size={14} />
                       <span className="font-medium text-default-700 dark:text-zinc-200">
@@ -1416,7 +1416,7 @@ const LIPPackagePage: React.FC = () => {
                     </Chip>
                   </div>
 
-                  <p className="text-default-600 dark:text-zinc-300 mt-4 text-sm leading-relaxed max-w-4xl">
+                  <p className="text-default-500 dark:text-zinc-400 mt-4 text-sm leading-relaxed max-w-4xl">
                     {pkg.description || t("lip.no_description")}
                   </p>
                 </div>
@@ -1478,7 +1478,7 @@ const LIPPackagePage: React.FC = () => {
                       "gap-6 w-full relative rounded-none p-0 border-b border-default-200 mb-6",
                     cursor:
                       "w-full bg-linear-to-r from-primary-500 to-primary-400 h-[3px]",
-                    tab: "max-w-fit px-0 h-12 text-base font-medium text-default-600 dark:text-zinc-300",
+                    tab: "max-w-fit px-0 h-12 text-base font-medium text-default-500 dark:text-zinc-400",
                     tabContent:
                       "group-data-[selected=true]:text-primary-600 dark:group-data-[selected=true]:text-primary-500 font-bold",
                   }}
@@ -1775,7 +1775,7 @@ const LIPPackagePage: React.FC = () => {
         }
       >
         <div className="space-y-4">
-          <p className="text-small text-default-600 dark:text-zinc-300">
+          <p className="text-small text-default-500 dark:text-zinc-400">
             {t("curseforge.install.select_version_body")}
           </p>
           <Select
@@ -1848,7 +1848,7 @@ const LIPPackagePage: React.FC = () => {
             </div>
           </div>
           {dialogRequiresLL && dialogLLStateLoading ? (
-            <div className="text-xs text-default-600 dark:text-zinc-300">
+            <div className="text-xs text-default-500 dark:text-zinc-400">
               {t("lip.files.checking_ll_state")}
             </div>
           ) : null}

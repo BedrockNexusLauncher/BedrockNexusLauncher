@@ -305,7 +305,7 @@ export default function InstanceSettingsPage() {
                 title={t("versions.edit.title")}
                 titleClassName="text-start pb-1"
                 description={
-                  <div className="mt-1 text-xs text-default-600 dark:text-zinc-300 truncate text-start">
+                  <div className="mt-1 text-xs text-default-500 dark:text-zinc-400 truncate text-start">
                     {t("versions.edit.mc_version")}:{" "}
                     <span className="text-default-700 dark:text-zinc-200 font-medium">
                       {vs.loading ? (
@@ -602,14 +602,14 @@ export default function InstanceSettingsPage() {
                           <span
                             className={
                               vs.currentLLVersion
-                                ? "text-small font-semibold text-default-600 dark:text-zinc-300"
+                                ? "text-small font-semibold text-default-500 dark:text-zinc-400"
                                 : "text-small font-medium text-default-400 dark:text-zinc-500"
                             }
                           >
                             {currentLLVersionText}
                           </span>
                         </div>
-                        <div className="text-small text-default-600 dark:text-zinc-300">
+                        <div className="text-small text-default-500 dark:text-zinc-400">
                           {t("downloadpage.install.levilamina_desc")}
                         </div>
                       </div>
@@ -711,7 +711,7 @@ export default function InstanceSettingsPage() {
                           {t("versions.edit.backup.experimental_badge")}
                         </Chip>
                       </div>
-                      <p className="text-tiny text-default-600 dark:text-zinc-300 max-w-2xl">
+                      <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
                         {t("versions.edit.backup.hint", {
                           gameDataLabel: vs.backupGameDataLabel,
                         })}
@@ -772,7 +772,7 @@ export default function InstanceSettingsPage() {
                       <p className="font-medium text-default-700 dark:text-zinc-200">
                         {t("versions.edit.danger_title")}
                       </p>
-                      <p className="text-tiny text-default-600 dark:text-zinc-300 max-w-2xl">
+                      <p className="text-tiny text-default-500 dark:text-zinc-400 max-w-2xl">
                         {t("versions.edit.danger_hint")}
                       </p>
                     </div>
@@ -783,7 +783,7 @@ export default function InstanceSettingsPage() {
                             ? t("versions.edit.unregister_button")
                             : t("common.delete")}
                         </p>
-                        <p className="text-small text-default-600 dark:text-zinc-300 leading-7">
+                        <p className="text-small text-default-500 dark:text-zinc-400 leading-7">
                           {vs.isRegistered
                             ? t("versions.edit.unregister_hint")
                             : t("versions.edit.delete_hint")}
@@ -858,7 +858,7 @@ export default function InstanceSettingsPage() {
         }}
       >
         <div className="space-y-4">
-          <p className="text-small leading-6 text-default-600 dark:text-zinc-300">
+          <p className="text-small leading-6 text-default-500 dark:text-zinc-400">
             {t("versions.edit.backup.dialog_body")}
           </p>
           {vs.backupHasSharedScope ? (
@@ -972,7 +972,7 @@ export default function InstanceSettingsPage() {
                           })}
                         </div>
                       ) : null}
-                      <div className="space-y-2 text-tiny text-default-600 dark:text-zinc-300">
+                      <div className="space-y-2 text-tiny text-default-500 dark:text-zinc-400">
                         <div className="break-all">
                           {t("versions.edit.backup.path_label")}:{" "}
                           <span className="font-mono text-[11px] text-default-700 dark:text-zinc-300">
@@ -1039,13 +1039,13 @@ export default function InstanceSettingsPage() {
         }}
       >
         <div className="space-y-4">
-          <p className="text-small leading-6 text-default-600 dark:text-zinc-300">
+          <p className="text-small leading-6 text-default-500 dark:text-zinc-400">
             {t("versions.edit.backup.restore.dialog_body")}
           </p>
           <div className="rounded-2xl bg-default-50/70 dark:bg-zinc-800/80 border border-default-200/70 dark:border-white/10 px-4 py-3">
             <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
               <div className="min-w-0">
-                <div className="text-tiny text-default-600 dark:text-zinc-300 mb-1">
+                <div className="text-tiny text-default-500 dark:text-zinc-400 mb-1">
                   {t("versions.edit.backup.archive_label")}
                 </div>
                 <div className="font-mono text-small break-all text-default-800 dark:text-zinc-100">
@@ -1053,7 +1053,7 @@ export default function InstanceSettingsPage() {
                 </div>
               </div>
               <div className="rounded-2xl bg-default-100/55 dark:bg-white/5 border border-default-200/60 dark:border-white/10 px-3 py-2">
-                <div className="text-tiny text-default-600 dark:text-zinc-300">
+                <div className="text-tiny text-default-500 dark:text-zinc-400">
                   {t("versions.edit.backup.restore.created_at")}
                 </div>
                 <div className="text-sm font-medium text-default-700 dark:text-zinc-300">
@@ -1180,21 +1180,21 @@ export default function InstanceSettingsPage() {
                                 )}
                               </span>
                               {group.unresolvedCount > 0 ? (
-                                <span className="text-sm text-default-600 dark:text-zinc-300">
+                                <span className="text-sm text-default-500 dark:text-zinc-400">
                                   {t(
                                     "versions.edit.backup.restore.conflict_group_unresolved",
                                     { count: group.unresolvedCount },
                                   )}
                                 </span>
                               ) : (
-                                <span className="text-sm text-default-600 dark:text-zinc-300">
+                                <span className="text-sm text-default-500 dark:text-zinc-400">
                                   {t(
                                     "versions.edit.backup.restore.conflict_group_resolved",
                                   )}
                                 </span>
                               )}
                             </div>
-                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-default-600 dark:text-zinc-300">
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-default-500 dark:text-zinc-400">
                               {group.categories.map((category, index) => (
                                 <span
                                   key={`${group.key}-${category.key}`}
@@ -1261,7 +1261,7 @@ export default function InstanceSettingsPage() {
                               className="space-y-3"
                             >
                               {group.categories.length > 1 ? (
-                                <div className="flex flex-wrap items-center gap-2 text-sm text-default-600 dark:text-zinc-300">
+                                <div className="flex flex-wrap items-center gap-2 text-sm text-default-500 dark:text-zinc-400">
                                   <span className="font-medium">
                                     {t(category.labelKey)}
                                   </span>
@@ -1326,7 +1326,7 @@ export default function InstanceSettingsPage() {
                                               </Chip>
                                             ) : null}
                                           </div>
-                                          <div className="flex flex-wrap gap-2 text-xs text-default-600 dark:text-zinc-300">
+                                          <div className="flex flex-wrap gap-2 text-xs text-default-500 dark:text-zinc-400">
                                             {Array.isArray(conflict.diffFields)
                                               ? conflict.diffFields
                                                   .slice(0, 3)
@@ -1412,7 +1412,7 @@ export default function InstanceSettingsPage() {
                                       conflict.currentSummary ? (
                                         <div className="grid gap-2 lg:grid-cols-2">
                                           <div className="rounded-2xl border border-default-200/70 dark:border-white/10 bg-default-50/70 dark:bg-white/5 px-3 py-3 space-y-2">
-                                            <div className="text-[11px] uppercase tracking-wide text-default-600 dark:text-zinc-300">
+                                            <div className="text-[11px] uppercase tracking-wide text-default-500 dark:text-zinc-400">
                                               {t(
                                                 "versions.edit.backup.restore.backup_side_label",
                                               )}
@@ -1422,7 +1422,7 @@ export default function InstanceSettingsPage() {
                                             </div>
                                           </div>
                                           <div className="rounded-2xl border border-default-200/70 dark:border-white/10 bg-default-50/70 dark:bg-white/5 px-3 py-3 space-y-2">
-                                            <div className="text-[11px] uppercase tracking-wide text-default-600 dark:text-zinc-300">
+                                            <div className="text-[11px] uppercase tracking-wide text-default-500 dark:text-zinc-400">
                                               {t(
                                                 "versions.edit.backup.restore.current_side_label",
                                               )}
@@ -1442,7 +1442,7 @@ export default function InstanceSettingsPage() {
                                           </summary>
                                           <div className="mt-3 space-y-3">
                                             {conflict.identityKey ? (
-                                              <div className="text-xs text-default-600 dark:text-zinc-300 break-all">
+                                              <div className="text-xs text-default-500 dark:text-zinc-400 break-all">
                                                 {t(
                                                   "versions.edit.backup.restore.identity_key_label",
                                                 )}
@@ -1456,7 +1456,7 @@ export default function InstanceSettingsPage() {
                                             conflict.currentPath ? (
                                               <div className="grid gap-3 md:grid-cols-2">
                                                 <div className="rounded-2xl border border-default-200/70 dark:border-white/10 bg-default-100/60 dark:bg-zinc-800/70 px-3 py-3 space-y-2">
-                                                  <div className="text-tiny uppercase tracking-wide text-default-600 dark:text-zinc-300">
+                                                  <div className="text-tiny uppercase tracking-wide text-default-500 dark:text-zinc-400">
                                                     {t(
                                                       "versions.edit.backup.restore.backup_path_label",
                                                     )}
@@ -1466,7 +1466,7 @@ export default function InstanceSettingsPage() {
                                                   </div>
                                                 </div>
                                                 <div className="rounded-2xl border border-default-200/70 dark:border-white/10 bg-default-100/60 dark:bg-zinc-800/70 px-3 py-3 space-y-2">
-                                                  <div className="text-tiny uppercase tracking-wide text-default-600 dark:text-zinc-300">
+                                                  <div className="text-tiny uppercase tracking-wide text-default-500 dark:text-zinc-400">
                                                     {t(
                                                       "versions.edit.backup.restore.current_path_label",
                                                     )}
@@ -1495,7 +1495,7 @@ export default function InstanceSettingsPage() {
                                                       </div>
                                                       <div className="grid gap-2 md:grid-cols-2">
                                                         <div className="rounded-xl bg-default-100/80 dark:bg-white/5 px-3 py-2">
-                                                          <div className="text-[11px] uppercase tracking-wide text-default-600 dark:text-zinc-300">
+                                                          <div className="text-[11px] uppercase tracking-wide text-default-500 dark:text-zinc-400">
                                                             {t(
                                                               "versions.edit.backup.restore.backup_side_label",
                                                             )}
@@ -1506,7 +1506,7 @@ export default function InstanceSettingsPage() {
                                                           </div>
                                                         </div>
                                                         <div className="rounded-xl bg-default-100/80 dark:bg-white/5 px-3 py-2">
-                                                          <div className="text-[11px] uppercase tracking-wide text-default-600 dark:text-zinc-300">
+                                                          <div className="text-[11px] uppercase tracking-wide text-default-500 dark:text-zinc-400">
                                                             {t(
                                                               "versions.edit.backup.restore.current_side_label",
                                                             )}
@@ -1573,7 +1573,7 @@ export default function InstanceSettingsPage() {
                 t("versions.edit.backup.restore.progress_body")}
             </div>
             {vs.restoreProgressStepText ? (
-              <div className="text-sm text-default-600 dark:text-zinc-300">
+              <div className="text-sm text-default-500 dark:text-zinc-400">
                 {vs.restoreProgressStepText}
               </div>
             ) : null}
@@ -1626,7 +1626,7 @@ export default function InstanceSettingsPage() {
             {t("versions.edit.backup.success_body")}
           </p>
           <div className="rounded-2xl bg-default-100/60 dark:bg-zinc-800/80 border border-default-200/60 dark:border-white/10 px-4 py-3">
-            <div className="text-tiny text-default-600 dark:text-zinc-300 mb-1">
+            <div className="text-tiny text-default-500 dark:text-zinc-400 mb-1">
               {t("versions.edit.backup.archive_label")}
             </div>
             <div className="font-mono text-small break-all text-default-800 dark:text-zinc-100">
@@ -1634,7 +1634,7 @@ export default function InstanceSettingsPage() {
             </div>
           </div>
           <div className="rounded-2xl bg-default-100/60 dark:bg-zinc-800/80 border border-default-200/60 dark:border-white/10 px-4 py-3">
-            <div className="text-tiny text-default-600 dark:text-zinc-300 mb-1">
+            <div className="text-tiny text-default-500 dark:text-zinc-400 mb-1">
               {t("versions.edit.backup.location_label")}
             </div>
             <div className="font-mono text-small break-all text-default-800 dark:text-zinc-100">
@@ -1737,7 +1737,7 @@ export default function InstanceSettingsPage() {
                   {scopeResult.details.map((detail) => (
                     <div
                       key={`${scopeResult.key}-${detail}`}
-                      className="font-mono text-tiny break-all text-default-600 dark:text-zinc-300"
+                      className="font-mono text-tiny break-all text-default-500 dark:text-zinc-400"
                     >
                       {detail}
                     </div>
@@ -1954,7 +1954,7 @@ export default function InstanceSettingsPage() {
         }}
       >
         <div className="space-y-3">
-          <p className="text-small leading-6 text-default-600 dark:text-zinc-300">
+          <p className="text-small leading-6 text-default-500 dark:text-zinc-400">
             {t("versions.edit.loader.ll_select_guidance")}
           </p>
           <Select

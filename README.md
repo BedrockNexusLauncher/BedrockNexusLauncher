@@ -16,7 +16,7 @@
     <img src="https://img.shields.io/github/v/release/BedrockNexusLauncher/BedrockNexusLauncher?display_name=tag&sort=semver" alt="Release" />
   </a>
   <img src="https://img.shields.io/badge/platform-Windows%2010%2F11-blue" alt="Platform" />
-  <img src="https://img.shields.io/badge/license-GPL--3.0--only-green" alt="License" />
+  <img src="https://img.shields.io/badge/license-LGPL--3.0-green" alt="License" />
 </p>
 
 ---
@@ -108,9 +108,7 @@ Pull requests are welcome! For substantial changes, please open an issue first t
 
 ## 📄 License
 
-This project is licensed under **GPL-3.0-only** — see [COPYING](COPYING) for details, and [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES) for bundled components.
-
-Bedrock Nexus is a fork of [LiteLDev/LeviLauncher](https://github.com/LiteLDev/LeviLauncher) (GPL-3.0-only), customized and rebranded.
+This project is licensed under the **LGPL-3.0** license for its non-closed-source parts — see [COPYING](COPYING) and [COPYING.LESSER](COPYING.LESSER) for details.
 
 ## ⚠️ Disclaimer
 

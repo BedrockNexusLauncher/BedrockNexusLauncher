@@ -89,7 +89,7 @@ export const WindowControls: React.FC<WindowControlsProps> = ({
         variant="light"
         size="sm"
         radius="lg"
-        aria-label={t("common.minimize", { defaultValue: t("common.collapse") })}
+        aria-label={t("common.collapse")}
         isDisabled={navLocked && !isOnboardingMode}
         onPress={() => {
           if (navLocked && !isOnboardingMode) return;
@@ -98,7 +98,7 @@ export const WindowControls: React.FC<WindowControlsProps> = ({
             document.activeElement.blur();
           }
         }}
-        className="wails-no-drag min-w-11 w-11 h-11 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+        className="wails-no-drag min-w-8 w-8 h-8 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
       >
         <IoRemoveOutline size={20} />
       </Button>
@@ -108,10 +108,10 @@ export const WindowControls: React.FC<WindowControlsProps> = ({
         variant="light"
         size="sm"
         radius="lg"
-        aria-label={isMaximized ? t("common.restore", { defaultValue: "Restore" }) : t("common.expand")}
+        aria-label={isMaximized ? t("common.collapse") : t("common.expand")}
         isDisabled={navLocked && !isOnboardingMode}
         onPress={handleToggleMaximize}
-        className="wails-no-drag min-w-11 w-11 h-11 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+        className="wails-no-drag min-w-8 w-8 h-8 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
       >
         {isMaximized ? (
           <IoCopyOutline size={18} />
@@ -134,7 +134,7 @@ export const WindowControls: React.FC<WindowControlsProps> = ({
             document.activeElement.blur();
           }
         }}
-        className="wails-no-drag min-w-11 w-11 h-11 text-zinc-500 hover:text-red-600 hover:bg-red-100 dark:text-zinc-400 dark:hover:text-red-400 dark:hover:bg-red-900/20"
+        className="wails-no-drag min-w-8 w-8 h-8 text-zinc-500 hover:text-red-600 hover:bg-red-100 dark:text-zinc-400 dark:hover:text-red-400 dark:hover:bg-red-900/20"
       >
         <IoCloseOutline size={22} />
       </Button>
