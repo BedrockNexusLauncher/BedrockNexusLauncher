@@ -107,7 +107,7 @@ func (a *Minecraft) GetDriveStats(root string) map[string]uint64 {
 }
 
 func (a *Minecraft) FetchHistoricalVersions(preferCN bool) map[string]interface{} {
-	return mcservice.FetchHistoricalVersions(preferCN)
+	return mcservice.FetchHistoricalVersionsWithStore(preferCN)
 }
 
 func (a *Minecraft) FetchLeviLaminaVersionDB() map[string][]string {
