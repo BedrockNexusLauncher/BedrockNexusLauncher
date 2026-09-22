@@ -877,6 +877,7 @@ func main() {
 		EnableFileDrop: true,
 	})
 	startup.Mark("window created")
+	userService.Attach(windows)
 	reapplyWindowMinConstraints := func() {
 		windows.SetMinSize(minWindowWidth, minWindowHeight)
 		currentW := windows.Width()

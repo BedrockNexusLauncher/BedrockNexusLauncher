@@ -32,12 +32,15 @@ export const UserAvatar = () => {
   const [reloadNonce, setReloadNonce] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [open, setOpen] = useState(false);
+  const [signing, setSigning] = useState(false);
+  const [licenses, setLicenses] = useState<any>(null);
 
   const clearUserState = React.useCallback(() => {
     setGamertag("");
     setXuid("");
     setAvatar("");
     setStats(null);
+    setLicenses(null);
   }, []);
 
   const refreshSessionIfNeeded = React.useCallback(async (force = false) => {
@@ -143,6 +146,16 @@ export const UserAvatar = () => {
       } catch (err) {
         console.error("[UserAvatar] GetLocalUserGamerPicture error", err);
       }
+
+      try {
+        const check = (userService as any)?.CheckGameLicenses;
+        if (typeof check === "function") {
+          const lic = await check(xuid);
+          if (!cancelled && lic) {
+            setLicenses(lic);
+          }
+        }
+      } catch {}
     };
 
     void fetchDetails();
@@ -171,10 +184,25 @@ export const UserAvatar = () => {
             isIconOnly
             variant="light"
             size="sm"
-            onPress={() => {
-              setLoading(true);
-              clearUserState();
-              setReloadNonce((v) => v + 1);
+            isLoading={signing}
+            onPress={async () => {
+              try {
+                setSigning(true);
+                const signIn = (userService as any)?.SignIn;
+                if (typeof signIn === "function") {
+                  const code = await signIn();
+                  if (code) {
+                    console.error("[UserAvatar] SignIn code", code);
+                  }
+                }
+              } catch (e) {
+                console.error("[UserAvatar] SignIn error", e);
+              } finally {
+                setSigning(false);
+                setLoading(true);
+                clearUserState();
+                setReloadNonce((v) => v + 1);
+              }
             }}
           >
             <FaXbox className="text-default-400" size={24} />
@@ -346,7 +374,46 @@ export const UserAvatar = () => {
             </div>
           )}
 
-          <div className="mt-3 pt-3 border-t border-default-100 flex justify-end" />
+          {licenses && (
+            <div className="mt-3 pt-3 border-t border-default-100 dark:border-white/10 flex items-center gap-2">
+              <Chip
+                size="sm"
+                variant="flat"
+                color={licenses.release === "authorized" ? "success" : "default"}
+              >
+                Release: {licenses.release || "unknown"}
+              </Chip>
+              <Chip
+                size="sm"
+                variant="flat"
+                color={licenses.preview === "authorized" ? "success" : "default"}
+              >
+                Preview: {licenses.preview || "unknown"}
+              </Chip>
+            </div>
+          )}
+
+          <div className="mt-3 pt-3 border-t border-default-100 flex justify-end">
+            <Button
+              size="sm"
+              variant="light"
+              color="danger"
+              onPress={async () => {
+                try {
+                  const reset = (userService as any)?.ResetSession;
+                  if (typeof reset === "function") {
+                    await reset();
+                  }
+                } catch {}
+                setOpen(false);
+                setLoading(true);
+                clearUserState();
+                setReloadNonce((v) => v + 1);
+              }}
+            >
+              {t("common.sign_out", "Sign out")}
+            </Button>
+          </div>
         </div>
       </PopoverContent>
     </Popover>

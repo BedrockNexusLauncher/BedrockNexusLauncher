@@ -15,16 +15,51 @@ import (
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/gdk"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/launchercore"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/mcservice"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/nativeinstall"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/processinfo"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/registry"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/types"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/versionlaunch"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/versions"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/xbox"
+	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
-type UserService struct{}
+type UserService struct{ window *application.WebviewWindow }
+
+func (s *UserService) IsElevated() bool {
+	return processinfo.IsElevated()
+}
 
 func NewUserService(_ *Minecraft) *UserService {
+	// Restore identity before any avatar or installation request can select a default account.
+	_ = nativeinstall.RestoreSharedAccount(context.Background(), filepath.Join(config.ConfigDir(), "microsoft-account"))
 	return &UserService{}
+}
+
+// Attach connects native authentication dialogs to the main window.
+//
+//wails:ignore
+func (s *UserService) Attach(window *application.WebviewWindow) { s.window = window }
+
+func (s *UserService) SignIn(ctx context.Context) string {
+	if s.window == nil {
+		return "ERR_AUTH_FAILED"
+	}
+	err := nativeinstall.SignInSharedAccount(ctx, filepath.Join(config.ConfigDir(), "microsoft-account"), uintptr(s.window.NativeWindow()), application.InvokeSync)
+	if err == nil {
+		return ""
+	}
+	log.Printf("UserService.SignIn: %v", err)
+	return nativeinstall.AuthErrorCode(err)
+}
+
+func (s *UserService) CheckGameLicenses(ctx context.Context, xuid string) nativeinstall.GameLicenses {
+	return nativeinstall.CheckGameLicenses(ctx, filepath.Join(config.ConfigDir(), "microsoft-account"), xuid)
+}
+
+func (s *UserService) RefreshGameLicenses(ctx context.Context, xuid string) nativeinstall.GameLicenses {
+	return nativeinstall.RefreshGameLicenses(ctx, filepath.Join(config.ConfigDir(), "microsoft-account"), xuid)
 }
 
 func (s *UserService) GetGamertagByXuid(xuidStr string) string {
@@ -32,7 +67,7 @@ func (s *UserService) GetGamertagByXuid(xuidStr string) string {
 	if err != nil {
 		return ""
 	}
-	tag, err := launchercore.GetGamertagByXuid(xuid)
+	tag, err := xbox.GetGamertagByXuid(xuid)
 	if err != nil {
 		return ""
 	}
@@ -40,7 +75,7 @@ func (s *UserService) GetGamertagByXuid(xuidStr string) string {
 }
 
 func (s *UserService) GetLocalUserId() string {
-	id, err := launchercore.GetLocalUserId()
+	id, err := xbox.GetLocalUserId()
 	if err != nil {
 		return ""
 	}
@@ -48,7 +83,7 @@ func (s *UserService) GetLocalUserId() string {
 }
 
 func (s *UserService) GetLocalUserGamertag() string {
-	tag, err := launchercore.GetLocalUserGamertag()
+	tag, err := xbox.GetLocalUserGamertag()
 	if err != nil {
 		return ""
 	}
@@ -56,7 +91,7 @@ func (s *UserService) GetLocalUserGamertag() string {
 }
 
 func (s *UserService) GetLocalUserGamerPicture(size int) string {
-	bin, err := launchercore.GetLocalUserGamerPicture(size)
+	bin, err := xbox.GetLocalUserGamerPicture(size)
 	if err != nil {
 		return ""
 	}
@@ -136,7 +171,7 @@ func (s *UserService) GetUserGamertagMap(usersRoot string) map[string]string {
 			continue
 		}
 
-		raw, err := launchercore.GetGamertagByXuid(xuid)
+		raw, err := xbox.GetGamertagByXuid(xuid)
 		if err != nil {
 			continue
 		}
@@ -174,14 +209,14 @@ func (s *UserService) GetUserGamertagMap(usersRoot string) map[string]string {
 }
 
 func (s *UserService) ResetSession() string {
-	if err := launchercore.ResetSession(); err != nil {
+	if err := xbox.ResetSession(); err != nil {
 		return err.Error()
 	}
 	return ""
 }
 
 func (s *UserService) XUserGetState() int {
-	state, err := launchercore.XUserGetState()
+	state, err := xbox.XUserGetState()
 	if err != nil {
 		return 1
 	}
