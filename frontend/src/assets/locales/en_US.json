@@ -180,7 +180,8 @@
   },
   "downloadpage": {
     "error": {
-      "already_downloading": "This file is already downloading"
+      "already_downloading": "This file is already downloading",
+      "download_failed": "Download failed"
     },
     "changelog": {
       "title": "Latest Changelog"
@@ -202,12 +203,14 @@
       },
       "type": {
         "release": "Release",
-        "preview": "Preview"
+        "preview": "Preview",
+        "beta": "Beta"
       }
     },
     "topcontent": {
       "types": "Types",
       "types_all": "All",
+      "package_all": "All packages",
       "status": "Status",
       "status_all": "All",
       "status_downloaded": "Downloaded",
@@ -222,6 +225,14 @@
     },
     "bottomcontent": {
       "total": "Total {{count}} versions"
+    },
+    "uwp": {
+      "resolving": "Resolving…",
+      "install_title": "Install UWP Instance",
+      "install_button": "Install",
+      "folder_label": "Instance folder name",
+      "installing": "Extracting and registering…",
+      "install_success": "UWP instance installed"
     },
     "install_folder": {
       "confirm_title": "Install Instance",

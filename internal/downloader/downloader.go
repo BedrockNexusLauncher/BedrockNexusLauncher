@@ -62,6 +62,7 @@ type state struct {
 	url         string
 	dest        string
 	expectedMD5 string
+	verify      func(string) error
 	retryCount  int
 	total       int64
 	downloaded  int64
@@ -79,6 +80,16 @@ func NewManager(events Events, opts Options) *Manager {
 }
 
 func (m *Manager) Start(ctx context.Context, src string, dest string, md5sum string) string {
+	return m.start(ctx, src, dest, md5sum, nil)
+}
+
+// StartVerified publishes the final file only after a package-specific integrity
+// check. Progress and cancellation retain the same destination and event shape.
+func (m *Manager) StartVerified(ctx context.Context, src, dest string, verify func(string) error) string {
+	return m.start(ctx, src, dest, "", verify)
+}
+
+func (m *Manager) start(ctx context.Context, src string, dest string, md5sum string, verify func(string) error) string {
 	dir := filepath.Dir(dest)
 	if dir != "" {
 		_ = os.MkdirAll(dir, 0o755)
@@ -92,7 +103,7 @@ func (m *Manager) Start(ctx context.Context, src string, dest string, md5sum str
 		m.emitStatus("started", dest)
 		return dest
 	}
-	local := &state{ctx: ctx, url: src, dest: dest, expectedMD5: md5sum}
+	local := &state{ctx: ctx, url: src, dest: dest, expectedMD5: md5sum, verify: verify}
 	m.tasks[dest] = local
 	m.mu.Unlock()
 	go m.run(local)
@@ -412,6 +423,16 @@ func (m *Manager) run(s *state) {
 			} else {
 				// Failed to calculate MD5, maybe treat as error?
 				m.emitError(fmt.Sprintf("MD5 calculation failed: %v", err), local.dest)
+				m.finishRunning(local)
+				return
+			}
+		}
+
+		if local.verify != nil {
+			m.emitStatus("verifying", local.dest)
+			if err := local.verify(downloadDest); err != nil {
+				_ = os.Remove(downloadDest)
+				m.emitError(err.Error(), local.dest)
 				m.finishRunning(local)
 				return
 			}

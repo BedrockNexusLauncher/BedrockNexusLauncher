@@ -33,6 +33,7 @@ import (
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/skinpack"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/types"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/update"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/uwpdownload"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/vcruntime"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/versionlaunch"
 	"github.com/wailsapp/wails/v3/pkg/application"
@@ -108,6 +109,26 @@ func (a *Minecraft) GetDriveStats(root string) map[string]uint64 {
 
 func (a *Minecraft) FetchHistoricalVersions(preferCN bool) map[string]interface{} {
 	return mcservice.FetchHistoricalVersionsWithStore(preferCN)
+}
+
+func (a *Minecraft) FetchUWPVersions() ([]uwpdownload.Version, error) {
+	return mcservice.FetchUWPVersions()
+}
+
+func (a *Minecraft) StartUWPDownload(version, updateID, channel string) (string, error) {
+	return mcservice.StartUWPDownload(a.ctx, version, updateID, channel)
+}
+
+func (a *Minecraft) ResolveDownloadedUWP(version, channel string) string {
+	return mcservice.ResolveDownloadedUWP(version, channel)
+}
+
+func (a *Minecraft) DeleteDownloadedUWP(version, channel string) string {
+	return mcservice.DeleteDownloadedUWP(version, channel)
+}
+
+func (a *Minecraft) InstallExtractAppx(path, folderName, channel string) string {
+	return mcservice.InstallExtractAppx(a.ctx, path, folderName, channel)
 }
 
 func (a *Minecraft) FetchLeviLaminaVersionDB() map[string][]string {

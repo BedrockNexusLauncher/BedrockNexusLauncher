@@ -180,7 +180,8 @@
   },
   "downloadpage": {
     "error": {
-      "already_downloading": "این فایل هم‌اکنون در حال دانلود است"
+      "already_downloading": "این فایل در حال دانلود است",
+      "download_failed": "دانلود ناموفق بود"
     },
     "changelog": {
       "title": "آخرین تغییرات"
@@ -202,12 +203,14 @@
       },
       "type": {
         "release": "انتشار رسمی",
-        "preview": "پیش‌نمایش"
+        "preview": "پیش‌نمایش",
+        "beta": "بتا"
       }
     },
     "topcontent": {
       "types": "نوع",
       "types_all": "همه",
+      "package_all": "همه پکیج‌ها",
       "status": "وضعیت",
       "status_all": "همه",
       "status_downloaded": "دانلود شده",
@@ -222,6 +225,14 @@
     },
     "bottomcontent": {
       "total": "مجموعاً {{count}} نسخه"
+    },
+    "uwp": {
+      "resolving": "در حال آماده‌سازی…",
+      "install_title": "نصب نمونه UWP",
+      "install_button": "نصب",
+      "folder_label": "نام پوشه نمونه",
+      "installing": "در حال استخراج و ثبت…",
+      "install_success": "نمونه UWP نصب شد"
     },
     "install_folder": {
       "confirm_title": "نصب نمونه",

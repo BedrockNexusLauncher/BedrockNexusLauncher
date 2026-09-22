@@ -53,8 +53,14 @@ import { LAYOUT } from "@/constants/layout";
 import { COMPONENT_STYLES } from "@/constants/componentStyles";
 import { cn } from "@/utils/cn";
 import { ROUTES } from "@/constants/routes";
+import {
+  normalizePackageType,
+  normalizeVersionChannel,
+  versionStatusKey,
+  type PackageType,
+} from "@/utils/packageType";
 
-type ItemType = "Preview" | "Release";
+type ItemType = "Preview" | "Release" | "Beta";
 
 type VersionItem = {
   version: string;
@@ -63,6 +69,8 @@ type VersionItem = {
   short: string;
   timestamp?: number;
   md5?: string;
+  packageType: PackageType;
+  uuid?: string;
 };
 
 export const DownloadPage: React.FC = () => {
@@ -82,6 +90,20 @@ export const DownloadPage: React.FC = () => {
 
   const [query, setQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<"all" | ItemType>("all");
+  const [packageFilter, setPackageFilter] = useState<"all" | PackageType>(
+    "all",
+  );
+  const [uwpDownloaded, setUwpDownloaded] = useState<Set<string>>(new Set());
+  const [resolvingUWP, setResolvingUWP] = useState<Set<string>>(new Set());
+  const [uwpInstallOpen, setUwpInstallOpen] = useState(false);
+  const [uwpInstallTarget, setUwpInstallTarget] = useState<{
+    dest: string;
+    short: string;
+    channel: string;
+  } | null>(null);
+  const [uwpFolderName, setUwpFolderName] = useState("");
+  const [uwpInstalling, setUwpInstalling] = useState(false);
+  const [uwpInstallError, setUwpInstallError] = useState("");
   const [statusFilter, setStatusFilter] = useState<
     "all" | "downloaded" | "not_downloaded"
   >("all");
@@ -141,6 +163,7 @@ export const DownloadPage: React.FC = () => {
     short: string;
     type: ItemType;
     fileName: string;
+    packageType?: PackageType;
   } | null>(null);
   const [deleteError, setDeleteError] = useState<string>("");
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
@@ -329,39 +352,73 @@ export const DownloadPage: React.FC = () => {
     }
   };
 
+  const stripChannelPrefix = (version: string) =>
+    String(version).replace(/^(Preview|Release|Beta)\s*/, "");
+
+  const fetchVersionItems = async (
+    packageType: "all" | PackageType = packageFilter,
+  ): Promise<VersionItem[]> => {
+    if (packageType === "all") {
+      const catalogs = await Promise.all([
+        fetchVersionItems("gdk"),
+        fetchVersionItems("uwp"),
+      ]);
+      return [...catalogs[0], ...catalogs[1]];
+    }
+    if (packageType === "uwp") {
+      if (
+        !hasBackend ||
+        typeof (minecraft as any)?.FetchUWPVersions !== "function"
+      ) {
+        return [];
+      }
+      const data = (await (minecraft as any).FetchUWPVersions()) || [];
+      return (Array.isArray(data) ? data : []).map((v: any) => ({
+        version: String(v.version),
+        urls: [],
+        type: normalizeVersionChannel(v.type),
+        short: stripChannelPrefix(String(v.version)),
+        timestamp: undefined,
+        md5: undefined,
+        packageType: "uwp" as const,
+        uuid: String(v.uuid || v.UUID || ""),
+      }));
+    }
+    let data: any;
+    if (hasBackend && typeof minecraft?.FetchHistoricalVersions === "function") {
+      data = await minecraft.FetchHistoricalVersions(Boolean(isChinaUser));
+    } else {
+      data = { previewVersions: [], releaseVersions: [] };
+    }
+    const preview: VersionItem[] = (data.previewVersions || []).map(
+      (v: any) => ({
+        version: v.version,
+        urls: normalizeUrls(v.urls ?? v.url),
+        type: "Preview",
+        short: stripChannelPrefix(String(v.version)),
+        timestamp: v.timestamp,
+        md5: v.md5,
+        packageType: "gdk" as const,
+      }),
+    );
+    const release: VersionItem[] = (data.releaseVersions || []).map(
+      (v: any) => ({
+        version: v.version,
+        urls: normalizeUrls(v.urls ?? v.url),
+        type: "Release",
+        short: stripChannelPrefix(String(v.version)),
+        timestamp: v.timestamp,
+        md5: v.md5,
+        packageType: "gdk" as const,
+      }),
+    );
+    return [...preview, ...release];
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let data: any;
-        if (
-          hasBackend &&
-          typeof minecraft?.FetchHistoricalVersions === "function"
-        ) {
-          data = await minecraft.FetchHistoricalVersions(Boolean(isChinaUser));
-        } else {
-          data = { previewVersions: [], releaseVersions: [] };
-        }
-        const preview: VersionItem[] = (data.previewVersions || []).map(
-          (v: any) => ({
-            version: v.version,
-            urls: normalizeUrls(v.urls ?? v.url),
-            type: "Preview",
-            short: String(v.version).replace(/^Preview\s*/, ""),
-            timestamp: v.timestamp,
-            md5: v.md5,
-          }),
-        );
-        const release: VersionItem[] = (data.releaseVersions || []).map(
-          (v: any) => ({
-            version: v.version,
-            urls: normalizeUrls(v.urls ?? v.url),
-            type: "Release",
-            short: String(v.version).replace(/^Release\s*/, ""),
-            timestamp: v.timestamp,
-            md5: v.md5,
-          }),
-        );
-        const newItems = [...preview, ...release];
+        const newItems = await fetchVersionItems();
         setItems(newItems);
         try {
           (window as any).__llVersionItemsCache = newItems;
@@ -381,39 +438,29 @@ export const DownloadPage: React.FC = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const newItems = await fetchVersionItems();
+        if (!cancelled) {
+          setItems(newItems);
+          setPage(1);
+        }
+      } catch (e) {
+        console.error("Failed to refetch versions", e);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [packageFilter]);
+
   const reloadAll = async () => {
     refreshLLDB();
     try {
-      let data: any;
-      if (
-        hasBackend &&
-        typeof minecraft?.FetchHistoricalVersions === "function"
-      ) {
-        data = await minecraft.FetchHistoricalVersions(Boolean(isChinaUser));
-      } else {
-        data = { previewVersions: [], releaseVersions: [] };
-      }
-      const preview: VersionItem[] = (data.previewVersions || []).map(
-        (v: any) => ({
-          version: v.version,
-          urls: normalizeUrls(v.urls ?? v.url),
-          type: "Preview",
-          short: String(v.version).replace(/^Preview\s*/, ""),
-          timestamp: v.timestamp,
-          md5: v.md5,
-        }),
-      );
-      const release: VersionItem[] = (data.releaseVersions || []).map(
-        (v: any) => ({
-          version: v.version,
-          urls: normalizeUrls(v.urls ?? v.url),
-          type: "Release",
-          short: String(v.version).replace(/^Release\s*/, ""),
-          timestamp: v.timestamp,
-          md5: v.md5,
-        }),
-      );
-      const newItems = [...preview, ...release];
+      const newItems = await fetchVersionItems();
       setItems(newItems);
       try {
         (window as any).__llVersionItemsCache = newItems;
@@ -444,6 +491,9 @@ export const DownloadPage: React.FC = () => {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return itemsWithStatus
+      .filter((it) =>
+        packageFilter === "all" ? true : it.packageType === packageFilter,
+      )
       .filter((it) => (typeFilter === "all" ? true : it.type === typeFilter))
       .filter((it) =>
         statusFilter === "all"
@@ -517,9 +567,128 @@ export const DownloadPage: React.FC = () => {
       }
     );
   };
-  const hasStatus = (it: VersionItem) => versionStatusMap.has(it.short);
+  const uwpKey = (it: VersionItem) =>
+    versionStatusKey(it.short, it.type, it.packageType);
+  const openUwpInstallPrompt = (
+    dest: string,
+    short: string,
+    channel: string,
+  ) => {
+    setUwpInstallTarget({ dest, short, channel });
+    setUwpFolderName(
+      short.replace(/[^\w.\-() ]/g, "").trim() || short,
+    );
+    setUwpInstallError("");
+    setUwpInstallOpen(true);
+  };
 
-  const isDownloaded = (it: VersionItem) => getVersionStatus(it).isDownloaded;
+  const handleUwpAction = async (item: VersionItem) => {
+    if (!hasBackend) return;
+    const channel = item.type.toLowerCase();
+    const key = uwpKey(item);
+    setResolvingUWP((prev) => new Set(prev).add(key));
+    try {
+      const existing = await (minecraft as any).ResolveDownloadedUWP(
+        item.short,
+        channel,
+      );
+      if (existing) {
+        setUwpDownloaded((prev) => new Set(prev).add(key));
+        openUwpInstallPrompt(String(existing), item.short, channel);
+        return;
+      }
+      if (!item.uuid) {
+        addToast({
+          description: "ERR_UWP_INVALID_VERSION",
+          color: "danger",
+        });
+        return;
+      }
+      const dest = (await (minecraft as any).StartUWPDownload(
+        item.version,
+        item.uuid,
+        channel,
+      )) as unknown as string;
+      if (!dest) {
+        addToast({
+          description: t("downloadpage.error.download_failed"),
+          color: "danger",
+        });
+        return;
+      }
+      const doneDest = await new Promise<string>((resolve, reject) => {
+        const offDone = Events.On("msixvc_download_done", (ev: any) => {
+          const raw = ev?.data;
+          const d =
+            typeof raw === "string" ? String(raw) : String(raw?.Dest || "");
+          if (d === dest) {
+            offDone();
+            offErr();
+            resolve(d);
+          }
+        });
+        const offErr = Events.On("msixvc_download_error", (ev: any) => {
+          const raw = ev?.data;
+          const d =
+            typeof raw === "string" ? "" : String(raw?.Dest || "");
+          if (!d || d === dest) {
+            offDone();
+            offErr();
+            reject(new Error(typeof raw === "string" ? raw : String(raw?.Error || "Download failed")));
+          }
+        });
+      });
+      setUwpDownloaded((prev) => new Set(prev).add(key));
+      openUwpInstallPrompt(doneDest, item.short, channel);
+    } catch (e: any) {
+      addToast({
+        description: e?.message || t("downloadpage.error.download_failed"),
+        color: "danger",
+      });
+    } finally {
+      setResolvingUWP((prev) => {
+        const next = new Set(prev);
+        next.delete(key);
+        return next;
+      });
+    }
+  };
+
+  const confirmUwpInstall = async () => {
+    if (!uwpInstallTarget || !hasBackend) return;
+    const folder = uwpFolderName.trim();
+    if (!folder) return;
+    setUwpInstalling(true);
+    setUwpInstallError("");
+    try {
+      const code = (await (minecraft as any).InstallExtractAppx(
+        uwpInstallTarget.dest,
+        folder,
+        uwpInstallTarget.channel,
+      )) as unknown as string;
+      if (code) {
+        setUwpInstallError(String(code));
+        return;
+      }
+      setUwpInstallOpen(false);
+      addToast({
+        title: t("uwp.install_success"),
+        color: "success",
+      });
+    } catch (e: any) {
+      setUwpInstallError(e?.message || "Install failed");
+    } finally {
+      setUwpInstalling(false);
+    }
+  };
+  const hasStatus = (it: VersionItem) =>
+    it.packageType === "uwp"
+      ? uwpDownloaded.has(uwpKey(it)) || versionStatusMap.has(it.short)
+      : versionStatusMap.has(it.short);
+
+  const isDownloaded = (it: VersionItem) =>
+    getVersionStatus(it).isDownloaded ||
+    (it.packageType === "uwp" && uwpDownloaded.has(uwpKey(it)));
   const isInstalled = (it: VersionItem) => getVersionStatus(it).isInstalled;
 
   const cardVariants: Variants = {
@@ -647,6 +816,47 @@ export const DownloadPage: React.FC = () => {
                       <DropdownItem key="Preview">
                         {t("downloadpage.customappx.modal.1.body.select.item2")}
                       </DropdownItem>
+                      <DropdownItem
+                        key="Beta"
+                        isDisabled={packageFilter === "gdk"}
+                      >
+                        Beta
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                  <Dropdown classNames={COMPONENT_STYLES.dropdown}>
+                    <DropdownTrigger>
+                      <Button
+                        radius="full"
+                        variant="flat"
+                        className="bg-default-100/50 dark:bg-zinc-800/50 text-default-600 dark:text-zinc-200 font-medium shrink-0 hover:bg-default-200/50 dark:hover:bg-zinc-700/50 transition-colors"
+                      >
+                        {packageFilter === "all"
+                          ? t("downloadpage.topcontent.package_all")
+                          : packageFilter.toUpperCase()}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      disallowEmptySelection
+                      selectionMode="single"
+                      selectedKeys={[packageFilter]}
+                      onSelectionChange={(keys) => {
+                        const k = Array.from(keys)[0] as
+                          | "all"
+                          | PackageType;
+                        if (k) {
+                          setPackageFilter(k);
+                          if (k === "gdk" && typeFilter === "Beta") {
+                            setTypeFilter("all");
+                          }
+                        }
+                      }}
+                    >
+                      <DropdownItem key="all">
+                        {t("downloadpage.topcontent.package_all")}
+                      </DropdownItem>
+                      <DropdownItem key="gdk">GDK</DropdownItem>
+                      <DropdownItem key="uwp">UWP</DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
                   <Dropdown classNames={COMPONENT_STYLES.dropdown}>
@@ -798,7 +1008,7 @@ export const DownloadPage: React.FC = () => {
                   }
                 >
                   {paged.map((item, index) => (
-                    <TableRow key={`${item.type}-${item.short}`}>
+                    <TableRow key={`${item.packageType}-${item.type}-${item.short}`}>
                       <TableCell>
                         <motion.div
                           custom={index}
@@ -828,7 +1038,9 @@ export const DownloadPage: React.FC = () => {
                           >
                             {item.type === "Release"
                               ? t("downloadpage.table.type.release")
-                              : t("downloadpage.table.type.preview")}
+                              : item.type === "Beta"
+                                ? t("downloadpage.table.type.beta")
+                                : t("downloadpage.table.type.preview")}
                           </Chip>
                         </motion.div>
                       </TableCell>
@@ -874,7 +1086,11 @@ export const DownloadPage: React.FC = () => {
                           animate="visible"
                           variants={rowVariants}
                         >
-                          {isLLSupported(item.short) ? (
+                          {item.packageType === "uwp" ? (
+                            <span className="text-default-300 dark:text-zinc-600 ms-2">
+                              -
+                            </span>
+                          ) : isLLSupported(item.short) ? (
                             <div className="flex items-center gap-1.5 text-primary-600 dark:text-primary-400 bg-primary-100/50 dark:bg-primary-900/20 px-2 py-1 rounded-lg w-fit">
                               <span className="text-small">LeviLamina</span>
                             </div>
@@ -893,7 +1109,76 @@ export const DownloadPage: React.FC = () => {
                           variants={rowVariants}
                           className="flex justify-end"
                         >
-                          {isDownloaded(item) ? (
+                          {item.packageType === "uwp" ? (
+                            <ButtonGroup
+                              radius="full"
+                              size="sm"
+                              variant="flat"
+                              className="bg-transparent"
+                            >
+                              <Button
+                                className="px-2 h-8 font-medium text-default-700 dark:text-zinc-200 bg-default-100 dark:bg-zinc-700/50 w-[88px]"
+                                startContent={<FaBoxOpen size={14} />}
+                                isDisabled={
+                                  resolvingUWP.has(uwpKey(item))
+                                }
+                                isLoading={resolvingUWP.has(uwpKey(item))}
+                                onPress={() => handleUwpAction(item)}
+                              >
+                                {resolvingUWP.has(uwpKey(item))
+                                  ? t("uwp.resolving")
+                                  : isDownloaded(item)
+                                    ? t("downloadpage.mirror.install_button")
+                                    : t("downloadmodal.download_button")}
+                              </Button>
+                              <Dropdown classNames={COMPONENT_STYLES.dropdown}>
+                                <DropdownTrigger>
+                                  <Button
+                                    isIconOnly
+                                    className="h-8 min-w-8 w-8 px-0 bg-default-100 dark:bg-zinc-700/50"
+                                  >
+                                    <FaChevronDown size={12} />
+                                  </Button>
+                                </DropdownTrigger>
+                                <DropdownMenu
+                                  aria-label="Actions"
+                                  onAction={async (key) => {
+                                    if (String(key) !== "delete_msixvc") return;
+                                    setDeleteError("");
+                                    setDeleteLoading(false);
+                                    let fname = "";
+                                    try {
+                                      if (hasBackend) {
+                                        fname = await (
+                                          minecraft as any
+                                        ).ResolveDownloadedUWP(
+                                          item.short,
+                                          String(item.type).toLowerCase(),
+                                        );
+                                      }
+                                    } catch {}
+                                    setDeleteItem({
+                                      short: item.short,
+                                      type: item.type,
+                                      packageType: "uwp",
+                                      fileName:
+                                        fname ||
+                                        `Minecraft-UWP-${item.type}-${item.short}.appx`,
+                                    });
+                                    deleteDisclosure.onOpen();
+                                  }}
+                                >
+                                  <DropdownItem
+                                    key="delete_msixvc"
+                                    color="danger"
+                                    startContent={<FaTrash size={12} />}
+                                  >
+                                    {t("downloadpage.actions.delete_installer")}
+                                  </DropdownItem>
+                                </DropdownMenu>
+                              </Dropdown>
+                            </ButtonGroup>
+                          ) : isDownloaded(item) ? (
                             <ButtonGroup
                               radius="full"
                               size="sm"
@@ -1331,9 +1616,11 @@ export const DownloadPage: React.FC = () => {
           title={t("downloadpage.delete.title")}
           description={t("downloadpage.delete.body")}
           itemName={
-            deleteItem?.fileName?.toLowerCase()?.endsWith(".msixvc")
-              ? deleteItem?.fileName
-              : `${deleteItem?.fileName || ""}.msixvc`
+            deleteItem?.packageType === "uwp"
+              ? String(deleteItem?.fileName || "")
+              : deleteItem?.fileName?.toLowerCase()?.endsWith(".msixvc")
+                ? deleteItem?.fileName
+                : `${deleteItem?.fileName || ""}.msixvc`
           }
           warning={t("downloadpage.delete.warning")}
           isPending={deleteLoading}
@@ -1346,21 +1633,48 @@ export const DownloadPage: React.FC = () => {
             setDeleteError("");
             setDeleteLoading(true);
             try {
-              if (typeof minecraft?.DeleteDownloadedMsixvc !== "function") {
-                setDeleteError("ERR_WRITE_TARGET");
-                setDeleteLoading(false);
-                throw new Error("Function not found");
+              let msg: string;
+              if (deleteItem?.packageType === "uwp") {
+                if (
+                  typeof (minecraft as any)?.DeleteDownloadedUWP !== "function"
+                ) {
+                  setDeleteError("ERR_WRITE_TARGET");
+                  setDeleteLoading(false);
+                  throw new Error("Function not found");
+                }
+                msg = await (minecraft as any).DeleteDownloadedUWP(
+                  String(deleteItem?.short || ""),
+                  String(deleteItem?.type).toLowerCase(),
+                );
+              } else {
+                if (typeof minecraft?.DeleteDownloadedMsixvc !== "function") {
+                  setDeleteError("ERR_WRITE_TARGET");
+                  setDeleteLoading(false);
+                  throw new Error("Function not found");
+                }
+                msg = await minecraft.DeleteDownloadedMsixvc(
+                  `${String(deleteItem?.type)} ${String(deleteItem?.short)}`,
+                  String(deleteItem?.type).toLowerCase(),
+                );
               }
-              const msg: string = await minecraft.DeleteDownloadedMsixvc(
-                `${String(deleteItem?.type)} ${String(deleteItem?.short)}`,
-                String(deleteItem?.type).toLowerCase(),
-              );
               if (msg) {
                 setDeleteError(msg);
                 setDeleteLoading(false);
                 throw new Error(msg);
               }
               setDeleteLoading(false);
+              if (deleteItem?.packageType === "uwp" && deleteItem) {
+                const key = versionStatusKey(
+                  deleteItem.short,
+                  deleteItem.type,
+                  "uwp",
+                );
+                setUwpDownloaded((prev) => {
+                  const next = new Set(prev);
+                  next.delete(key);
+                  return next;
+                });
+              }
               try {
                 await refreshOne(
                   String(deleteItem?.short || ""),
@@ -1533,6 +1847,60 @@ export const DownloadPage: React.FC = () => {
           )),
           document.body,
         )}
+
+        {/* UWP install prompt */}
+        <UnifiedModal
+          isOpen={uwpInstallOpen}
+          onOpenChange={(open) => {
+            if (!open && !uwpInstalling) setUwpInstallOpen(false);
+          }}
+          title={t("uwp.install_title")}
+          size="md"
+          footer={
+            <div className="flex w-full justify-end gap-2">
+              <Button
+                variant="flat"
+                onPress={() => setUwpInstallOpen(false)}
+                isDisabled={uwpInstalling}
+              >
+                {t("common.close")}
+              </Button>
+              <Button
+                color="primary"
+                onPress={confirmUwpInstall}
+                isDisabled={!uwpFolderName.trim() || uwpInstalling}
+                isLoading={uwpInstalling}
+              >
+                {t("uwp.install_button")}
+              </Button>
+            </div>
+          }
+        >
+          <div className="flex flex-col gap-4">
+            {uwpInstallTarget && (
+              <p className="text-small text-default-500">
+                {uwpInstallTarget.short} · {uwpInstallTarget.channel}
+              </p>
+            )}
+            <Input
+              label={t("uwp.folder_label")}
+              placeholder="my-uwp"
+              value={uwpFolderName}
+              onValueChange={setUwpFolderName}
+              isDisabled={uwpInstalling}
+              classNames={COMPONENT_STYLES.input}
+            />
+            {uwpInstalling && (
+              <div className="flex items-center gap-2 text-small text-default-500">
+                <Spinner size="sm" />
+                {t("uwp.installing")}
+              </div>
+            )}
+            {uwpInstallError && (
+              <p className="text-small text-danger">{uwpInstallError}</p>
+            )}
+          </div>
+        </UnifiedModal>
       </PageContainer>
     </>
   );
