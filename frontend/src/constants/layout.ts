@@ -10,10 +10,10 @@ export const LAYOUT = {
     },
   },
   GLASS_CARD: {
-    BASE: "border border-black/5 dark:border-white/10 shadow-sm bg-white/50 dark:bg-zinc-950/50 rounded-4xl",
+    BASE: "material-panel border border-black/5 dark:border-white/10 shadow-sm bg-white/50 dark:bg-zinc-950/50 rounded-4xl",
     HEADER: "p-6 block border-b border-default-200 dark:border-white/10",
     BODY: "flex flex-col gap-4 p-4",
   },
   CARD_HOVER: "card-hover",
-  NAVBAR_BG: "bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md",
+  NAVBAR_BG: "material-panel bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md",
 };

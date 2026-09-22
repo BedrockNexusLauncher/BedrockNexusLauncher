@@ -26,6 +26,9 @@ import { useLayoutMode } from "@/hooks/useLayoutMode";
 import { useAnimations } from "@/hooks/useAnimations";
 import { useThemedStrokes } from "@/hooks/useThemedStrokes";
 import { useBackgroundImage, getFitStyles } from "@/hooks/useBackgroundImage";
+import { useBackgroundAppearance } from "@/hooks/useBackgroundAppearance";
+import { useDocumentAppearance } from "@/hooks/useDocumentAppearance";
+import { BackgroundContext } from "@/utils/BackgroundContext";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { useAppModals } from "@/hooks/useAppModals";
@@ -131,6 +134,35 @@ function App() {
     lightBackgroundBaseOpacity,
     darkBackgroundBaseOpacity,
   } = useBackgroundImage();
+
+  const { profiles } = useBackgroundAppearance();
+  const appearanceMode = resolvedTheme === "dark" ? "dark" : "light";
+  const appearance = profiles[appearanceMode];
+  const hasWallpaper =
+    Boolean(bgData) && backgroundOpacity > 0;
+  useDocumentAppearance(
+    hasWallpaper,
+    appearance,
+    appearanceMode,
+    backgroundBrightness,
+    backgroundBlur,
+    backgroundOpacity,
+  );
+  const backgroundValue = {
+    bgData,
+    backgroundReady,
+    backgroundFitMode,
+    backgroundBlur,
+    backgroundBrightness,
+    backgroundOpacity,
+    lightBackgroundBaseMode,
+    darkBackgroundBaseMode,
+    lightBackgroundBaseColor,
+    darkBackgroundBaseColor,
+    lightBackgroundBaseOpacity,
+    darkBackgroundBaseOpacity,
+    getFitStyles,
+  };
 
   const {
     navLocked,
@@ -238,6 +270,7 @@ function App() {
 
   return (
     <KeybindingProvider>
+      <BackgroundContext.Provider value={backgroundValue}>
       <CurrentVersionProvider>
         <ModIntelligenceProvider>
           <GlobalShortcuts tryNavigate={tryNavigate} />
@@ -549,6 +582,7 @@ function App() {
           </VersionStatusProvider>
         </ModIntelligenceProvider>
       </CurrentVersionProvider>
+      </BackgroundContext.Provider>
     </KeybindingProvider>
   );
 }

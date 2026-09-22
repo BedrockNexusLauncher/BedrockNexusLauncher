@@ -1,0 +1,67 @@
+/* Material personalization recipes. Published on :root by
+   useDocumentAppearance; surfaces opt in with .material-panel so the
+   no-wallpaper look stays exactly as before. */
+
+:root[data-material-scope][data-wallpaper-active="true"] {
+  --material-opacity: var(--wallpaper-surface-opacity);
+  --material-panel: rgb(var(--wallpaper-surface-rgb) / var(--material-opacity));
+  --material-inset: rgb(
+    var(--wallpaper-surface-rgb) / calc(var(--material-opacity) * 0.45)
+  );
+  --material-filter: blur(var(--wallpaper-surface-blur));
+}
+
+:root[data-wallpaper-active="true"] .material-panel {
+  background-color: var(--material-panel);
+  -webkit-backdrop-filter: var(--material-filter);
+  backdrop-filter: var(--material-filter);
+  border-color: rgb(var(--wallpaper-surface-rgb) / 0.35);
+}
+
+:root[data-wallpaper-active="true"] .material-panel .material-panel {
+  background-color: var(--material-inset);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.wallpaper-layers {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.wallpaper-scrim {
+  background: rgb(var(--wallpaper-surface-rgb));
+  opacity: var(--wallpaper-overlay-opacity);
+}
+
+.appearance-preview {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid rgb(128 128 128 / 0.35);
+  color: var(--wallpaper-ink);
+  min-height: 13rem;
+}
+.appearance-preview .wallpaper-layers {
+  z-index: 0;
+}
+.material-preview-card {
+  background-color: var(--material-panel, rgb(128 128 128 / 0.25));
+  -webkit-backdrop-filter: var(--material-filter, none);
+  backdrop-filter: var(--material-filter, none);
+  border-color: rgb(128 128 128 / 0.3);
+}
+.material-preview-pill {
+  background-color: rgb(var(--wallpaper-control-rgb, 128 128 128) / 0.6);
+}
+
+/* Accessibility: drop translucency instead of guessing fallbacks. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :root[data-material-scope][data-wallpaper-active="true"] {
+    --material-opacity: 1;
+    --material-filter: none;
+  }
+}

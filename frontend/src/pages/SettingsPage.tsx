@@ -66,6 +66,7 @@ import { UnifiedModal } from "@/components/UnifiedModal";
 import { ReportProblemModal } from "@/components/ReportProblemModal";
 import { PageHeader } from "@/components/PageHeader";
 import { PageContainer } from "@/components/PageContainer";
+import { MaterialSettings } from "@/components/MaterialSettings";
 import { LAYOUT } from "@/constants/layout";
 import { THEMES, THEME_GROUPS } from "@/constants/themes";
 import { COMPONENT_STYLES } from "@/constants/componentStyles";
@@ -933,6 +934,9 @@ export const SettingsPage: React.FC = () => {
                           }}
                         />
                       </div>
+
+                      {/* Material personalization */}
+                      <MaterialSettings />
 
                       {/* Background Image Card */}
                       <div className="flex flex-col gap-4 p-5 mt-6 rounded-3xl bg-default-200/10 border border-default-200/50">

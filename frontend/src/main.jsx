@@ -1,4 +1,5 @@
 import "./style.css";
+import "./material.css";
 import React, { startTransition } from "react";
 import { createRoot } from "react-dom/client";
 import { ROUTES } from "./constants/routes";
