@@ -361,7 +361,7 @@
       }
     },
     "lip": {
-      "title": "lip",
+      "title": "Bedrinth",
       "install_button": "インストール",
       "check_button": "確認",
       "cache_clean_button": "キャッシュを削除",
@@ -1258,8 +1258,8 @@
     },
     "guide": {
       "open_button": "開発者ガイド",
-      "title": "LIP 開発者ガイド",
-      "description": "自分の Mod を Bedrock Nexus の LIP ページに掲載したい場合は、LIP の package_manifest 仕様に従って公開してください。",
+      "title": "Bedrinth 開発者ガイド",
+      "description": "自分の Mod を Bedrock Nexus の Bedrinth ページに掲載したい場合は、LIP の package_manifest 仕様に従って公開してください。",
       "manifest_hint": "このダイアログは開発者向けの簡易案内です。フィールド名、必須項目、例、検証ルールの詳細は公式ドキュメントを参照してください。",
       "variant_hint": "variant の label に client を含む場合に限り、ランチャーに収録されます。デフォルトでは \"label\": \"client\" を使用し、サブ拡張は \"label\": \"client_xxxx\" または \"label\": \"client\\xxxx\" を使用してください。",
       "docs_button": "完全な仕様を見る",

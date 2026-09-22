@@ -374,7 +374,7 @@
       }
     },
     "lip": {
-      "title": "lip",
+      "title": "Bedrinth",
       "install_button": "설치",
       "check_button": "확인",
       "cache_clean_button": "캐시 지우기",
@@ -1253,8 +1253,8 @@
     },
     "guide": {
       "open_button": "개발자 가이드",
-      "title": "LIP 개발자 가이드",
-      "description": "모드가 Bedrock Nexus 의 LIP 페이지에 나타나도록 하려면 LIP package_manifest 사양에 따라 게시하세요.",
+      "title": "Bedrinth 개발자 가이드",
+      "description": "모드가 Bedrock Nexus 의 Bedrinth 페이지에 나타나도록 하려면 LIP package_manifest 사양에 따라 게시하세요.",
       "manifest_hint": "이 대화 상자는 개발자를 위한 빠른 개요일 뿐입니다. 필드 이름, 필수 엔트리, 예제 및 유효성 검사 규칙은 공식 문서에 정의되어 있습니다.",
       "variant_hint": "변형은 레이블에 client 가 포함된 경우에만 런처에서 인덱싱됩니다. 기본적으로 \\\"label\\\": \\\"client\\\"를 사용하세요; 하위 확장용으로는 \\\"label\\\": \\\"client_xxxx\\\" 또는 \\\"label\\\": \\\"client\\\\xxxx\\\"를 사용하세요.",
       "docs_button": "전체 사양 보기",

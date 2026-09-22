@@ -373,7 +373,7 @@
       }
     },
     "lip": {
-      "title": "lip",
+      "title": "Bedrinth",
       "install_button": "Install",
       "check_button": "Check",
       "cache_clean_button": "Clean Cache",
@@ -1339,8 +1339,8 @@
     },
     "guide": {
       "open_button": "Developer Guide",
-      "title": "LIP Developer Guide",
-      "description": "If you want your mod to appear on Bedrock Nexus's LIP page, publish it according to the LIP package_manifest specification.",
+      "title": "Bedrinth Developer Guide",
+      "description": "If you want your mod to appear on Bedrock Nexus's Bedrinth page, publish it according to the LIP package_manifest specification.",
       "manifest_hint": "This dialog is only a quick overview for developers. Field names, required entries, examples, and validation rules are defined in the official documentation.",
       "variant_hint": "A variant is indexed by the launcher only when its label contains client. By default, use \"label\": \"client\"; for sub-extensions, use \"label\": \"client_xxxx\" or \"label\": \"client\\xxxx\".",
       "docs_button": "View Full Spec",

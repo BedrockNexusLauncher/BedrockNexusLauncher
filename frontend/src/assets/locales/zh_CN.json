@@ -373,7 +373,7 @@
       }
     },
     "lip": {
-      "title": "lip",
+      "title": "Bedrinth",
       "install_button": "安装",
       "check_button": "检查",
       "cache_clean_button": "清理缓存",
@@ -1274,8 +1274,8 @@
     },
     "guide": {
       "open_button": "开发者指南",
-      "title": "LIP 开发者指南",
-      "description": "如果你希望自己的模组出现在 Bedrock Nexus 的 LIP 页面中，请按照 LIP 的 package_manifest 规范发布。",
+      "title": "Bedrinth 开发者指南",
+      "description": "如果你希望自己的模组出现在 Bedrock Nexus 的 Bedrinth 页面中，请按照 LIP 的 package_manifest 规范发布。",
       "manifest_hint": "这个弹窗只提供面向开发者的快速说明。字段命名、必填项、示例与校验细则请以官方文档为准。",
       "variant_hint": "仅当 variant 的 label 包含 client 时，才会被启动器收录。默认情况下请使用 \"label\": \"client\"；子扩展请使用 \"label\": \"client_xxxx\" 或 \"label\": \"client\\xxxx\"。",
       "docs_button": "查看完整规范",

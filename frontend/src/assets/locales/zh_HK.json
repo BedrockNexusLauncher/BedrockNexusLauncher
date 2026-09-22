@@ -361,7 +361,7 @@
       }
     },
     "lip": {
-      "title": "lip",
+      "title": "Bedrinth",
       "install_button": "安裝",
       "check_button": "檢查",
       "cache_clean_button": "清理快取",
@@ -1274,8 +1274,8 @@
     },
     "guide": {
       "open_button": "開發者指南",
-      "title": "LIP 開發者指南",
-      "description": "如果你希望自己的模組出現在 Bedrock Nexus 的 LIP 頁面中，請按照 LIP 的 package_manifest 規範發佈。",
+      "title": "Bedrinth 開發者指南",
+      "description": "如果你希望自己的模組出現在 Bedrock Nexus 的 Bedrinth 頁面中，請按照 LIP 的 package_manifest 規範發佈。",
       "manifest_hint": "這個彈窗只提供面向開發者的快速說明。欄位命名、必填項、示例與校驗細則請以官方文件為準。",
       "variant_hint": "僅當 variant 的 label 包含 client 時，才會被啟動器收錄。預設情況下請使用 \"label\": \"client\"；子擴展請使用 \"label\": \"client_xxxx\" 或 \"label\": \"client\\xxxx\"。",
       "docs_button": "查看完整規範",

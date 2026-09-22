@@ -374,7 +374,7 @@
       }
     },
     "lip": {
-      "title": "lip",
+      "title": "Bedrinth",
       "install_button": "Instalar",
       "check_button": "Verificar",
       "cache_clean_button": "Limpar cache",
@@ -1253,8 +1253,8 @@
     },
     "guide": {
       "open_button": "Guia do programador",
-      "title": "Guia do programador LIP",
-      "description": "Se deseja que o seu mod apareça na página LIP do Bedrock Nexus, publique-o de acordo com as especificações package_manifest do LIP.",
+      "title": "Guia do programador Bedrinth",
+      "description": "Se deseja que o seu mod apareça na página Bedrinth do Bedrock Nexus, publique-o de acordo com as especificações package_manifest do LIP.",
       "manifest_hint": "Esta caixa de diálogo é apenas uma visão geral rápida para programadores. Os nomes dos campos, entradas obrigatórias, exemplos e regras de validação são definidos na documentação oficial.",
       "variant_hint": "Uma variante é indexada pelo launcher apenas quando o seu rótulo contém client. Por predefinição use \\\"label\\\": \\\"client\\\"; para sub-extensões use \\\"label\\\": \\\"client_xxxx\\\" ou \\\"label\\\": \\\"client\\\\xxxx\\\".",
       "docs_button": "Ver especificações completas",
