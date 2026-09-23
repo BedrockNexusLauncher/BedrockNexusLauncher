@@ -461,16 +461,23 @@ export default function ServersPage() {
             </div>
           </div>
 
-          <div className="mt-2 text-default-500 dark:text-zinc-400 text-sm flex flex-wrap items-center gap-2">
-            <span>{t("contentpage.current_version")}:</span>
-            <span className="font-medium text-default-700 dark:text-zinc-200 bg-default-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md">
-              {currentVersionName || t("contentpage.none")}
-            </span>
-            <span className="text-default-300">|</span>
-            <span>{t("contentpage.isolation")}:</span>
-            <span className="font-medium text-default-700 dark:text-zinc-200 bg-default-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md">
-              {roots.isIsolation ? t("common.yes") : t("common.no")}
-            </span>
+          <div className="mt-3 flex flex-wrap items-stretch gap-2 text-sm">
+            <div className="flex flex-col gap-0.5 rounded-xl bg-default-100 dark:bg-zinc-800 px-3 py-1.5 min-w-0">
+              <span className="text-[11px] text-default-500 dark:text-zinc-400">
+                {t("contentpage.current_version")}
+              </span>
+              <span className="font-medium text-default-700 dark:text-zinc-200 truncate">
+                {currentVersionName || t("contentpage.none")}
+              </span>
+            </div>
+            <div className="flex flex-col gap-0.5 rounded-xl bg-default-100 dark:bg-zinc-800 px-3 py-1.5 min-w-0">
+              <span className="text-[11px] text-default-500 dark:text-zinc-400">
+                {t("contentpage.isolation")}
+              </span>
+              <span className="font-medium text-default-700 dark:text-zinc-200">
+                {roots.isIsolation ? t("common.yes") : t("common.no")}
+              </span>
+            </div>
           </div>
         </CardBody>
       </Card>
