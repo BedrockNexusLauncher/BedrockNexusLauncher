@@ -78,78 +78,82 @@ export default function ContentPage() {
                       titleClassName="pb-1"
                     />
                   </div>
-                  <div className="mt-2 text-default-500 dark:text-zinc-400 text-sm flex flex-wrap items-center gap-2">
-                    <span>{t("contentpage.current_version")}:</span>
-                    <span className="font-medium text-default-700 dark:text-zinc-200 bg-default-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md">
-                      {cp.currentVersionName || t("contentpage.none")}
-                    </span>
-                    <span className="text-default-300 dark:text-zinc-600">
-                      |
-                    </span>
-                    <span>{t("contentpage.isolation")}:</span>
-                    <span className="font-medium text-default-700 dark:text-zinc-200 bg-default-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md">
-                      {cp.roots.isIsolation ? t("common.yes") : t("common.no")}
-                    </span>
-                    <span className="text-default-300 dark:text-zinc-600">
-                      |
-                    </span>
-                    <span>{t("contentpage.select_player")}:</span>
-                    <Dropdown classNames={COMPONENT_STYLES.dropdown}>
-                      <DropdownTrigger>
-                        <Button
-                          size="sm"
-                          className={cn(
-                            COMPONENT_STYLES.dropdownTriggerButton,
-                            "h-6 min-w-0 px-2 text-small font-medium text-default-700 dark:text-zinc-200",
-                          )}
-                        >
-                          {cp.selectedPlayer
-                            ? resolvePlayerDisplayName(
-                                cp.selectedPlayer,
-                                cp.playerGamertagMap,
-                              )
-                            : t("contentpage.no_players")}
-                        </Button>
-                      </DropdownTrigger>
-                      <DropdownMenu
-                        aria-label="Players"
-                        selectionMode="single"
-                        selectedKeys={new Set([cp.selectedPlayer])}
-                        onSelectionChange={(keys) => {
-                          const arr = Array.from(
-                            keys as unknown as Set<string>,
-                          );
-                          const next = arr[0] || "";
-                          if (typeof next === "string") cp.onChangePlayer(next);
-                        }}
-                      >
-                        {cp.players.length ? (
-                          cp.players.map((p) => (
-                            <DropdownItem
-                              key={p}
-                              textValue={resolvePlayerDisplayName(
-                                p,
-                                cp.playerGamertagMap,
-                              )}
-                            >
-                              {resolvePlayerDisplayName(
-                                p,
-                                cp.playerGamertagMap,
-                              )}
-                            </DropdownItem>
-                          ))
-                        ) : (
-                          <DropdownItem key="none" isDisabled>
-                            {t("contentpage.no_players")}
-                          </DropdownItem>
-                        )}
-                      </DropdownMenu>
-                    </Dropdown>
-                    {!cp.selectedPlayer && (
-                      <span className="text-danger-500 text-xs">
-                        ({t("contentpage.require_player_for_world_import")})
+                  <div className="mt-3 flex flex-wrap items-stretch gap-2 text-sm">
+                    <div className="flex flex-col gap-0.5 rounded-xl bg-default-100 dark:bg-zinc-800 px-3 py-1.5 min-w-0">
+                      <span className="text-[11px] text-default-500 dark:text-zinc-400">
+                        {t("contentpage.current_version")}
                       </span>
-                    )}
+                      <span className="font-medium text-default-700 dark:text-zinc-200 truncate">
+                        {cp.currentVersionName || t("contentpage.none")}
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-0.5 rounded-xl bg-default-100 dark:bg-zinc-800 px-3 py-1.5 min-w-0">
+                      <span className="text-[11px] text-default-500 dark:text-zinc-400">
+                        {t("contentpage.isolation")}
+                      </span>
+                      <span className="font-medium text-default-700 dark:text-zinc-200">
+                        {cp.roots.isIsolation ? t("common.yes") : t("common.no")}
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-0.5 rounded-xl bg-default-100 dark:bg-zinc-800 px-3 py-1.5 min-w-0">
+                      <span className="text-[11px] text-default-500 dark:text-zinc-400">
+                        {t("contentpage.select_player")}
+                      </span>
+                      <Dropdown classNames={COMPONENT_STYLES.dropdown}>
+                        <DropdownTrigger>
+                          <Button
+                            size="sm"
+                            variant="light"
+                            className="h-6 min-w-0 px-0 text-small font-medium text-default-700 dark:text-zinc-200"
+                          >
+                            {cp.selectedPlayer
+                              ? resolvePlayerDisplayName(
+                                  cp.selectedPlayer,
+                                  cp.playerGamertagMap,
+                                )
+                              : t("contentpage.no_players")}
+                          </Button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                          aria-label="Players"
+                          selectionMode="single"
+                          selectedKeys={new Set([cp.selectedPlayer])}
+                          onSelectionChange={(keys) => {
+                            const arr = Array.from(
+                              keys as unknown as Set<string>,
+                            );
+                            const next = arr[0] || "";
+                            if (typeof next === "string") cp.onChangePlayer(next);
+                          }}
+                        >
+                          {cp.players.length ? (
+                            cp.players.map((p) => (
+                              <DropdownItem
+                                key={p}
+                                textValue={resolvePlayerDisplayName(
+                                  p,
+                                  cp.playerGamertagMap,
+                                )}
+                              >
+                                {resolvePlayerDisplayName(
+                                  p,
+                                  cp.playerGamertagMap,
+                                )}
+                              </DropdownItem>
+                            ))
+                          ) : (
+                            <DropdownItem key="none" isDisabled>
+                              {t("contentpage.no_players")}
+                            </DropdownItem>
+                          )}
+                        </DropdownMenu>
+                      </Dropdown>
+                      {!cp.selectedPlayer && (
+                        <span className="text-danger-500 text-xs">
+                          ({t("contentpage.require_player_for_world_import")})
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
