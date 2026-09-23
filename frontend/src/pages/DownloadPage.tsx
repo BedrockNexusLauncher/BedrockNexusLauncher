@@ -731,8 +731,8 @@ export const DownloadPage: React.FC = () => {
           <Card className={cn("flex-none", LAYOUT.GLASS_CARD.BASE)}>
             <CardBody className="p-4">
               <div className="flex flex-col gap-3 justify-between">
-                <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
-                  <div className="flex items-center gap-3 w-full sm:max-w-md">
+                <div className="flex items-center gap-2 overflow-x-auto w-full pb-1">
+                  <div className="flex items-center gap-3 shrink-0 w-56 sm:w-72">
                   <Input
                     isClearable
                     radius="full"
@@ -754,11 +754,10 @@ export const DownloadPage: React.FC = () => {
                     onClear={() => setQuery("")}
                   />
                 </div>
-                <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
                   <Button
                     radius="full"
                     variant="flat"
-                    className="bg-default-100/50 dark:bg-zinc-800/50 text-default-600 dark:text-zinc-200 font-medium hover:bg-default-200/50 dark:hover:bg-zinc-700/50 transition-colors"
+                    className="bg-default-100/50 dark:bg-zinc-800/50 text-default-600 dark:text-zinc-200 font-medium hover:bg-default-200/50 dark:hover:bg-zinc-700/50 transition-colors shrink-0"
                     startContent={
                       <FaSync
                         className={refreshing ? "animate-spin" : ""}
@@ -820,9 +819,6 @@ export const DownloadPage: React.FC = () => {
                       </Button>
                     </Tooltip>
                   </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 shrink-0 overflow-x-auto w-full pb-1">
                   <Dropdown classNames={COMPONENT_STYLES.dropdown}>
                     <DropdownTrigger>
                       <Button
