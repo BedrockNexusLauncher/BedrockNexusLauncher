@@ -31,7 +31,7 @@ export const ContentDownloadCard = () => {
         </div>
       </CardHeader>
 
-      <CardBody className="p-4 flex flex-col gap-3">
+      <CardBody className="p-4 flex-1 flex flex-col justify-evenly gap-3">
         <div
           className="flex items-center justify-between p-3 rounded-xl hover:bg-default-200/50 dark:hover:bg-zinc-700/50 cursor-pointer transition-colors border border-transparent hover:border-default-200/50 dark:hover:border-white/10"
           onClick={() => navigate("/curseforge")}
