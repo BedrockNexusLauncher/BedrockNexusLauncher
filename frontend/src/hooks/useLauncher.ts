@@ -17,6 +17,7 @@ import {
 import {
   GetContentRoots,
   CheckResourcePackMaterialCompatibility,
+  ListPacksForVersion,
 } from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/contentservice";
 import * as versionService from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/versionservice";
 import * as userService from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/userservice";
@@ -97,7 +98,8 @@ export const useLauncher = (args: any) => {
     worlds: number;
     resourcePacks: number;
     behaviorPacks: number;
-  }>({ worlds: 0, resourcePacks: 0, behaviorPacks: 0 });
+    skinPacks: number;
+  }>({ worlds: 0, resourcePacks: 0, behaviorPacks: 0, skinPacks: 0 });
   const [incompatibleShaderCount, setIncompatibleShaderCount] =
     React.useState<number>(0);
   const [giTotal, setGiTotal] = React.useState<number>(0);
@@ -853,7 +855,12 @@ export const useLauncher = (args: any) => {
 
   const refreshContentCounts = React.useCallback(async () => {
     if (!hasBackend) {
-      setContentCounts({ worlds: 0, resourcePacks: 0, behaviorPacks: 0 });
+      setContentCounts({
+        worlds: 0,
+        resourcePacks: 0,
+        behaviorPacks: 0,
+        skinPacks: 0,
+      });
       return;
     }
     const countDir = async (path: string): Promise<number> => {
@@ -864,10 +871,28 @@ export const useLauncher = (args: any) => {
         return 0;
       }
     };
+    const countSkinPacks = async (
+      versionName: string,
+      player: string,
+    ): Promise<number> => {
+      try {
+        const allPacks = await ListPacksForVersion(versionName, player || "");
+        return (allPacks || []).filter(
+          (p: any) => p?.manifest?.pack_type === 7,
+        ).length;
+      } catch {
+        return 0;
+      }
+    };
     try {
       const name = readCurrentVersionName();
       if (!name) {
-        setContentCounts({ worlds: 0, resourcePacks: 0, behaviorPacks: 0 });
+        setContentCounts({
+          worlds: 0,
+          resourcePacks: 0,
+          behaviorPacks: 0,
+          skinPacks: 0,
+        });
         return;
       }
       const roots = await GetContentRoots(name);
@@ -916,16 +941,20 @@ export const useLauncher = (args: any) => {
           if (nextPlayer) {
             const wp = `${safe.usersRoot}\\${nextPlayer}\\games\\com.mojang\\minecraftWorlds`;
             const defaultWorlds = await countDir(wp);
+            const skins = await countSkinPacks(name, nextPlayer);
             setContentCounts({
               worlds: defaultWorlds,
               resourcePacks: res,
               behaviorPacks: bp,
+              skinPacks: skins,
             });
           } else {
+            const skins = await countSkinPacks(name, "");
             setContentCounts({
               worlds: 0,
               resourcePacks: res,
               behaviorPacks: bp,
+              skinPacks: skins,
             });
           }
 
@@ -946,7 +975,12 @@ export const useLauncher = (args: any) => {
                 if (matchedPlayer && matchedPlayer !== nextPlayer) {
                   const wp = `${safe.usersRoot}\\${matchedPlayer}\\games\\com.mojang\\minecraftWorlds`;
                   const newWorlds = await countDir(wp);
-                  setContentCounts((prev) => ({ ...prev, worlds: newWorlds }));
+                  const newSkins = await countSkinPacks(name, matchedPlayer);
+                  setContentCounts((prev) => ({
+                    ...prev,
+                    worlds: newWorlds,
+                    skinPacks: newSkins,
+                  }));
                 }
               }
             } catch {}
@@ -954,9 +988,19 @@ export const useLauncher = (args: any) => {
           return;
         } catch {}
       }
-      setContentCounts({ worlds: 0, resourcePacks: res, behaviorPacks: bp });
+      setContentCounts({
+        worlds: 0,
+        resourcePacks: res,
+        behaviorPacks: bp,
+        skinPacks: 0,
+      });
     } catch {
-      setContentCounts({ worlds: 0, resourcePacks: 0, behaviorPacks: 0 });
+      setContentCounts({
+        worlds: 0,
+        resourcePacks: 0,
+        behaviorPacks: 0,
+        skinPacks: 0,
+      });
     }
   }, [hasBackend]);
 

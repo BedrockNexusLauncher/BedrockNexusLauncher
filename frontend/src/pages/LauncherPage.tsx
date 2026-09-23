@@ -22,6 +22,7 @@ import {
   FaGlobe,
   FaImage,
   FaCogs,
+  FaUser,
   FaList,
   FaWindows,
   FaFolderOpen,
@@ -196,6 +197,7 @@ export const LauncherPage = (args: any) => {
   const worldsLabel = t("content.count.worlds") as string;
   const resourceLabel = t("content.count.resource_packs") as string;
   const behaviorLabel = t("content.count.behavior_packs") as string;
+  const skinLabel = t("content.count.skin_packs") as string;
   const launchErrorMessage = useMemo(() => {
     const key = `errors.${launchErrorCode}`;
     const translated = t(key) as unknown as string;
@@ -696,6 +698,13 @@ export const LauncherPage = (args: any) => {
                     icon: FaCogs,
                     path: "/content/behaviorPacks",
                     color: "text-orange-500",
+                  },
+                  {
+                    label: skinLabel,
+                    count: contentCounts.skinPacks,
+                    icon: FaUser,
+                    path: "/content/skinPacks",
+                    color: "text-teal-500",
                   },
                 ].map((item, idx) => (
                   <div

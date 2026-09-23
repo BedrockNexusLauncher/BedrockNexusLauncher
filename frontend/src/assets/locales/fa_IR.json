@@ -693,7 +693,8 @@
     "count": {
       "worlds": "دنیاها",
       "resource_packs": "بسته‌های منبع",
-      "behavior_packs": "بسته‌های رفتاری"
+      "behavior_packs": "بسته‌های رفتاری",
+      "skin_packs": "بسته‌های اسکین"
     }
   },
   "contentpage": {

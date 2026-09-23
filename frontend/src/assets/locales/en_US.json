@@ -693,7 +693,8 @@
     "count": {
       "worlds": "Worlds",
       "resource_packs": "Resource Packs",
-      "behavior_packs": "Behavior Packs"
+      "behavior_packs": "Behavior Packs",
+      "skin_packs": "Skin Packs"
     }
   },
   "contentpage": {
