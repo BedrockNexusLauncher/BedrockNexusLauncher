@@ -76,7 +76,7 @@ import { useSettings, ThemeMode } from "@/hooks/useSettings";
 
 const normalizeHexColor = (
   value: string | undefined,
-  fallback: string = "#8b5cf6",
+  fallback: string = "#6b69d6",
 ) => {
   if (!value) return fallback;
   const trimmed = value.trim();

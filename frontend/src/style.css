@@ -17,21 +17,21 @@
   --font-sans: "MiSans", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", "MiSans", sans-serif;
 
-  /* Fallback palette = launcher default (violet, matches the logo).
+  /* Fallback palette = launcher default (win_purple).
      The active palette is applied at runtime as --theme-* vars by
      useThemeColors.ts; these fallbacks cover first paint. */
-  --color-primary-50: rgb(var(--theme-50, 245, 243, 255));
-  --color-primary-100: rgb(var(--theme-100, 237, 233, 254));
-  --color-primary-200: rgb(var(--theme-200, 221, 214, 254));
-  --color-primary-300: rgb(var(--theme-300, 196, 181, 253));
-  --color-primary-400: rgb(var(--theme-400, 167, 139, 250));
-  --color-primary-500: rgb(var(--theme-500, 139, 92, 246));
-  --color-primary-600: rgb(var(--theme-600, 124, 58, 237));
-  --color-primary-700: rgb(var(--theme-700, 109, 40, 217));
-  --color-primary-800: rgb(var(--theme-800, 91, 33, 182));
-  --color-primary-900: rgb(var(--theme-900, 76, 29, 149));
-  --color-primary-950: rgb(var(--theme-950, 46, 16, 101));
-  --color-primary: rgb(var(--theme-500, 139, 92, 246));
+  --color-primary-50: rgb(var(--theme-50, 194, 190, 255));
+  --color-primary-100: rgb(var(--theme-100, 184, 181, 255));
+  --color-primary-200: rgb(var(--theme-200, 165, 162, 255));
+  --color-primary-300: rgb(var(--theme-300, 146, 143, 255));
+  --color-primary-400: rgb(var(--theme-400, 126, 124, 253));
+  --color-primary-500: rgb(var(--theme-500, 107, 105, 214));
+  --color-primary-600: rgb(var(--theme-600, 90, 88, 180));
+  --color-primary-700: rgb(var(--theme-700, 73, 71, 146));
+  --color-primary-800: rgb(var(--theme-800, 56, 55, 111));
+  --color-primary-900: rgb(var(--theme-900, 39, 38, 77));
+  --color-primary-950: rgb(var(--theme-950, 30, 29, 60));
+  --color-primary: rgb(var(--theme-500, 107, 105, 214));
 
   --animate-fadeInUp: fadeInUp 1s ease-out;
   --animate-fadeInUp2: fadeInUp 1.5s ease-out;
@@ -518,7 +518,7 @@ html.rtl-locale h6 {
 .card-hover:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.18);
-  border-color: rgba(var(--theme-500, 139, 92, 246), 0.3);
+  border-color: rgba(var(--theme-500, 107, 105, 214), 0.3);
 }
 .dark .card-hover:hover {
   box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.55);

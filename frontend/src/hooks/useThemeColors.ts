@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { THEMES, hexToRgb, hexToHsl, generateTheme } from "@/constants/themes";
 
-/** Default accent palette (matches the launcher's purple logo). */
-export const DEFAULT_THEME_COLOR = "violet";
-export const DEFAULT_CUSTOM_THEME_COLOR = "#8b5cf6";
+/** Default accent palette (Windows purple, circled in settings). */
+export const DEFAULT_THEME_COLOR = "win_purple";
+export const DEFAULT_CUSTOM_THEME_COLOR = "#6b69d6";
 
 type ModeKey = "light" | "dark";
 
