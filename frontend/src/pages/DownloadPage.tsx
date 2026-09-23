@@ -789,35 +789,37 @@ export const DownloadPage: React.FC = () => {
                   >
                     {t("downloadpage.customappx.button")}
                   </Button>
-                  <Tooltip content={t("download_manager.title")}>
-                    <Button
-                      ref={tasksButtonRef}
-                      isIconOnly
-                      radius="full"
-                      variant={isDownloading ? "solid" : "flat"}
-                      color={isDownloading ? "success" : "default"}
-                      className={`transition-colors ${
-                        isDownloading
-                          ? "bg-primary-500 text-white"
-                          : "bg-default-100/50 dark:bg-zinc-800/50 text-default-600 dark:text-zinc-200 hover:bg-default-200/50 dark:hover:bg-zinc-700/50"
-                      }`}
-                      onPress={() => navigate(ROUTES.downloadTasks)}
-                    >
-                      <motion.div
-                        animate={isDownloading ? { y: [0, -2, 0] } : {}}
-                        transition={{
-                          repeat: Infinity,
-                          duration: 1.5,
-                          ease: "easeInOut",
-                        }}
+                  <div className="ms-auto">
+                    <Tooltip content={t("download_manager.title")}>
+                      <Button
+                        ref={tasksButtonRef}
+                        isIconOnly
+                        radius="full"
+                        variant={isDownloading ? "solid" : "flat"}
+                        color={isDownloading ? "success" : "default"}
+                        className={`transition-colors ${
+                          isDownloading
+                            ? "bg-primary-500 text-white"
+                            : "bg-default-100/50 dark:bg-zinc-800/50 text-default-600 dark:text-zinc-200 hover:bg-default-200/50 dark:hover:bg-zinc-700/50"
+                        }`}
+                        onPress={() => navigate(ROUTES.downloadTasks)}
                       >
-                        <FaCloudDownloadAlt size={20} />
-                      </motion.div>
-                      {isDownloading && (
-                        <span className="absolute -top-1 -end-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white dark:border-zinc-900 animate-pulse" />
-                      )}
-                    </Button>
-                  </Tooltip>
+                        <motion.div
+                          animate={isDownloading ? { y: [0, -2, 0] } : {}}
+                          transition={{
+                            repeat: Infinity,
+                            duration: 1.5,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <FaCloudDownloadAlt size={20} />
+                        </motion.div>
+                        {isDownloading && (
+                          <span className="absolute -top-1 -end-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white dark:border-zinc-900 animate-pulse" />
+                        )}
+                      </Button>
+                    </Tooltip>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
                   <Dropdown classNames={COMPONENT_STYLES.dropdown}>
