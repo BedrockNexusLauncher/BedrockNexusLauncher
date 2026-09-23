@@ -821,7 +821,8 @@ export const DownloadPage: React.FC = () => {
                     </Tooltip>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 shrink-0 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+              </div>
+              <div className="flex items-center gap-2 shrink-0 overflow-x-auto w-full pb-1">
                   <Dropdown classNames={COMPONENT_STYLES.dropdown}>
                     <DropdownTrigger>
                       <Button
@@ -971,7 +972,6 @@ export const DownloadPage: React.FC = () => {
                   </Dropdown>
                 </div>
               </div>
-            </div>
             </CardBody>
           </Card>
         </motion.div>
