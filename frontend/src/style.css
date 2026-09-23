@@ -453,6 +453,11 @@ html.rtl-locale div {
 html.rtl-locale .text-left {
   text-align: right;
 }
+/* Flex rows stay LTR with the locked engine; opt-in mirroring puts a leading
+   icon on the right next to right-aligned text (e.g. the launcher tips row). */
+html.rtl-locale .rtl-mirror {
+  flex-direction: row-reverse;
+}
 /* جمله‌های فارسیِ مخلوط با واژه‌های لاتین (مثل متن‌های صفحه «درباره» که با
    «Bedrock Nexus» شروع می‌شوند) با قاعدهٔ plaintext بالا برای هر «خط» جهت
    اولین نویسهٔ قوی را می‌گیرند؛ یعنی خطی که با حرف لاتین شروع یا شکسته شود

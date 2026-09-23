@@ -586,7 +586,7 @@ export const LauncherPage = (args: any) => {
               </div>
 
               {/* Tips (Bottom) */}
-              <div className="w-full rounded-full px-4 py-2 flex items-center gap-2 bg-default-100/40 dark:bg-white/[0.03] border border-default-200/40 dark:border-white/5">
+              <div className="rtl-mirror w-full rounded-full px-4 py-2 flex items-center gap-2 bg-default-100/40 dark:bg-white/[0.03] border border-default-200/40 dark:border-white/5">
                 <span className="p-1 rounded-md bg-primary-500/10 text-primary-600 dark:text-primary-400 shrink-0">
                   <FaLightbulb size={13} aria-hidden="true" />
                 </span>
