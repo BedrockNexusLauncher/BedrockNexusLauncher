@@ -117,7 +117,7 @@ function App() {
 
   // Extracted hooks
   const { layoutMode } = useLayoutMode();
-  useAnimations();
+  const { disableAnimations } = useAnimations();
   useThemedStrokes();
   const { themeColorsReady } = useThemeColors(resolvedTheme);
   const {
@@ -283,6 +283,12 @@ function App() {
                       <ToastProvider
                         placement="top-center"
                         toastOffset={80}
+                        // Mirrors Settings → "Disable Animations": HeroUI removes
+                        // toasts only in `onTransitionEnd`, which never fires
+                        // once that toggle forces `transition-duration: 0s`.
+                        // Passing the flag switches toasts to their designed
+                        // no-animation path (immediate close, no transition).
+                        disableAnimation={disableAnimations}
                         regionProps={{ className: "wails-no-drag z-[120]" }}
                         toastProps={{
                           timeout: 2000,
