@@ -214,6 +214,18 @@ func (a *Minecraft) ListServers(versionName string, player string) []types.Serve
 	return servers
 }
 
+func (a *Minecraft) AddServer(versionName string, player string, name string, address string, port string) string {
+	return mcservice.AddServer(versionName, player, name, address, port)
+}
+
+func (a *Minecraft) UpdateServer(versionName string, player string, index string, name string, address string, port string) string {
+	return mcservice.UpdateServer(versionName, player, index, name, address, port)
+}
+
+func (a *Minecraft) DeleteServer(versionName string, player string, index string) string {
+	return mcservice.DeleteServer(versionName, player, index)
+}
+
 func (a *Minecraft) PingServer(host string) *mcservice.MotdBEInfo {
 	info, _ := mcservice.MotdBE(host)
 	return info

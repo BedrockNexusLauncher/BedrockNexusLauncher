@@ -323,14 +323,18 @@ export default function InstanceSettingsPage() {
                       {vs.targetName || "-"}
                     </span>
                     <span className="mx-2 text-default-400">·</span>
-                    {vs.versionType === "preview" ? (
+                    {vs.versionType === "release" ? (
+                      <Chip size="sm" variant="flat" color="success">
+                        {t("common.release")}
+                      </Chip>
+                    ) : vs.versionType === "beta" ? (
                       <Chip size="sm" variant="flat" color="warning">
+                        {vs.versionType}
+                      </Chip>
+                    ) : vs.versionType === "preview" ? (
+                      <Chip size="sm" variant="flat" color="secondary">
                         {t("common.preview")}
                       </Chip>
-                    ) : vs.versionType === "release" ? (
-                      <span className="text-default-700 dark:text-zinc-300">
-                        {t("common.release")}
-                      </span>
                     ) : (
                       <Chip size="sm" variant="flat" color="secondary">
                         {vs.versionType || "-"}

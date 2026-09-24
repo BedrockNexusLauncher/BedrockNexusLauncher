@@ -125,17 +125,17 @@ export default function AboutPage() {
                     icon={<FaCode size={20} />}
                     iconWrapperClassName="bg-blue-500/10 text-blue-600 dark:text-blue-400"
                     title={t("about.source")}
+                    action={
+                      <Button
+                        variant="flat"
+                        className="bg-default-100 dark:bg-white/10"
+                        startContent={<FaGithub className="text-lg" />}
+                        onPress={() => Browser.OpenURL(repoUrl)}
+                      >
+                        {t("about.github_repo")}
+                      </Button>
+                    }
                   />
-                  <div className="flex flex-wrap items-center gap-3 mb-4">
-                    <Button
-                      variant="flat"
-                      className="bg-default-100 dark:bg-white/10"
-                      startContent={<FaGithub className="text-lg" />}
-                      onPress={() => Browser.OpenURL(repoUrl)}
-                    >
-                      {t("about.github_repo")}
-                    </Button>
-                  </div>
                   <p className="rtl-paragraph text-small text-default-500 dark:text-zinc-400">
                     {t("about.license.tip")}
                   </p>

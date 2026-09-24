@@ -123,7 +123,6 @@
       "manage_versions": "Cliquez sur \"Gérer les versions\" dans le panneau déroulant pour installer, importer ou organiser des instances.",
       "quick_actions_menu": "Le menu à côté du bouton de lancement offre les paramètres de l'instance, le raccourci bureau, le dossier du jeu et les actions d'enregistrement système.",
       "launch_dependencies": "Si GameInput, VC++ Runtime ou les Services de jeu sont manquants, Bedrock Nexus vous guidera pour les installer avant le lancement.",
-      "gdk_required": "L'enregistrement système nécessite Microsoft GDK. Installez-le d'abord via Paramètres > Composants si vous y êtes invité.",
       "mods_card": "La carte Mods affiche les mods activés pour l'instance actuelle et ouvre la page complète des mods en un clic.",
       "content_counts_card": "La carte Contenu affiche le nombre de mondes, packs de ressources et packs de comportement, et chaque ligne ouvre la page correspondante.",
       "incompatible_resource_packs": "Si des packs de ressources incompatibles sont détectés, cliquez sur la ligne d'avertissement pour les examiner directement.",
@@ -181,7 +180,8 @@
   },
   "downloadpage": {
     "error": {
-      "already_downloading": "Ce fichier est déjà en cours de téléchargement"
+      "already_downloading": "Ce fichier est déjà en cours de téléchargement",
+      "download_failed": "Téléchargement échoué"
     },
     "changelog": {
       "title": "Dernier journal des modifications"
@@ -203,7 +203,8 @@
       },
       "type": {
         "release": "Version stable",
-        "preview": "Aperçu"
+        "preview": "Aperçu",
+        "beta": "Bêta"
       }
     },
     "topcontent": {
@@ -216,13 +217,14 @@
       "loader": "Chargeur",
       "input": {
         "placeholder": "Rechercher par version..."
-      }
+      },
+      "package_all": "Tous les paquets"
     },
     "actions": {
       "delete_installer": "Supprimer l'installateur"
     },
     "bottomcontent": {
-      "total": "Total {{count}} versions"
+      "total": "Total : {{count}} versions"
     },
     "install_folder": {
       "confirm_title": "Installer l'instance",
@@ -300,6 +302,14 @@
           }
         }
       }
+    },
+    "uwp": {
+      "resolving": "Résolution…",
+      "install_title": "Installer l’instance UWP",
+      "install_button": "Installer",
+      "folder_label": "Nom du dossier de l’instance",
+      "installing": "Extraction et enregistrement…",
+      "install_success": "Instance UWP installée"
     }
   },
   "onboarding": {
@@ -395,7 +405,9 @@
         "outdated": "Une version plus récente est disponible",
         "missing": "lip n'est pas installé",
         "check_failed": "Échec de la vérification de l'état de lip : {{error}}",
-        "done": "Installation de lip terminée"
+        "done": "Installation de lip terminée",
+        "checking_runtime": "Vérification du runtime .NET 10...",
+        "installing_runtime": "Installation du runtime .NET 10..."
       },
       "error": {
         "lip_fetch_release": "Échec de la récupération de la dernière version de lip",
@@ -406,7 +418,10 @@
         "lip_create_target_dir": "Échec de la création du répertoire d'installation de lip",
         "lip_replace_file": "Échec du remplacement de lipd.exe",
         "lip_verify_install": "Échec de la vérification de la version installée de lip",
-        "lip_install_failed": "Échec de l'installation de lip"
+        "lip_install_failed": "Échec de l'installation de lip",
+        "lip_download_dotnet_installer": "Échec du téléchargement du script d’installation de .NET 10",
+        "lip_install_dotnet_runtime": "Échec de l’installation du runtime .NET 10",
+        "lip_verify_dotnet_runtime": "Échec de la vérification du runtime .NET 10"
       },
       "version_label": "Actuelle : {{currentVersion}} / Dernière : {{latestVersion}}",
       "startup_prompt": {
@@ -550,7 +565,36 @@
       "calculating": "Calcul en cours...",
       "sunrise_time": "Lever du soleil aujourd'hui",
       "sunset_time": "Coucher du soleil aujourd'hui",
-      "sun_fetch_failed": "Échec de la récupération des heures de lever/coucher du soleil"
+      "sun_fetch_failed": "Échec de la récupération des heures de lever/coucher du soleil",
+      "material": {
+        "title": "Matériau",
+        "description": "Translucidité, flou et superposition des surfaces sur le fond d’écran, enregistrés séparément pour les thèmes clair et sombre",
+        "edit_mode": "Modifier le thème",
+        "presets": "Préréglages",
+        "balanced": "Équilibré",
+        "balanced_desc": "Verre lisible avec flou doux",
+        "clear": "Transparent",
+        "clear_desc": "Visibilité maximale du fond d’écran",
+        "solid": "Opaque",
+        "solid_desc": "Surfaces opaques, sans flou",
+        "opacity": "Opacité des surfaces",
+        "blur": "Flou des surfaces",
+        "overlay": "Superposition du fond d’écran",
+        "readability": "Protection de la lisibilité",
+        "readability_desc": "Augmente automatiquement l’opacité pour que le texte reste lisible sur les fonds clairs ou chargés",
+        "reset": "Réinitialiser",
+        "preview": "Aperçu",
+        "preview_label": "Aperçu du matériau",
+        "preview_text": "Les surfaces suivent le fond d’écran avec la translucidité et le flou configurés.",
+        "no_image": "Choisissez une image de fond pour prévisualiser le matériau en direct",
+        "protected": "Protection de lisibilité active",
+        "unprotected": "Protection de lisibilité inactive",
+        "protected_opacity": "Opacité protégée {{value}} %"
+      }
+    },
+    "search": {
+      "placeholder": "Rechercher dans les paramètres",
+      "count": "{{count}} sections correspondantes"
     }
   },
   "downloadmodal": {
@@ -649,7 +693,8 @@
     "count": {
       "worlds": "Mondes",
       "resource_packs": "Packs de ressources",
-      "behavior_packs": "Packs de comportement"
+      "behavior_packs": "Packs de comportement",
+      "skin_packs": "Packs de skins"
     }
   },
   "contentpage": {
@@ -1017,7 +1062,14 @@
     "ERR_INSTANCE_BACKUP_RESTORE_FULL_REQUIRES_EMPTY_TARGET": "Les sauvegardes complètes de Minecraft Bedrock ne peuvent être restaurées que dans un répertoire cible vide",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_INSTALL_FAILED": "Certains paquets gérés par lip n'ont pas pu être installés",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_MISSING": "Certains paquets gérés par lip n'ont pas été restaurés",
-    "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "Certaines versions de paquets gérés par lip ne correspondent pas à la sauvegarde"
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "Certaines versions de paquets gérés par lip ne correspondent pas à la sauvegarde",
+    "ERR_LAUNCH_TIMEOUT": "Minecraft n’est pas apparu dans le délai de démarrage. Vérifiez que l’instance sélectionnée est enregistrée et que Minecraft peut démarrer normalement.",
+    "ERR_PATCH_RUN_FAILED": "Échec de l’exécution du script de correctif",
+    "ERR_LIP_CACHE_CLEAN_FAILED": "Échec du nettoyage du cache lip",
+    "ERR_SERVER_INVALID_NAME": "Nom de serveur invalide",
+    "ERR_SERVER_INVALID_ADDRESS": "Adresse de serveur invalide",
+    "ERR_SERVER_INVALID_PORT": "Le port doit être un nombre entre 1 et 65535",
+    "ERR_SERVER_NOT_FOUND": "Serveur introuvable — la liste a peut-être changé"
   },
   "filemanager": {
     "sort": {
@@ -1376,5 +1428,103 @@
     "download": "Télécharger",
     "open_page": "Ouvrir la page",
     "download_started": "Téléchargement lancé"
+  },
+  "marketplace": {
+    "title": "Place de marché",
+    "search_placeholder": "Rechercher des éléments...",
+    "search": "Rechercher",
+    "refresh": "Actualiser",
+    "index_source": "Source de l’index",
+    "apply": "Appliquer",
+    "type": "Type",
+    "select_type": "Sélectionner le type",
+    "all_types": "Tous les types",
+    "tag": "Étiquette",
+    "select_tag": "Sélectionner l’étiquette",
+    "all_tags": "Toutes les étiquettes",
+    "sort_by": "Trier par",
+    "select_sort": "Sélectionner le tri",
+    "sort": {
+      "newest": "Plus récents",
+      "name": "Nom A-Z"
+    },
+    "no_results": "Aucun élément trouvé",
+    "load_error": "Échec du chargement de l’index, veuillez réessayer",
+    "no_description": "Aucune description disponible.",
+    "by_author": "Par {{author}}",
+    "by": "Par",
+    "version": "Version",
+    "updated": "Mis à jour",
+    "updated_date": "Mis à jour {{date}}",
+    "item_not_found": "Élément introuvable",
+    "go_back": "Retour",
+    "install_action": "Installer",
+    "homepage": "Page d’accueil",
+    "item_details_aria_label": "Détails de l’élément",
+    "tabs": {
+      "description": "Description",
+      "files": "Fichiers"
+    },
+    "types": {
+      "mcaddon": "Addon",
+      "mcpack": "Pack",
+      "mcworld": "Monde",
+      "skinpack": "Pack de skins",
+      "dll": "Mod LeviLamina",
+      "lip": "Paquet lip"
+    },
+    "files": {
+      "title": "Toutes les versions",
+      "table_aria_label": "Tableau des fichiers de l’élément",
+      "columns": {
+        "version": "Version",
+        "date": "Date",
+        "size": "Taille",
+        "changelog": "Changements",
+        "actions": "Actions"
+      }
+    },
+    "no_files_found": "Aucun fichier trouvé",
+    "install": {
+      "downloading_title": "Téléchargement du contenu",
+      "select_version_title": "Choisir l’instance du jeu",
+      "select_player_title": "Choisir le joueur",
+      "importing_title": "Importation du contenu",
+      "success_title": "Succès",
+      "error_title": "Erreur",
+      "downloading_body": "Téléchargement du fichier...",
+      "select_version_body": "Veuillez choisir l’instance du jeu vers laquelle importer :",
+      "local_installation": "Instance locale",
+      "select_version_placeholder": "Choisir une instance",
+      "registered": "Enregistrée",
+      "select_player_body": "Ce contenu nécessite de choisir un joueur :",
+      "player_label": "Joueur",
+      "select_player_placeholder": "Choisir un joueur",
+      "importing_body": "Importation du contenu...",
+      "success_msg": "Importation réussie",
+      "success_desc": "Le contenu a été importé avec succès dans l’instance sélectionnée.",
+      "failed_msg": "Échec de l’importation",
+      "next": "Suivant",
+      "close": "Fermer"
+    }
+  },
+  "serverspage": {
+    "add_server": "Ajouter un serveur",
+    "edit_server": "Modifier le serveur",
+    "delete_server": "Supprimer le serveur",
+    "delete_confirm": "Ce serveur sera également supprimé de la liste des serveurs enregistrés dans le jeu.",
+    "play": "Jouer",
+    "form_name": "Nom du serveur",
+    "form_name_ph": "Mon serveur",
+    "form_address": "Adresse du serveur",
+    "form_address_ph": "play.example.net",
+    "form_port": "Port",
+    "form_port_ph": "19132",
+    "add_success": "Serveur ajouté",
+    "update_success": "Serveur mis à jour",
+    "delete_success": "Serveur supprimé",
+    "launch_hint": "Lancement du jeu — sélectionnez ce serveur en jeu pour rejoindre.",
+    "no_version": "Sélectionnez d’abord une version du jeu",
+    "no_player": "Sélectionnez d’abord un joueur"
   }
 }

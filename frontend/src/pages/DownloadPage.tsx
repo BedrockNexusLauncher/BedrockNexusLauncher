@@ -834,7 +834,7 @@ export const DownloadPage: React.FC = () => {
                                 "downloadpage.customappx.modal.1.body.select.item1",
                               )
                             : typeFilter === "Beta"
-                              ? "Beta"
+                              ? t("downloadpage.table.type.beta")
                               : t(
                                   "downloadpage.customappx.modal.1.body.select.item2",
                                 )}
@@ -862,7 +862,7 @@ export const DownloadPage: React.FC = () => {
                         key="Beta"
                         isDisabled={packageFilter === "gdk"}
                       >
-                        Beta
+                        {t("downloadpage.table.type.beta")}
                       </DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
@@ -1050,7 +1050,11 @@ export const DownloadPage: React.FC = () => {
                           <Chip
                             size="sm"
                             color={
-                              item.type === "Release" ? "warning" : "secondary"
+                              item.type === "Release"
+                                ? "success"
+                                : item.type === "Beta"
+                                  ? "warning"
+                                  : "secondary"
                             }
                             variant="flat"
                             className="font-medium"

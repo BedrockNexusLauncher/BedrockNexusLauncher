@@ -123,7 +123,6 @@
       "manage_versions": "Clicca su \"Gestisci versioni\" nel pannello a tendina per installare, importare o organizzare le istanze.",
       "quick_actions_menu": "Il menu accanto al pulsante di avvio offre impostazioni istanza, collegamento desktop, cartella gioco e azioni di registrazione di sistema.",
       "launch_dependencies": "Se GameInput, VC++ Runtime o i Servizi di gioco mancano, Bedrock Nexus ti guiderà nell'installazione prima dell'avvio.",
-      "gdk_required": "La registrazione di sistema richiede Microsoft GDK. Installalo prima via Impostazioni > Componenti se richiesto.",
       "mods_card": "La scheda Mod mostra le mod attivate per l'istanza corrente e apre la pagina completa delle mod con un clic.",
       "content_counts_card": "La scheda Contenuti mostra il conteggio di mondi, pacchetti risorse e pacchetti comportamento, e ogni riga apre la pagina corrispondente.",
       "incompatible_resource_packs": "Se vengono rilevati pacchetti risorse incompatibili, clicca sulla riga di avviso per esaminarli direttamente.",
@@ -181,7 +180,8 @@
   },
   "downloadpage": {
     "error": {
-      "already_downloading": "Questo file è già in fase di download"
+      "already_downloading": "Questo file è già in fase di download",
+      "download_failed": "Download non riuscito"
     },
     "changelog": {
       "title": "Ultimo changelog"
@@ -203,7 +203,8 @@
       },
       "type": {
         "release": "Rilascio",
-        "preview": "Anteprima"
+        "preview": "Anteprima",
+        "beta": "Beta"
       }
     },
     "topcontent": {
@@ -216,7 +217,8 @@
       "loader": "Loader",
       "input": {
         "placeholder": "Cerca versione..."
-      }
+      },
+      "package_all": "Tutti i pacchetti"
     },
     "actions": {
       "delete_installer": "Elimina installer"
@@ -300,6 +302,14 @@
           }
         }
       }
+    },
+    "uwp": {
+      "resolving": "Risoluzione…",
+      "install_title": "Installa istanza UWP",
+      "install_button": "Installa",
+      "folder_label": "Nome cartella dell’istanza",
+      "installing": "Estrazione e registrazione…",
+      "install_success": "Istanza UWP installata"
     }
   },
   "onboarding": {
@@ -395,7 +405,9 @@
         "outdated": "Una versione più recente è disponibile",
         "missing": "lip non è installato",
         "check_failed": "Verifica stato lip fallita: {{error}}",
-        "done": "Installazione lip completata"
+        "done": "Installazione lip completata",
+        "checking_runtime": "Verifica del runtime .NET 10 in corso...",
+        "installing_runtime": "Installazione del runtime .NET 10 in corso..."
       },
       "error": {
         "lip_fetch_release": "Recupero ultima versione lip fallito",
@@ -406,7 +418,10 @@
         "lip_create_target_dir": "Creazione directory installazione lip fallita",
         "lip_replace_file": "Sostituzione lipd.exe fallita",
         "lip_verify_install": "Verifica versione installata lip fallita",
-        "lip_install_failed": "Installazione lip fallita"
+        "lip_install_failed": "Installazione lip fallita",
+        "lip_download_dotnet_installer": "Download dello script di installazione di .NET 10 non riuscito",
+        "lip_install_dotnet_runtime": "Installazione del runtime .NET 10 non riuscita",
+        "lip_verify_dotnet_runtime": "Verifica del runtime .NET 10 non riuscita"
       },
       "version_label": "Corrente: {{currentVersion}} / Ultima: {{latestVersion}}",
       "startup_prompt": {
@@ -550,11 +565,40 @@
       "calculating": "Calcolo in corso...",
       "sunrise_time": "Alba oggi",
       "sunset_time": "Tramonto oggi",
-      "sun_fetch_failed": "Recupero orari alba/tramonto fallito"
+      "sun_fetch_failed": "Recupero orari alba/tramonto fallito",
+      "material": {
+        "title": "Materiale",
+        "description": "Traslucenza, sfocatura e sovrapposizione delle superfici sullo sfondo, salvate separatamente per i temi chiaro e scuro",
+        "edit_mode": "Modifica tema",
+        "presets": "Preimpostazioni",
+        "balanced": "Bilanciato",
+        "balanced_desc": "Vetro leggibile con sfocatura morbida",
+        "clear": "Trasparente",
+        "clear_desc": "Massima visibilità dello sfondo",
+        "solid": "Coprente",
+        "solid_desc": "Superfici opache, senza sfocatura",
+        "opacity": "Opacità delle superfici",
+        "blur": "Sfocatura delle superfici",
+        "overlay": "Sovrapposizione dello sfondo",
+        "readability": "Protezione leggibilità",
+        "readability_desc": "Aumenta automaticamente l’opacità così il testo resta leggibile su sfondi chiari o complessi",
+        "reset": "Reimposta",
+        "preview": "Anteprima",
+        "preview_label": "Anteprima del materiale",
+        "preview_text": "Le superfici seguono lo sfondo con la traslucenza e la sfocatura configurate.",
+        "no_image": "Imposta un’immagine di sfondo per vedere l’anteprima live del materiale",
+        "protected": "Protezione leggibilità attiva",
+        "unprotected": "Protezione leggibilità disattiva",
+        "protected_opacity": "Opacità protetta {{value}}%"
+      }
+    },
+    "search": {
+      "placeholder": "Cerca nelle impostazioni",
+      "count": "{{count}} sezioni corrispondenti"
     }
   },
   "downloadmodal": {
-    "download_button": "Download",
+    "download_button": "Scarica",
     "installing": {
       "title": "Installazione in corso"
     },
@@ -649,7 +693,8 @@
     "count": {
       "worlds": "Mondi",
       "resource_packs": "Pacchetti risorse",
-      "behavior_packs": "Pacchetti comportamento"
+      "behavior_packs": "Pacchetti comportamento",
+      "skin_packs": "Pacchetti skin"
     }
   },
   "contentpage": {
@@ -1017,7 +1062,14 @@
     "ERR_INSTANCE_BACKUP_RESTORE_FULL_REQUIRES_EMPTY_TARGET": "I backup completi di Minecraft Bedrock possono essere ripristinati solo in una directory di destinazione vuota",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_INSTALL_FAILED": "Alcuni pacchetti gestiti da lip non sono stati installati",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_MISSING": "Alcuni pacchetti gestiti da lip non sono stati ripristinati",
-    "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "Alcune versioni di pacchetti gestiti da lip non corrispondono al backup"
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "Alcune versioni di pacchetti gestiti da lip non corrispondono al backup",
+    "ERR_LAUNCH_TIMEOUT": "Minecraft non è apparso entro il timeout di avvio. Verifica che l’istanza selezionata sia registrata e che Minecraft possa avviarsi normalmente.",
+    "ERR_PATCH_RUN_FAILED": "Esecuzione dello script di patch non riuscita",
+    "ERR_LIP_CACHE_CLEAN_FAILED": "Pulizia della cache di lip non riuscita",
+    "ERR_SERVER_INVALID_NAME": "Nome del server non valido",
+    "ERR_SERVER_INVALID_ADDRESS": "Indirizzo del server non valido",
+    "ERR_SERVER_INVALID_PORT": "La porta deve essere un numero tra 1 e 65535",
+    "ERR_SERVER_NOT_FOUND": "Server non trovato — l’elenco potrebbe essere cambiato"
   },
   "filemanager": {
     "sort": {
@@ -1376,5 +1428,103 @@
     "download": "Scarica",
     "open_page": "Apri pagina",
     "download_started": "Download avviato"
+  },
+  "marketplace": {
+    "title": "Marketplace",
+    "search_placeholder": "Cerca elementi del marketplace...",
+    "search": "Cerca",
+    "refresh": "Aggiorna",
+    "index_source": "Origine indice",
+    "apply": "Applica",
+    "type": "Tipo",
+    "select_type": "Seleziona tipo",
+    "all_types": "Tutti i tipi",
+    "tag": "Tag",
+    "select_tag": "Seleziona tag",
+    "all_tags": "Tutti i tag",
+    "sort_by": "Ordina per",
+    "select_sort": "Seleziona ordinamento",
+    "sort": {
+      "newest": "Più recenti",
+      "name": "Nome A-Z"
+    },
+    "no_results": "Nessun elemento trovato",
+    "load_error": "Caricamento dell’indice non riuscito, riprova",
+    "no_description": "Nessuna descrizione disponibile.",
+    "by_author": "Di {{author}}",
+    "by": "Di",
+    "version": "Versione",
+    "updated": "Aggiornato",
+    "updated_date": "Aggiornato {{date}}",
+    "item_not_found": "Elemento non trovato",
+    "go_back": "Indietro",
+    "install_action": "Installa",
+    "homepage": "Homepage",
+    "item_details_aria_label": "Dettagli dell’elemento del marketplace",
+    "tabs": {
+      "description": "Descrizione",
+      "files": "File"
+    },
+    "types": {
+      "mcaddon": "Addon",
+      "mcpack": "Pacchetto",
+      "mcworld": "Mondo",
+      "skinpack": "Pacchetto skin",
+      "dll": "Mod LeviLamina",
+      "lip": "Pacchetto lip"
+    },
+    "files": {
+      "title": "Tutte le versioni",
+      "table_aria_label": "Tabella dei file dell’elemento",
+      "columns": {
+        "version": "Versione",
+        "date": "Data",
+        "size": "Dimensione",
+        "changelog": "Modifiche",
+        "actions": "Azioni"
+      }
+    },
+    "no_files_found": "Nessun file trovato",
+    "install": {
+      "downloading_title": "Download del contenuto",
+      "select_version_title": "Seleziona istanza di gioco",
+      "select_player_title": "Seleziona giocatore",
+      "importing_title": "Importazione del contenuto",
+      "success_title": "Successo",
+      "error_title": "Errore",
+      "downloading_body": "Download del file in corso...",
+      "select_version_body": "Seleziona l’istanza di gioco in cui importare:",
+      "local_installation": "Istanza locale",
+      "select_version_placeholder": "Seleziona un’istanza",
+      "registered": "Registrata",
+      "select_player_body": "Questo contenuto richiede la selezione di un giocatore:",
+      "player_label": "Giocatore",
+      "select_player_placeholder": "Seleziona un giocatore",
+      "importing_body": "Importazione del contenuto in corso...",
+      "success_msg": "Importazione riuscita",
+      "success_desc": "Il contenuto è stato importato correttamente nell’istanza selezionata.",
+      "failed_msg": "Importazione non riuscita",
+      "next": "Avanti",
+      "close": "Chiudi"
+    }
+  },
+  "serverspage": {
+    "add_server": "Aggiungi server",
+    "edit_server": "Modifica server",
+    "delete_server": "Elimina server",
+    "delete_confirm": "Questo server verrà rimosso anche dall’elenco dei server salvati nel gioco.",
+    "play": "Gioca",
+    "form_name": "Nome del server",
+    "form_name_ph": "Il mio server",
+    "form_address": "Indirizzo del server",
+    "form_address_ph": "play.example.net",
+    "form_port": "Porta",
+    "form_port_ph": "19132",
+    "add_success": "Server aggiunto",
+    "update_success": "Server aggiornato",
+    "delete_success": "Server eliminato",
+    "launch_hint": "Avvio del gioco — seleziona questo server nel gioco per unirti.",
+    "no_version": "Seleziona prima una versione del gioco",
+    "no_player": "Seleziona prima un giocatore"
   }
 }

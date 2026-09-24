@@ -123,7 +123,6 @@
       "manage_versions": "드롭다운 영역에서 \"버전 관리\"를 클릭하여 인스턴스를 설치, 가져오기 또는 정리하세요.",
       "quick_actions_menu": "실행 버튼 옆 메뉴는 인스턴스 설정, 바탕 화면 바로 가기, 게임 폴더 및 시스템 등록 작업을 제공합니다.",
       "launch_dependencies": "GameInput, VC++ Runtime 또는 Gaming Services 가 누락된 경우, Bedrock Nexus 가 게임 실행 전 설치를 안내합니다.",
-      "gdk_required": "시스템 등록에는 Microsoft GDK 가 필요합니다. 요청되면 설정 > 구성 요소에서 먼저 설치하세요.",
       "mods_card": "모드 카드는 현재 인스턴스에 활성화된 모드를 표시하며, 클릭 한 번으로 전체 모드 페이지를 엽니다.",
       "content_counts_card": "콘텐츠 카드는 월드, 리소스 팩, 행동 팩의 수를 표시하며, 각 행은 해당 페이지를 엽니다.",
       "incompatible_resource_packs": "호환되지 않는 리소스 팩이 감지되면 경고 행을 클릭하여 직접 확인하세요.",
@@ -181,7 +180,8 @@
   },
   "downloadpage": {
     "error": {
-      "already_downloading": "이 파일은 이미 다운로드 중입니다"
+      "already_downloading": "이 파일은 이미 다운로드 중입니다",
+      "download_failed": "다운로드 실패"
     },
     "changelog": {
       "title": "최신 변경 로그"
@@ -203,7 +203,8 @@
       },
       "type": {
         "release": "릴리스",
-        "preview": "미리보기"
+        "preview": "미리보기",
+        "beta": "베타"
       }
     },
     "topcontent": {
@@ -216,7 +217,8 @@
       "loader": "로더",
       "input": {
         "placeholder": "버전 검색..."
-      }
+      },
+      "package_all": "모든 패키지"
     },
     "actions": {
       "delete_installer": "설치 프로그램 삭제"
@@ -300,6 +302,14 @@
           }
         }
       }
+    },
+    "uwp": {
+      "resolving": "확인 중…",
+      "install_title": "UWP 인스턴스 설치",
+      "install_button": "설치",
+      "folder_label": "인스턴스 폴더 이름",
+      "installing": "추출 및 등록 중…",
+      "install_success": "UWP 인스턴스가 설치됨"
     }
   },
   "onboarding": {
@@ -395,7 +405,9 @@
         "outdated": "새로운 버전을 사용할 수 있습니다",
         "missing": "lip 이 설치되어 있지 않습니다",
         "check_failed": "lip 상태 확인 실패: {{error}}",
-        "done": "lip 설치 완료"
+        "done": "lip 설치 완료",
+        "checking_runtime": ".NET 10 런타임을 확인하는 중...",
+        "installing_runtime": ".NET 10 런타임을 설치하는 중..."
       },
       "error": {
         "lip_fetch_release": "최신 lip 버전 가져오기 실패",
@@ -406,7 +418,10 @@
         "lip_create_target_dir": "lip 설치 디렉토리 생성 실패",
         "lip_replace_file": "lipd.exe 교체 실패",
         "lip_verify_install": "설치된 lip 버전 검증 실패",
-        "lip_install_failed": "lip 설치 실패"
+        "lip_install_failed": "lip 설치 실패",
+        "lip_download_dotnet_installer": ".NET 10 설치 스크립트 다운로드 실패",
+        "lip_install_dotnet_runtime": ".NET 10 런타임 설치 실패",
+        "lip_verify_dotnet_runtime": ".NET 10 런타임 확인 실패"
       },
       "version_label": "현재: {{currentVersion}} / 최신: {{latestVersion}}",
       "startup_prompt": {
@@ -550,7 +565,36 @@
       "calculating": "계산 중...",
       "sunrise_time": "오늘 일출 시간",
       "sunset_time": "오늘 일몰 시간",
-      "sun_fetch_failed": "일출/일몰 시간 가져오기 실패"
+      "sun_fetch_failed": "일출/일몰 시간 가져오기 실패",
+      "material": {
+        "title": "머티리얼",
+        "description": "배경화면 위 표면의 반투명, 흐림 효과 및 오버레이. 라이트/다크 테마별로 따로 저장됨",
+        "edit_mode": "테마 편집",
+        "presets": "프리셋",
+        "balanced": "균형",
+        "balanced_desc": "부드러운 흐림 효과의 읽기 쉬운 글래스",
+        "clear": "투명",
+        "clear_desc": "배경화면 최대 가시성",
+        "solid": "불투명",
+        "solid_desc": "불투명 표면, 흐림 효과 없음",
+        "opacity": "표면 불투명도",
+        "blur": "표면 흐림",
+        "overlay": "배경화면 오버레이",
+        "readability": "가독성 보호",
+        "readability_desc": "밝거나 복잡한 배경에서도 텍스트가 잘 보이도록 표면 불투명도를 자동으로 높임",
+        "reset": "초기화",
+        "preview": "미리 보기",
+        "preview_label": "머티리얼 미리 보기",
+        "preview_text": "표면이 설정된 반투명과 흐림 효과로 배경화면을 따릅니다.",
+        "no_image": "머티리얼을 실시간으로 미리 보려면 배경화면 이미지를 설정하세요",
+        "protected": "가독성 보호 켜짐",
+        "unprotected": "가독성 보호 꺼짐",
+        "protected_opacity": "보호된 불투명도 {{value}}%"
+      }
+    },
+    "search": {
+      "placeholder": "설정 검색",
+      "count": "일치하는 섹션 {{count}}개"
     }
   },
   "downloadmodal": {
@@ -649,7 +693,8 @@
     "count": {
       "worlds": "월드",
       "resource_packs": "리소스 팩",
-      "behavior_packs": "행동 팩"
+      "behavior_packs": "행동 팩",
+      "skin_packs": "스킨 팩"
     }
   },
   "contentpage": {
@@ -1017,7 +1062,14 @@
     "ERR_INSTANCE_BACKUP_RESTORE_FULL_REQUIRES_EMPTY_TARGET": "완전한 Minecraft Bedrock 백업은 빈 대상 디렉토리로만 복원할 수 있습니다",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_INSTALL_FAILED": "일부 lip 관리 패키지를 설치하지 못했습니다",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_MISSING": "일부 lip 관리 패키지가 복원되지 않았습니다",
-    "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "일부 lip 관리 패키지 버전이 백업과 일치하지 않습니다"
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "일부 lip 관리 패키지 버전이 백업과 일치하지 않습니다",
+    "ERR_LAUNCH_TIMEOUT": "시작 제한 시간 내에 Minecraft가 나타나지 않았습니다. 선택한 인스턴스가 등록되어 있고 Minecraft가 정상적으로 시작되는지 확인하세요.",
+    "ERR_PATCH_RUN_FAILED": "패치 스크립트 실행 실패",
+    "ERR_LIP_CACHE_CLEAN_FAILED": "lip 캐시 정리 실패",
+    "ERR_SERVER_INVALID_NAME": "유효하지 않은 서버 이름",
+    "ERR_SERVER_INVALID_ADDRESS": "유효하지 않은 서버 주소",
+    "ERR_SERVER_INVALID_PORT": "포트는 1~65535 사이의 숫자여야 합니다",
+    "ERR_SERVER_NOT_FOUND": "서버를 찾을 수 없음 — 목록이 변경되었을 수 있습니다"
   },
   "filemanager": {
     "sort": {
@@ -1376,5 +1428,103 @@
     "download": "다운로드",
     "open_page": "페이지 열기",
     "download_started": "다운로드 시작됨"
+  },
+  "marketplace": {
+    "title": "마켓플레이스",
+    "search_placeholder": "마켓플레이스 아이템 검색...",
+    "search": "검색",
+    "refresh": "새로 고침",
+    "index_source": "인덱스 소스",
+    "apply": "적용",
+    "type": "유형",
+    "select_type": "유형 선택",
+    "all_types": "모든 유형",
+    "tag": "태그",
+    "select_tag": "태그 선택",
+    "all_tags": "모든 태그",
+    "sort_by": "정렬 기준",
+    "select_sort": "정렬 선택",
+    "sort": {
+      "newest": "최신순",
+      "name": "이름 A-Z"
+    },
+    "no_results": "아이템을 찾을 수 없음",
+    "load_error": "마켓플레이스 인덱스를 불러오지 못했습니다. 다시 시도하세요",
+    "no_description": "설명이 없습니다.",
+    "by_author": "작성자: {{author}}",
+    "by": "작성자:",
+    "version": "버전",
+    "updated": "업데이트됨",
+    "updated_date": "업데이트: {{date}}",
+    "item_not_found": "아이템을 찾을 수 없음",
+    "go_back": "뒤로 가기",
+    "install_action": "설치",
+    "homepage": "홈페이지",
+    "item_details_aria_label": "마켓플레이스 아이템 세부 정보",
+    "tabs": {
+      "description": "설명",
+      "files": "파일"
+    },
+    "types": {
+      "mcaddon": "애드온",
+      "mcpack": "팩",
+      "mcworld": "월드",
+      "skinpack": "스킨 팩",
+      "dll": "LeviLamina 모드",
+      "lip": "lip 패키지"
+    },
+    "files": {
+      "title": "모든 버전",
+      "table_aria_label": "마켓플레이스 아이템 파일 표",
+      "columns": {
+        "version": "버전",
+        "date": "날짜",
+        "size": "크기",
+        "changelog": "변경 사항",
+        "actions": "작업"
+      }
+    },
+    "no_files_found": "파일을 찾을 수 없음",
+    "install": {
+      "downloading_title": "콘텐츠 다운로드 중",
+      "select_version_title": "게임 인스턴스 선택",
+      "select_player_title": "플레이어 선택",
+      "importing_title": "콘텐츠 가져오는 중",
+      "success_title": "성공",
+      "error_title": "오류",
+      "downloading_body": "파일 다운로드 중...",
+      "select_version_body": "가져올 게임 인스턴스를 선택하세요:",
+      "local_installation": "로컬 인스턴스",
+      "select_version_placeholder": "인스턴스 선택",
+      "registered": "등록됨",
+      "select_player_body": "이 콘텐츠는 플레이어 선택이 필요합니다:",
+      "player_label": "플레이어",
+      "select_player_placeholder": "플레이어 선택",
+      "importing_body": "콘텐츠를 가져오는 중...",
+      "success_msg": "가져오기 성공",
+      "success_desc": "선택한 인스턴스로 콘텐츠를 성공적으로 가져왔습니다.",
+      "failed_msg": "가져오기 실패",
+      "next": "다음",
+      "close": "닫기"
+    }
+  },
+  "serverspage": {
+    "add_server": "서버 추가",
+    "edit_server": "서버 편집",
+    "delete_server": "서버 삭제",
+    "delete_confirm": "이 서버는 게임 내 저장된 서버 목록에서도 삭제됩니다.",
+    "play": "플레이",
+    "form_name": "서버 이름",
+    "form_name_ph": "내 서버",
+    "form_address": "서버 주소",
+    "form_address_ph": "play.example.net",
+    "form_port": "포트",
+    "form_port_ph": "19132",
+    "add_success": "서버가 추가됨",
+    "update_success": "서버가 업데이트됨",
+    "delete_success": "서버가 삭제됨",
+    "launch_hint": "게임을 실행 중 — 입장하려면 게임 내에서 이 서버를 선택하세요.",
+    "no_version": "먼저 게임 버전을 선택하세요",
+    "no_player": "먼저 플레이어를 선택하세요"
   }
 }

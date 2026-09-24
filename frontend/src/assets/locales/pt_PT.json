@@ -123,7 +123,6 @@
       "manage_versions": "Clique em \"Gerir versões\" no painel suspenso para instalar, importar ou organizar instâncias.",
       "quick_actions_menu": "O menu junto ao botão de iniciar oferece definições da instância, atalho no ambiente de trabalho, pasta do jogo e ações de registo no sistema.",
       "launch_dependencies": "Se o GameInput, VC++ Runtime ou os Serviços de Jogo estiverem em falta, o Bedrock Nexus guiá-lo-á na instalação antes do lançamento.",
-      "gdk_required": "O registo no sistema requer o Microsoft GDK. Instale-o primeiro via Definições > Componentes se for solicitado.",
       "mods_card": "O cartão de Mods mostra os mods ativados para a instância atual e abre a página completa de mods com um clique.",
       "content_counts_card": "O cartão de Conteúdo mostra a contagem de mundos, pacotes de recursos e pacotes de comportamento, e cada linha abre a página correspondente.",
       "incompatible_resource_packs": "Se forem detetados pacotes de recursos incompatíveis, clique na linha de aviso para os examinar diretamente.",
@@ -181,7 +180,8 @@
   },
   "downloadpage": {
     "error": {
-      "already_downloading": "Este ficheiro já está a ser transferido"
+      "already_downloading": "Este ficheiro já está a ser transferido",
+      "download_failed": "Descarga falhada"
     },
     "changelog": {
       "title": "Último registo de alterações"
@@ -203,7 +203,8 @@
       },
       "type": {
         "release": "Lançamento",
-        "preview": "Pré-visualização"
+        "preview": "Pré-visualização",
+        "beta": "Beta"
       }
     },
     "topcontent": {
@@ -216,7 +217,8 @@
       "loader": "Carregador",
       "input": {
         "placeholder": "Pesquisar versão..."
-      }
+      },
+      "package_all": "Todos os pacotes"
     },
     "actions": {
       "delete_installer": "Eliminar instalador"
@@ -300,6 +302,14 @@
           }
         }
       }
+    },
+    "uwp": {
+      "resolving": "A resolver…",
+      "install_title": "Instalar instância UWP",
+      "install_button": "Instalar",
+      "folder_label": "Nome da pasta da instância",
+      "installing": "A extrair e registar…",
+      "install_success": "Instância UWP instalada"
     }
   },
   "onboarding": {
@@ -395,7 +405,9 @@
         "outdated": "Uma versão mais recente está disponível",
         "missing": "lip não está instalado",
         "check_failed": "Verificação do estado do lip falhou: {{error}}",
-        "done": "Instalação do lip concluída"
+        "done": "Instalação do lip concluída",
+        "checking_runtime": "A verificar o runtime .NET 10...",
+        "installing_runtime": "A instalar o runtime .NET 10..."
       },
       "error": {
         "lip_fetch_release": "Falha ao obter a última versão do lip",
@@ -406,7 +418,10 @@
         "lip_create_target_dir": "Falha ao criar diretório de instalação do lip",
         "lip_replace_file": "Falha ao substituir lipd.exe",
         "lip_verify_install": "Falha ao verificar a versão instalada do lip",
-        "lip_install_failed": "Falha na instalação do lip"
+        "lip_install_failed": "Falha na instalação do lip",
+        "lip_download_dotnet_installer": "Falha ao descarregar o script de instalação do .NET 10",
+        "lip_install_dotnet_runtime": "Falha ao instalar o runtime .NET 10",
+        "lip_verify_dotnet_runtime": "Falha ao verificar o runtime .NET 10"
       },
       "version_label": "Atual: {{currentVersion}} / Última: {{latestVersion}}",
       "startup_prompt": {
@@ -550,7 +565,36 @@
       "calculating": "A calcular...",
       "sunrise_time": "Nascer do sol hoje",
       "sunset_time": "Pôr do sol hoje",
-      "sun_fetch_failed": "Falha ao obter horários de nascer/pôr do sol"
+      "sun_fetch_failed": "Falha ao obter horários de nascer/pôr do sol",
+      "material": {
+        "title": "Material",
+        "description": "Translucidez, desfocagem e sobreposição das superfícies sobre o papel de parede, guardadas em separado para os temas claro e escuro",
+        "edit_mode": "Editar tema",
+        "presets": "Predefinições",
+        "balanced": "Equilibrado",
+        "balanced_desc": "Vidro legível com desfocagem suave",
+        "clear": "Transparente",
+        "clear_desc": "Visibilidade máxima do papel de parede",
+        "solid": "Sólido",
+        "solid_desc": "Superfícies opacas, sem desfocagem",
+        "opacity": "Opacidade da superfície",
+        "blur": "Desfocagem da superfície",
+        "overlay": "Sobreposição do papel de parede",
+        "readability": "Proteção de legibilidade",
+        "readability_desc": "Aumenta automaticamente a opacidade para que o texto continue legível sobre fundos claros ou ocupados",
+        "reset": "Repor",
+        "preview": "Pré-visualizar",
+        "preview_label": "Pré-visualização do material",
+        "preview_text": "As superfícies seguem o papel de parede com a translucidez e desfocagem configuradas.",
+        "no_image": "Escolha uma imagem de fundo para pré-visualizar o material em direto",
+        "protected": "Proteção de legibilidade ativa",
+        "unprotected": "Proteção de legibilidade inativa",
+        "protected_opacity": "Opacidade protegida {{value}}%"
+      }
+    },
+    "search": {
+      "placeholder": "Pesquisar nas definições",
+      "count": "{{count}} secções correspondentes"
     }
   },
   "downloadmodal": {
@@ -649,7 +693,8 @@
     "count": {
       "worlds": "Mundos",
       "resource_packs": "Pacotes de recursos",
-      "behavior_packs": "Pacotes de comportamento"
+      "behavior_packs": "Pacotes de comportamento",
+      "skin_packs": "Pacotes de skins"
     }
   },
   "contentpage": {
@@ -1017,7 +1062,14 @@
     "ERR_INSTANCE_BACKUP_RESTORE_FULL_REQUIRES_EMPTY_TARGET": "Backups completos do Minecraft Bedrock só podem ser restaurados num diretório de destino vazio",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_INSTALL_FAILED": "Alguns pacotes geridos por lip não puderam ser instalados",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_MISSING": "Alguns pacotes geridos por lip não foram restaurados",
-    "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "Algumas versões de pacotes geridos por lip não correspondem ao backup"
+    "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "Algumas versões de pacotes geridos por lip não correspondem ao backup",
+    "ERR_LAUNCH_TIMEOUT": "O Minecraft não apareceu dentro do tempo de arranque. Verifique se a instância selecionada está registada e se o Minecraft consegue iniciar normalmente.",
+    "ERR_PATCH_RUN_FAILED": "Falha ao executar o script de correção",
+    "ERR_LIP_CACHE_CLEAN_FAILED": "Falha ao limpar a cache do lip",
+    "ERR_SERVER_INVALID_NAME": "Nome de servidor inválido",
+    "ERR_SERVER_INVALID_ADDRESS": "Endereço de servidor inválido",
+    "ERR_SERVER_INVALID_PORT": "A porta deve ser um número entre 1 e 65535",
+    "ERR_SERVER_NOT_FOUND": "Servidor não encontrado — a lista pode ter mudado"
   },
   "filemanager": {
     "sort": {
@@ -1376,5 +1428,103 @@
     "download": "Descarregar",
     "open_page": "Abrir página",
     "download_started": "Descarregamento iniciado"
+  },
+  "marketplace": {
+    "title": "Mercado",
+    "search_placeholder": "Pesquisar itens do mercado...",
+    "search": "Pesquisar",
+    "refresh": "Atualizar",
+    "index_source": "Fonte do índice",
+    "apply": "Aplicar",
+    "type": "Tipo",
+    "select_type": "Selecionar tipo",
+    "all_types": "Todos os tipos",
+    "tag": "Etiqueta",
+    "select_tag": "Selecionar etiqueta",
+    "all_tags": "Todas as etiquetas",
+    "sort_by": "Ordenar por",
+    "select_sort": "Selecionar ordenação",
+    "sort": {
+      "newest": "Mais recentes",
+      "name": "Nome A-Z"
+    },
+    "no_results": "Nenhum item encontrado",
+    "load_error": "Falha ao carregar o índice do mercado, tente novamente",
+    "no_description": "Sem descrição disponível.",
+    "by_author": "Por {{author}}",
+    "by": "Por",
+    "version": "Versão",
+    "updated": "Atualizado",
+    "updated_date": "Atualizado {{date}}",
+    "item_not_found": "Item não encontrado",
+    "go_back": "Voltar",
+    "install_action": "Instalar",
+    "homepage": "Página inicial",
+    "item_details_aria_label": "Detalhes do item do mercado",
+    "tabs": {
+      "description": "Descrição",
+      "files": "Ficheiros"
+    },
+    "types": {
+      "mcaddon": "Addon",
+      "mcpack": "Pacote",
+      "mcworld": "Mundo",
+      "skinpack": "Pacote de skins",
+      "dll": "Mod LeviLamina",
+      "lip": "Pacote lip"
+    },
+    "files": {
+      "title": "Todas as versões",
+      "table_aria_label": "Tabela de ficheiros do item",
+      "columns": {
+        "version": "Versão",
+        "date": "Data",
+        "size": "Tamanho",
+        "changelog": "Alterações",
+        "actions": "Ações"
+      }
+    },
+    "no_files_found": "Nenhum ficheiro encontrado",
+    "install": {
+      "downloading_title": "A descarregar conteúdo",
+      "select_version_title": "Selecionar instância do jogo",
+      "select_player_title": "Selecionar jogador",
+      "importing_title": "A importar conteúdo",
+      "success_title": "Sucesso",
+      "error_title": "Erro",
+      "downloading_body": "A descarregar ficheiro...",
+      "select_version_body": "Selecione a instância do jogo para onde importar:",
+      "local_installation": "Instância local",
+      "select_version_placeholder": "Selecionar uma instância",
+      "registered": "Registada",
+      "select_player_body": "Este conteúdo requer a seleção de um jogador:",
+      "player_label": "Jogador",
+      "select_player_placeholder": "Selecionar um jogador",
+      "importing_body": "A importar conteúdo...",
+      "success_msg": "Importação concluída",
+      "success_desc": "O conteúdo foi importado com sucesso para a instância selecionada.",
+      "failed_msg": "Importação falhada",
+      "next": "Seguinte",
+      "close": "Fechar"
+    }
+  },
+  "serverspage": {
+    "add_server": "Adicionar servidor",
+    "edit_server": "Editar servidor",
+    "delete_server": "Eliminar servidor",
+    "delete_confirm": "Este servidor também será removido da lista de servidores guardados dentro do jogo.",
+    "play": "Jogar",
+    "form_name": "Nome do servidor",
+    "form_name_ph": "O meu servidor",
+    "form_address": "Endereço do servidor",
+    "form_address_ph": "play.example.net",
+    "form_port": "Porta",
+    "form_port_ph": "19132",
+    "add_success": "Servidor adicionado",
+    "update_success": "Servidor atualizado",
+    "delete_success": "Servidor eliminado",
+    "launch_hint": "A iniciar o jogo — selecione este servidor dentro do jogo para entrar.",
+    "no_version": "Selecione primeiro uma versão do jogo",
+    "no_player": "Selecione primeiro um jogador"
   }
 }

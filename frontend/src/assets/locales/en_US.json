@@ -1042,6 +1042,10 @@
     "ERR_LIP_PACKAGE_UNINSTALL_FAILED": "Failed to uninstall lip package",
     "ERR_LIP_PACKAGE_QUERY_FAILED": "Failed to query lip package state",
     "ERR_LIP_CACHE_CLEAN_FAILED": "Failed to clean lip cache",
+    "ERR_SERVER_INVALID_NAME": "Invalid server name",
+    "ERR_SERVER_INVALID_ADDRESS": "Invalid server address",
+    "ERR_SERVER_INVALID_PORT": "Port must be a number between 1 and 65535",
+    "ERR_SERVER_NOT_FOUND": "Server not found — the list may have changed",
     "ERR_LIP_PACKAGE_REQUIRED_BY_DEPENDENTS": "This package is required by other installed mods and cannot be uninstalled now",
     "ERR_LIP_PACKAGE_DEMOTED_TO_DEPENDENCY": "This package is still required by other installed mods, so it cannot be fully uninstalled. It has been automatically switched to dependency install mode.",
     "ERR_LL_MANAGED_IN_VERSION_SETTINGS": "LeviLamina can only be managed in Version Settings",
@@ -1437,6 +1441,25 @@
     "delay": "Latency",
     "online": "Online",
     "version": "Version"
+  },
+  "serverspage": {
+    "add_server": "Add server",
+    "edit_server": "Edit server",
+    "delete_server": "Delete server",
+    "delete_confirm": "This server will also be removed from the saved servers list inside the game.",
+    "play": "Play",
+    "form_name": "Server name",
+    "form_name_ph": "My server",
+    "form_address": "Server address",
+    "form_address_ph": "play.example.net",
+    "form_port": "Port",
+    "form_port_ph": "19132",
+    "add_success": "Server added",
+    "update_success": "Server updated",
+    "delete_success": "Server deleted",
+    "launch_hint": "Launching the game — select this server in-game to join.",
+    "no_version": "Select a game version first",
+    "no_player": "Select a player first"
   },
   "installpage": {
     "error": {

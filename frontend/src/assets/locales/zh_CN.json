@@ -180,7 +180,8 @@
   },
   "downloadpage": {
     "error": {
-      "already_downloading": "该文件正在下载中"
+      "already_downloading": "该文件正在下载中",
+      "download_failed": "下载失败"
     },
     "changelog": {
       "title": "最新更新日志"
@@ -202,7 +203,8 @@
       },
       "type": {
         "release": "正式版",
-        "preview": "预览版"
+        "preview": "预览版",
+        "beta": "测试版"
       }
     },
     "topcontent": {
@@ -215,7 +217,8 @@
       "loader": "加载器",
       "input": {
         "placeholder": "按版本搜索..."
-      }
+      },
+      "package_all": "全部软件包"
     },
     "actions": {
       "delete_installer": "删除下载包"
@@ -299,6 +302,14 @@
           }
         }
       }
+    },
+    "uwp": {
+      "resolving": "正在解析…",
+      "install_title": "安装 UWP 实例",
+      "install_button": "安装",
+      "folder_label": "实例文件夹名称",
+      "installing": "正在解压并注册…",
+      "install_success": "UWP 实例已安装"
     }
   },
   "onboarding": {
@@ -529,7 +540,32 @@
       "calculating": "正在计算...",
       "sunrise_time": "今日日出",
       "sunset_time": "今日日落",
-      "sun_fetch_failed": "获取日出日落时间失败"
+      "sun_fetch_failed": "获取日出日落时间失败",
+      "material": {
+        "title": "材质",
+        "description": "壁纸上表面的半透明、模糊和叠加效果，浅色/深色主题分别保存",
+        "edit_mode": "编辑主题",
+        "presets": "预设",
+        "balanced": "均衡",
+        "balanced_desc": "柔和模糊的易读玻璃效果",
+        "clear": "通透",
+        "clear_desc": "壁纸可见度最大化",
+        "solid": "实色",
+        "solid_desc": "不透明表面，无模糊",
+        "opacity": "表面不透明度",
+        "blur": "表面模糊",
+        "overlay": "壁纸叠加",
+        "readability": "可读性保护",
+        "readability_desc": "自动提高表面不透明度，确保文字在明亮或复杂的壁纸上依然清晰可读",
+        "reset": "重置",
+        "preview": "预览",
+        "preview_label": "材质预览",
+        "preview_text": "表面将以配置的半透明和模糊效果跟随壁纸。",
+        "no_image": "设置一张壁纸图片以实时预览材质",
+        "protected": "可读性保护已开启",
+        "unprotected": "可读性保护已关闭",
+        "protected_opacity": "受保护的不透明度 {{value}}%"
+      }
     },
     "process": {
       "title": "进程管理",
@@ -555,6 +591,10 @@
       "register_mode_latest_preview": "最新的预览版",
       "register_mode_last_launched": "上次启动的版本",
       "register_mode_off": "从不自动注册"
+    },
+    "search": {
+      "placeholder": "搜索设置",
+      "count": "匹配到 {{count}} 个分区"
     }
   },
   "downloadmodal": {
@@ -573,7 +613,7 @@
     "contribute.desc": "欢迎通过提交 Issue 或 Pull Request 的方式参与贡献，共同完善 Bedrock Nexus。",
     "github_repo": "GitHub · Bedrock Nexus",
     "license.tip": "许可证与详细信息请参见仓库中的 LICENSE 文件。",
-    "issue": "Issue",
+    "issue": "议题",
     "star_fork": "Star / Fork",
     "creator_name": "Aster",
     "creator_desc": "由 Aster 设计、开发并维护，致力于打造快速、简洁、可靠的启动器。",
@@ -653,7 +693,8 @@
     "count": {
       "worlds": "世界",
       "resource_packs": "资源包",
-      "behavior_packs": "行为包"
+      "behavior_packs": "行为包",
+      "skin_packs": "皮肤包"
     }
   },
   "contentpage": {
@@ -1012,17 +1053,23 @@
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_INSTALL_FAILED": "部分 lip 模组包安装失败",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_MISSING": "部分 lip 模组包未能恢复",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "部分 lip 模组包版本与备份不一致",
-    "ERR_LL_NOT_SUPPORTED": "LeviLamina is not supported for this game version",
-    "ERR_FETCH_LL_DB": "Failed to fetch LeviLamina version database",
-    "ERR_INVALID_VERSION_FORMAT": "Invalid game version format",
-    "ERR_LIP_INSTALL_FAILED": "Failed to install LeviLamina via lip",
-    "ERR_LIP_PACKAGE_INVALID_IDENTIFIER": "Invalid lip package identifier",
-    "ERR_LIP_PACKAGE_VERSION_REQUIRED": "lip package version is required",
-    "ERR_LIP_PACKAGE_INSTALL_FAILED": "Failed to install lip package",
-    "ERR_LIP_PACKAGE_UNINSTALL_FAILED": "Failed to uninstall lip package",
-    "ERR_LIP_PACKAGE_QUERY_FAILED": "Failed to query lip package state",
+    "ERR_LL_NOT_SUPPORTED": "当前游戏版本不支持 LeviLamina",
+    "ERR_FETCH_LL_DB": "获取 LeviLamina 版本数据库失败",
+    "ERR_INVALID_VERSION_FORMAT": "游戏版本格式无效",
+    "ERR_LIP_INSTALL_FAILED": "通过 lip 安装 LeviLamina 失败",
+    "ERR_LIP_PACKAGE_INVALID_IDENTIFIER": "lip 软件包标识符无效",
+    "ERR_LIP_PACKAGE_VERSION_REQUIRED": "需要指定 lip 软件包版本",
+    "ERR_LIP_PACKAGE_INSTALL_FAILED": "安装 lip 软件包失败",
+    "ERR_LIP_PACKAGE_UNINSTALL_FAILED": "卸载 lip 软件包失败",
+    "ERR_LIP_PACKAGE_QUERY_FAILED": "查询 lip 软件包状态失败",
     "ERR_LIP_CACHE_CLEAN_FAILED": "清理 lip 缓存失败",
-    "ERR_LL_MANAGED_IN_VERSION_SETTINGS": "LeviLamina can only be managed in Version Settings"
+    "ERR_LL_MANAGED_IN_VERSION_SETTINGS": "LeviLamina 只能在版本设置中管理",
+    "ERR_LAUNCH_TIMEOUT": "Minecraft 未在启动超时时间内出现。请检查所选实例已注册，且 Minecraft 可以正常启动。",
+    "ERR_PATCH_RUN_FAILED": "运行补丁脚本失败",
+    "ERR_SERVER_INVALID_NAME": "服务器名称无效",
+    "ERR_SERVER_INVALID_ADDRESS": "服务器地址无效",
+    "ERR_SERVER_INVALID_PORT": "端口必须是 1 到 65535 之间的数字",
+    "ERR_SERVER_NOT_FOUND": "未找到服务器 — 列表可能已更改"
   },
   "filemanager": {
     "sort": {
@@ -1250,7 +1297,7 @@
       "downgrade": "降级",
       "redirect": "转跳",
       "installing_version_label": "安装包版本",
-      "variant_label": "Variant",
+      "variant_label": "变体",
       "variant_hint_keep_default": "一般情况下无需改动",
       "variant_placeholder": "选择要安装的 variant",
       "variant_default": "默认",
@@ -1381,5 +1428,103 @@
     "download": "下载",
     "open_page": "打开页面",
     "download_started": "下载已开始"
+  },
+  "marketplace": {
+    "title": "市场",
+    "search_placeholder": "搜索市场物品...",
+    "search": "搜索",
+    "refresh": "刷新",
+    "index_source": "索引来源",
+    "apply": "应用",
+    "type": "类型",
+    "select_type": "选择类型",
+    "all_types": "全部类型",
+    "tag": "标签",
+    "select_tag": "选择标签",
+    "all_tags": "全部标签",
+    "sort_by": "排序方式",
+    "select_sort": "选择排序",
+    "sort": {
+      "newest": "最新",
+      "name": "名称 A-Z"
+    },
+    "no_results": "未找到物品",
+    "load_error": "市场索引加载失败，请重试",
+    "no_description": "暂无描述。",
+    "by_author": "作者：{{author}}",
+    "by": "作者：",
+    "version": "版本",
+    "updated": "已更新",
+    "updated_date": "更新于 {{date}}",
+    "item_not_found": "未找到物品",
+    "go_back": "返回",
+    "install_action": "安装",
+    "homepage": "主页",
+    "item_details_aria_label": "市场物品详情",
+    "tabs": {
+      "description": "描述",
+      "files": "文件"
+    },
+    "types": {
+      "mcaddon": "附加包",
+      "mcpack": "资源包",
+      "mcworld": "世界",
+      "skinpack": "皮肤包",
+      "dll": "LeviLamina 模组",
+      "lip": "lip 软件包"
+    },
+    "files": {
+      "title": "全部版本",
+      "table_aria_label": "市场物品文件表",
+      "columns": {
+        "version": "版本",
+        "date": "日期",
+        "size": "大小",
+        "changelog": "更新日志",
+        "actions": "操作"
+      }
+    },
+    "no_files_found": "未找到文件",
+    "install": {
+      "downloading_title": "正在下载内容",
+      "select_version_title": "选择游戏实例",
+      "select_player_title": "选择玩家",
+      "importing_title": "正在导入内容",
+      "success_title": "成功",
+      "error_title": "错误",
+      "downloading_body": "正在下载文件...",
+      "select_version_body": "请选择要导入到的游戏实例：",
+      "local_installation": "本地实例",
+      "select_version_placeholder": "选择实例",
+      "registered": "已注册",
+      "select_player_body": "此内容需要选择一位玩家：",
+      "player_label": "玩家",
+      "select_player_placeholder": "选择玩家",
+      "importing_body": "正在导入内容...",
+      "success_msg": "导入成功",
+      "success_desc": "内容已成功导入到所选实例。",
+      "failed_msg": "导入失败",
+      "next": "下一步",
+      "close": "关闭"
+    }
+  },
+  "serverspage": {
+    "add_server": "添加服务器",
+    "edit_server": "编辑服务器",
+    "delete_server": "删除服务器",
+    "delete_confirm": "该服务器也会从游戏内已保存的服务器列表中移除。",
+    "play": "开始游戏",
+    "form_name": "服务器名称",
+    "form_name_ph": "我的服务器",
+    "form_address": "服务器地址",
+    "form_address_ph": "play.example.net",
+    "form_port": "端口",
+    "form_port_ph": "19132",
+    "add_success": "服务器已添加",
+    "update_success": "服务器已更新",
+    "delete_success": "服务器已删除",
+    "launch_hint": "正在启动游戏 — 请在游戏内选择该服务器加入。",
+    "no_version": "请先选择游戏版本",
+    "no_player": "请先选择玩家"
   }
 }

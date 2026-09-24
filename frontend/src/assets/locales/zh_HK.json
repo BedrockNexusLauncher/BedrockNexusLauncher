@@ -180,7 +180,8 @@
   },
   "downloadpage": {
     "error": {
-      "already_downloading": "該檔案正在下載中"
+      "already_downloading": "該檔案正在下載中",
+      "download_failed": "下載失敗"
     },
     "changelog": {
       "title": "最新更新日誌"
@@ -202,7 +203,8 @@
       },
       "type": {
         "release": "正式版",
-        "preview": "預覽版"
+        "preview": "預覽版",
+        "beta": "測試版"
       }
     },
     "topcontent": {
@@ -215,7 +217,8 @@
       "loader": "載入器",
       "input": {
         "placeholder": "按版本搜尋..."
-      }
+      },
+      "package_all": "全部套件"
     },
     "actions": {
       "delete_installer": "刪除下載包"
@@ -299,6 +302,14 @@
           }
         }
       }
+    },
+    "uwp": {
+      "resolving": "正在解析…",
+      "install_title": "安裝 UWP 執行個體",
+      "install_button": "安裝",
+      "folder_label": "執行個體資料夾名稱",
+      "installing": "正在解壓縮並註冊…",
+      "install_success": "UWP 執行個體已安裝"
     }
   },
   "settings": {
@@ -517,7 +528,32 @@
       "calculating": "正在計算...",
       "sunrise_time": "今日日出",
       "sunset_time": "今日日落",
-      "sun_fetch_failed": "獲取日出日落時間失敗"
+      "sun_fetch_failed": "獲取日出日落時間失敗",
+      "material": {
+        "title": "材質",
+        "description": "桌布上表面的半透明、模糊與疊加效果，淺色/深色主題分別儲存",
+        "edit_mode": "編輯主題",
+        "presets": "預設",
+        "balanced": "均衡",
+        "balanced_desc": "柔和模糊的易讀玻璃效果",
+        "clear": "通透",
+        "clear_desc": "桌布可見度最大化",
+        "solid": "實色",
+        "solid_desc": "不透明表面，無模糊",
+        "opacity": "表面不透明度",
+        "blur": "表面模糊",
+        "overlay": "桌布疊加",
+        "readability": "可讀性保護",
+        "readability_desc": "自動提高表面不透明度，確保文字在明亮或複雜的桌布上依然清晰可讀",
+        "reset": "重設",
+        "preview": "預覽",
+        "preview_label": "材質預覽",
+        "preview_text": "表面將以設定的半透明與模糊效果跟隨桌布。",
+        "no_image": "設定一張桌布圖片以即時預覽材質",
+        "protected": "可讀性保護已開啟",
+        "unprotected": "可讀性保護已關閉",
+        "protected_opacity": "受保護的不透明度 {{value}}%"
+      }
     },
     "process": {
       "title": "進程管理",
@@ -543,6 +579,10 @@
       "register_mode_latest_preview": "最新的預覽版",
       "register_mode_last_launched": "上次啟動的版本",
       "register_mode_off": "從不自動註冊"
+    },
+    "search": {
+      "placeholder": "搜尋設定",
+      "count": "符合 {{count}} 個區段"
     }
   },
   "downloadmodal": {
@@ -561,7 +601,7 @@
     "contribute.desc": "歡迎透過提交 Issue 或 Pull Request 的方式參與貢獻，共同完善 Bedrock Nexus。",
     "github_repo": "GitHub · Bedrock Nexus",
     "license.tip": "授權與詳細資訊請參見倉庫中的 LICENSE 檔案。",
-    "issue": "Issue",
+    "issue": "議題",
     "star_fork": "Star / Fork",
     "creator_name": "Aster",
     "creator_desc": "由 Aster 設計、開發並維護，致力打造快速、簡潔、可靠的啟動器。",
@@ -641,7 +681,8 @@
     "count": {
       "worlds": "世界",
       "resource_packs": "資源包",
-      "behavior_packs": "行為包"
+      "behavior_packs": "行為包",
+      "skin_packs": "造型包"
     }
   },
   "contentpage": {
@@ -1000,17 +1041,23 @@
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_INSTALL_FAILED": "部分由 lip 管理的模組套件安裝失敗",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_MISSING": "部分由 lip 管理的模組套件未能還原",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "部分由 lip 管理的模組套件版本與備份不一致",
-    "ERR_LL_NOT_SUPPORTED": "LeviLamina is not supported for this game version",
-    "ERR_FETCH_LL_DB": "Failed to fetch LeviLamina version database",
-    "ERR_INVALID_VERSION_FORMAT": "Invalid game version format",
-    "ERR_LIP_INSTALL_FAILED": "Failed to install LeviLamina via lip",
-    "ERR_LIP_PACKAGE_INVALID_IDENTIFIER": "Invalid lip package identifier",
-    "ERR_LIP_PACKAGE_VERSION_REQUIRED": "lip package version is required",
-    "ERR_LIP_PACKAGE_INSTALL_FAILED": "Failed to install lip package",
-    "ERR_LIP_PACKAGE_UNINSTALL_FAILED": "Failed to uninstall lip package",
-    "ERR_LIP_PACKAGE_QUERY_FAILED": "Failed to query lip package state",
+    "ERR_LL_NOT_SUPPORTED": "目前遊戲版本不支援 LeviLamina",
+    "ERR_FETCH_LL_DB": "擷取 LeviLamina 版本資料庫失敗",
+    "ERR_INVALID_VERSION_FORMAT": "遊戲版本格式無效",
+    "ERR_LIP_INSTALL_FAILED": "透過 lip 安裝 LeviLamina 失敗",
+    "ERR_LIP_PACKAGE_INVALID_IDENTIFIER": "lip 套件識別碼無效",
+    "ERR_LIP_PACKAGE_VERSION_REQUIRED": "需要指定 lip 套件版本",
+    "ERR_LIP_PACKAGE_INSTALL_FAILED": "安裝 lip 套件失敗",
+    "ERR_LIP_PACKAGE_UNINSTALL_FAILED": "解除安裝 lip 套件失敗",
+    "ERR_LIP_PACKAGE_QUERY_FAILED": "查詢 lip 套件狀態失敗",
     "ERR_LIP_CACHE_CLEAN_FAILED": "清理 lip 快取失敗",
-    "ERR_LL_MANAGED_IN_VERSION_SETTINGS": "LeviLamina can only be managed in Version Settings"
+    "ERR_LL_MANAGED_IN_VERSION_SETTINGS": "LeviLamina 只能在版本設定中管理",
+    "ERR_LAUNCH_TIMEOUT": "Minecraft 未在啟動逾時內出現。請檢查所選執行個體已註冊，且 Minecraft 可以正常啟動。",
+    "ERR_PATCH_RUN_FAILED": "執行修補指令碼失敗",
+    "ERR_SERVER_INVALID_NAME": "伺服器名稱無效",
+    "ERR_SERVER_INVALID_ADDRESS": "伺服器位址無效",
+    "ERR_SERVER_INVALID_PORT": "連接埠必須是 1 到 65535 之間的數字",
+    "ERR_SERVER_NOT_FOUND": "找不到伺服器 — 清單可能已更改"
   },
   "filemanager": {
     "sort": {
@@ -1250,7 +1297,7 @@
       "downgrade": "降級",
       "redirect": "轉跳",
       "installing_version_label": "安裝套件版本",
-      "variant_label": "Variant",
+      "variant_label": "變體",
       "variant_hint_keep_default": "一般情況下無需改動",
       "variant_placeholder": "選擇要安裝的 variant",
       "variant_default": "預設",
@@ -1381,5 +1428,103 @@
     "download": "下載",
     "open_page": "開啟頁面",
     "download_started": "下載已開始"
+  },
+  "marketplace": {
+    "title": "市集",
+    "search_placeholder": "搜尋市集物品...",
+    "search": "搜尋",
+    "refresh": "重新整理",
+    "index_source": "索引來源",
+    "apply": "套用",
+    "type": "類型",
+    "select_type": "選擇類型",
+    "all_types": "全部類型",
+    "tag": "標籤",
+    "select_tag": "選擇標籤",
+    "all_tags": "全部標籤",
+    "sort_by": "排序方式",
+    "select_sort": "選擇排序",
+    "sort": {
+      "newest": "最新",
+      "name": "名稱 A-Z"
+    },
+    "no_results": "找不到物品",
+    "load_error": "市集索引載入失敗，請重試",
+    "no_description": "暫無描述。",
+    "by_author": "作者：{{author}}",
+    "by": "作者：",
+    "version": "版本",
+    "updated": "已更新",
+    "updated_date": "更新於 {{date}}",
+    "item_not_found": "找不到物品",
+    "go_back": "返回",
+    "install_action": "安裝",
+    "homepage": "主頁",
+    "item_details_aria_label": "市集物品詳情",
+    "tabs": {
+      "description": "描述",
+      "files": "檔案"
+    },
+    "types": {
+      "mcaddon": "附加包",
+      "mcpack": "資源包",
+      "mcworld": "世界",
+      "skinpack": "造型包",
+      "dll": "LeviLamina 模組",
+      "lip": "lip 套件"
+    },
+    "files": {
+      "title": "全部版本",
+      "table_aria_label": "市集物品檔案表",
+      "columns": {
+        "version": "版本",
+        "date": "日期",
+        "size": "大小",
+        "changelog": "更新日誌",
+        "actions": "操作"
+      }
+    },
+    "no_files_found": "找不到檔案",
+    "install": {
+      "downloading_title": "正在下載內容",
+      "select_version_title": "選擇遊戲執行個體",
+      "select_player_title": "選擇玩家",
+      "importing_title": "正在匯入內容",
+      "success_title": "成功",
+      "error_title": "錯誤",
+      "downloading_body": "正在下載檔案...",
+      "select_version_body": "請選擇要匯入的遊戲執行個體：",
+      "local_installation": "本機執行個體",
+      "select_version_placeholder": "選擇執行個體",
+      "registered": "已註冊",
+      "select_player_body": "此內容需要選擇一位玩家：",
+      "player_label": "玩家",
+      "select_player_placeholder": "選擇玩家",
+      "importing_body": "正在匯入內容...",
+      "success_msg": "匯入成功",
+      "success_desc": "內容已成功匯入到所選執行個體。",
+      "failed_msg": "匯入失敗",
+      "next": "下一步",
+      "close": "關閉"
+    }
+  },
+  "serverspage": {
+    "add_server": "新增伺服器",
+    "edit_server": "編輯伺服器",
+    "delete_server": "刪除伺服器",
+    "delete_confirm": "該伺服器亦會從遊戲內已儲存的伺服器清單中移除。",
+    "play": "開始遊戲",
+    "form_name": "伺服器名稱",
+    "form_name_ph": "我的伺服器",
+    "form_address": "伺服器位址",
+    "form_address_ph": "play.example.net",
+    "form_port": "連接埠",
+    "form_port_ph": "19132",
+    "add_success": "已新增伺服器",
+    "update_success": "已更新伺服器",
+    "delete_success": "已刪除伺服器",
+    "launch_hint": "正在啟動遊戲 — 請在遊戲內選擇該伺服器加入。",
+    "no_version": "請先選擇遊戲版本",
+    "no_player": "請先選擇玩家"
   }
 }

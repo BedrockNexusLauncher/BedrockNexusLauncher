@@ -180,7 +180,8 @@
   },
   "downloadpage": {
     "error": {
-      "already_downloading": "このファイルは既にダウンロード中です"
+      "already_downloading": "このファイルは既にダウンロード中です",
+      "download_failed": "ダウンロードに失敗しました"
     },
     "changelog": {
       "title": "最新の変更ログ"
@@ -202,7 +203,8 @@
       },
       "type": {
         "release": "リリース",
-        "preview": "プレビュー"
+        "preview": "プレビュー",
+        "beta": "ベータ"
       }
     },
     "topcontent": {
@@ -215,7 +217,8 @@
       "loader": "ローダー",
       "input": {
         "placeholder": "バージョンで検索..."
-      }
+      },
+      "package_all": "すべてのパッケージ"
     },
     "actions": {
       "delete_installer": "インストーラーを削除"
@@ -299,6 +302,14 @@
           }
         }
       }
+    },
+    "uwp": {
+      "resolving": "解決中…",
+      "install_title": "UWPインスタンスのインストール",
+      "install_button": "インストール",
+      "folder_label": "インスタンスのフォルダー名",
+      "installing": "展開・登録中…",
+      "install_success": "UWPインスタンスをインストールしました"
     }
   },
   "settings": {
@@ -517,7 +528,32 @@
       "theme_start_time": "ダークモード開始時間",
       "theme_end_time": "ダークモード終了時間",
       "theme_schedule_desc": "指定された期間中に自動的にダークモードに切り替えます",
-      "theme_auto_desc": "現地の日の出と日の入り時刻に基づいてテーマを自動的に切り替えます"
+      "theme_auto_desc": "現地の日の出と日の入り時刻に基づいてテーマを自動的に切り替えます",
+      "material": {
+        "title": "マテリアル",
+        "description": "壁紙の上に重なる表面の半透明・ぼかし・オーバーレイ。ライト/ダークテーマ別に保存",
+        "edit_mode": "テーマを編集",
+        "presets": "プリセット",
+        "balanced": "バランス",
+        "balanced_desc": "柔らかいぼかしの読みやすいグラス",
+        "clear": "クリア",
+        "clear_desc": "壁紙の視認性を最大化",
+        "solid": "ソリッド",
+        "solid_desc": "不透明な表面、ぼかしなし",
+        "opacity": "表面の不透明度",
+        "blur": "表面のぼかし",
+        "overlay": "壁紙オーバーレイ",
+        "readability": "読みやすさ保護",
+        "readability_desc": "明るい・複雑な壁紙でも文字が読みやすくなるよう表面の不透明度を自動で上げる",
+        "reset": "リセット",
+        "preview": "プレビュー",
+        "preview_label": "マテリアルプレビュー",
+        "preview_text": "表面は設定された半透明とぼかしで壁紙に追従します。",
+        "no_image": "マテリアルをライブプレビューするには壁紙画像を設定してください",
+        "protected": "読みやすさ保護が有効",
+        "unprotected": "読みやすさ保護が無効",
+        "protected_opacity": "保護された不透明度 {{value}}%"
+      }
     },
     "process": {
       "title": "プロセス管理",
@@ -543,6 +579,10 @@
       "register_mode_latest_preview": "最新の Preview バージョン",
       "register_mode_last_launched": "最後に起動したバージョン",
       "register_mode_off": "自動登録しない"
+    },
+    "search": {
+      "placeholder": "設定を検索",
+      "count": "一致するセクション {{count}} 件"
     }
   },
   "downloadmodal": {
@@ -641,7 +681,8 @@
     "count": {
       "worlds": "ワールド",
       "resource_packs": "リソースパック",
-      "behavior_packs": "ビヘイビアーパック"
+      "behavior_packs": "ビヘイビアーパック",
+      "skin_packs": "スキンパック"
     }
   },
   "contentpage": {
@@ -781,7 +822,7 @@
         "title": "インスタンスのバックアップ",
         "hint": "設定変更や mods の追加、新しいことを試す前に、このインスタンスのバックアップを作成しておけます",
         "section_body": "一緒に保存したいゲーム内容と mods を選べます；ランチャー本体は含まれません",
-        "experimental_badge": "Experimental",
+        "experimental_badge": "実験的",
         "experimental_disabled": "インスタンスバックアップと復元を使用する前に、{{settingsPath}} で有効にしてください。",
         "button": "インスタンスをバックアップ",
         "dialog_title": "バックアップする内容を選択",
@@ -1010,7 +1051,13 @@
     "ERR_LIP_PACKAGE_UNINSTALL_FAILED": "lip パッケージのアンインストールに失敗しました",
     "ERR_LIP_PACKAGE_QUERY_FAILED": "lip パッケージの状態の照会に失敗しました",
     "ERR_LIP_CACHE_CLEAN_FAILED": "lip キャッシュの削除に失敗しました",
-    "ERR_LL_MANAGED_IN_VERSION_SETTINGS": "LeviLamina はバージョン設定でのみ管理できます"
+    "ERR_LL_MANAGED_IN_VERSION_SETTINGS": "LeviLamina はバージョン設定でのみ管理できます",
+    "ERR_LAUNCH_TIMEOUT": "起動タイムアウト内にMinecraftが表示されませんでした。選択したインスタンスが登録済みで、Minecraftが正常に起動できるか確認してください。",
+    "ERR_PATCH_RUN_FAILED": "パッチスクリプトの実行に失敗しました",
+    "ERR_SERVER_INVALID_NAME": "無効なサーバー名",
+    "ERR_SERVER_INVALID_ADDRESS": "無効なサーバーアドレス",
+    "ERR_SERVER_INVALID_PORT": "ポートは1～65535の数値である必要があります",
+    "ERR_SERVER_NOT_FOUND": "サーバーが見つかりません — リストが変更された可能性があります"
   },
   "filemanager": {
     "sort": {
@@ -1381,5 +1428,103 @@
     "download": "ダウンロード",
     "open_page": "ページを開く",
     "download_started": "ダウンロードを開始しました"
+  },
+  "marketplace": {
+    "title": "マーケットプレイス",
+    "search_placeholder": "マーケットプレイスのアイテムを検索...",
+    "search": "検索",
+    "refresh": "更新",
+    "index_source": "インデックスソース",
+    "apply": "適用",
+    "type": "種類",
+    "select_type": "種類を選択",
+    "all_types": "すべての種類",
+    "tag": "タグ",
+    "select_tag": "タグを選択",
+    "all_tags": "すべてのタグ",
+    "sort_by": "並び替え",
+    "select_sort": "並び替えを選択",
+    "sort": {
+      "newest": "新着順",
+      "name": "名前 A-Z"
+    },
+    "no_results": "アイテムが見つかりません",
+    "load_error": "マーケットプレイスのインデックス読み込みに失敗しました。再試行してください",
+    "no_description": "説明がありません。",
+    "by_author": "{{author}} 作",
+    "by": "作者:",
+    "version": "バージョン",
+    "updated": "更新済み",
+    "updated_date": "更新: {{date}}",
+    "item_not_found": "アイテムが見つかりません",
+    "go_back": "戻る",
+    "install_action": "インストール",
+    "homepage": "ホームページ",
+    "item_details_aria_label": "マーケットプレイスアイテムの詳細",
+    "tabs": {
+      "description": "説明",
+      "files": "ファイル"
+    },
+    "types": {
+      "mcaddon": "アドオン",
+      "mcpack": "パック",
+      "mcworld": "ワールド",
+      "skinpack": "スキンパック",
+      "dll": "LeviLamina Mod",
+      "lip": "lipパッケージ"
+    },
+    "files": {
+      "title": "すべてのバージョン",
+      "table_aria_label": "マーケットプレイスアイテムのファイル表",
+      "columns": {
+        "version": "バージョン",
+        "date": "日付",
+        "size": "サイズ",
+        "changelog": "変更履歴",
+        "actions": "操作"
+      }
+    },
+    "no_files_found": "ファイルが見つかりません",
+    "install": {
+      "downloading_title": "コンテンツをダウンロード中",
+      "select_version_title": "ゲームインスタンスの選択",
+      "select_player_title": "プレイヤーの選択",
+      "importing_title": "コンテンツをインポート中",
+      "success_title": "成功",
+      "error_title": "エラー",
+      "downloading_body": "ファイルをダウンロード中...",
+      "select_version_body": "インポート先のゲームインスタンスを選択してください:",
+      "local_installation": "ローカルインスタンス",
+      "select_version_placeholder": "インスタンスを選択",
+      "registered": "登録済み",
+      "select_player_body": "このコンテンツにはプレイヤーの選択が必要です:",
+      "player_label": "プレイヤー",
+      "select_player_placeholder": "プレイヤーを選択",
+      "importing_body": "コンテンツをインポート中...",
+      "success_msg": "インポート成功",
+      "success_desc": "選択したインスタンスにコンテンツをインポートしました。",
+      "failed_msg": "インポート失敗",
+      "next": "次へ",
+      "close": "閉じる"
+    }
+  },
+  "serverspage": {
+    "add_server": "サーバーを追加",
+    "edit_server": "サーバーを編集",
+    "delete_server": "サーバーを削除",
+    "delete_confirm": "このサーバーはゲーム内の保存済みサーバーリストからも削除されます。",
+    "play": "プレイ",
+    "form_name": "サーバー名",
+    "form_name_ph": "マイサーバー",
+    "form_address": "サーバーアドレス",
+    "form_address_ph": "play.example.net",
+    "form_port": "ポート",
+    "form_port_ph": "19132",
+    "add_success": "サーバーを追加しました",
+    "update_success": "サーバーを更新しました",
+    "delete_success": "サーバーを削除しました",
+    "launch_hint": "ゲームを起動中 — 参加するにはゲーム内でこのサーバーを選択してください。",
+    "no_version": "先にゲームバージョンを選択してください",
+    "no_player": "先にプレイヤーを選択してください"
   }
 }

@@ -435,20 +435,20 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
                       {it.isBeta ? (
                         <Chip
                           size="sm"
-                          color="default"
-                          variant="flat"
-                          className="shrink-0"
-                        >
-                          Beta
-                        </Chip>
-                      ) : it.isPreview ? (
-                        <Chip
-                          size="sm"
                           color="warning"
                           variant="flat"
                           className="shrink-0"
                         >
-                          Preview
+                          {t("downloadpage.table.type.beta")}
+                        </Chip>
+                      ) : it.isPreview ? (
+                        <Chip
+                          size="sm"
+                          color="secondary"
+                          variant="flat"
+                          className="shrink-0"
+                        >
+                          {t("downloadpage.table.type.preview")}
                         </Chip>
                       ) : (
                         <Chip
@@ -457,7 +457,7 @@ export const InstanceSelectPage: React.FC<{ refresh?: () => void }> = (
                           variant="flat"
                           className="shrink-0"
                         >
-                          Release
+                          {t("downloadpage.table.type.release")}
                         </Chip>
                       )}
                       <Button

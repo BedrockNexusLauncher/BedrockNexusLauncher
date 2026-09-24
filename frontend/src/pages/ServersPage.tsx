@@ -30,12 +30,17 @@ import {
   FaClock,
   FaTrash,
   FaPlus,
+  FaPlay,
+  FaPen,
   FaTag,
 } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import * as minecraft from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/minecraft";
 import { OpenPathDir } from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/minecraft";
 import { GetContentRoots } from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/contentservice";
+import { LaunchVersionByName } from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/versionservice";
+import { UnifiedModal } from "@/components/UnifiedModal";
+import { DeleteConfirmModal } from "@/components/DeleteConfirmModal";
 import { readCurrentVersionName } from "@/utils/currentVersion";
 import { motion } from "framer-motion";
 import {
@@ -71,7 +76,20 @@ interface MotdInfo {
   delay: number;
 }
 
-const ServerRow = React.memo(({ server }: { server: Server }) => {
+const ServerRow = React.memo(
+  ({
+    server,
+    onPlay,
+    onEdit,
+    onDelete,
+    playLoading,
+  }: {
+    server: Server;
+    onPlay: (s: Server) => void;
+    onEdit: (s: Server) => void;
+    onDelete: (s: Server) => void;
+    playLoading: boolean;
+  }) => {
   const { t } = useTranslation();
   const [info, setInfo] = useState<MotdInfo | null>(null);
   const [loading, setLoading] = useState(true);
@@ -200,6 +218,48 @@ const ServerRow = React.memo(({ server }: { server: Server }) => {
           </div>
         </div>
       </div>
+      <div className="flex sm:flex-col flex-row items-center justify-center gap-2 shrink-0">
+        <Tooltip content={t("serverspage.play")}>
+          <Button
+            isIconOnly
+            radius="full"
+            size="sm"
+            color="primary"
+            variant="flat"
+            aria-label={t("serverspage.play")}
+            isLoading={playLoading}
+            onPress={() => onPlay(server)}
+          >
+            <FaPlay size={14} />
+          </Button>
+        </Tooltip>
+        <Tooltip content={t("serverspage.edit_server")}>
+          <Button
+            isIconOnly
+            radius="full"
+            size="sm"
+            variant="flat"
+            className="bg-default-100 dark:bg-zinc-800 text-default-600 dark:text-zinc-200"
+            aria-label={t("serverspage.edit_server")}
+            onPress={() => onEdit(server)}
+          >
+            <FaPen size={14} />
+          </Button>
+        </Tooltip>
+        <Tooltip content={t("serverspage.delete_server")}>
+          <Button
+            isIconOnly
+            radius="full"
+            size="sm"
+            variant="flat"
+            color="danger"
+            aria-label={t("serverspage.delete_server")}
+            onPress={() => onDelete(server)}
+          >
+            <FaTrash size={14} />
+          </Button>
+        </Tooltip>
+      </div>
     </div>
   );
 });
@@ -221,6 +281,17 @@ export default function ServersPage() {
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState<"name" | "time">("name");
   const [sortAsc, setSortAsc] = useState<boolean>(true);
+  const [serverModalOpen, setServerModalOpen] = useState(false);
+  const [editingServer, setEditingServer] = useState<Server | null>(null);
+  const [formName, setFormName] = useState("");
+  const [formAddress, setFormAddress] = useState("");
+  const [formPort, setFormPort] = useState("19132");
+  const [formError, setFormError] = useState("");
+  const [formSaving, setFormSaving] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Server | null>(null);
+  const [deleteError, setDeleteError] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [launchingIndex, setLaunchingIndex] = useState<string | null>(null);
   const currentVersionName =
     location.state?.versionName || readCurrentVersionName();
 
@@ -248,6 +319,170 @@ export default function ServersPage() {
     if (r.usersRoot) {
       const path = `${r.usersRoot}\\${selectedPlayer}\\games\\com.mojang\\minecraftpe`;
       OpenPathDir(path);
+    }
+  };
+
+  const trServerErr = (code: string): string => {
+    const key = `errors.${code}`;
+    const v = t(key) as unknown as string;
+    return v && v !== key ? v : code;
+  };
+
+  const validateServerForm = (
+    name: string,
+    address: string,
+    port: string,
+  ): string => {
+    if (!name.trim() || name.includes(":") || /[\r\n]/.test(name)) {
+      return "ERR_SERVER_INVALID_NAME";
+    }
+    if (!address.trim() || /[\s:/\\]/.test(address)) {
+      return "ERR_SERVER_INVALID_ADDRESS";
+    }
+    const p = port.trim();
+    if (!/^\d+$/.test(p) || Number(p) < 1 || Number(p) > 65535) {
+      return "ERR_SERVER_INVALID_PORT";
+    }
+    return "";
+  };
+
+  const openAddServer = () => {
+    if (!selectedPlayer) {
+      addToast({
+        description: t("serverspage.no_player"),
+        color: "warning",
+      });
+      return;
+    }
+    setEditingServer(null);
+    setFormName("");
+    setFormAddress("");
+    setFormPort("19132");
+    setFormError("");
+    setServerModalOpen(true);
+  };
+
+  const openEditServer = (srv: Server) => {
+    setEditingServer(srv);
+    setFormName(srv.name);
+    setFormAddress(srv.ip);
+    setFormPort(srv.port);
+    setFormError("");
+    setServerModalOpen(true);
+  };
+
+  const confirmServerForm = async () => {
+    const invalid = validateServerForm(formName, formAddress, formPort);
+    if (invalid) {
+      setFormError(trServerErr(invalid));
+      return;
+    }
+    if (!selectedPlayer) {
+      setFormError(trServerErr("ERR_NO_GAME_DATA"));
+      return;
+    }
+    setFormSaving(true);
+    setFormError("");
+    try {
+      const code = editingServer
+        ? await (minecraft as any)?.UpdateServer?.(
+            currentVersionName || "",
+            selectedPlayer,
+            editingServer.index,
+            formName.trim(),
+            formAddress.trim(),
+            formPort.trim(),
+          )
+        : await (minecraft as any)?.AddServer?.(
+            currentVersionName || "",
+            selectedPlayer,
+            formName.trim(),
+            formAddress.trim(),
+            formPort.trim(),
+          );
+      const err = String(code || "");
+      if (err) {
+        setFormError(trServerErr(err));
+        return;
+      }
+      addToast({
+        title: t(
+          editingServer
+            ? "serverspage.update_success"
+            : "serverspage.add_success",
+        ),
+        color: "success",
+      });
+      setServerModalOpen(false);
+      await refreshAll();
+    } catch (e: any) {
+      setFormError(e?.message || trServerErr("ERR_WRITE_TARGET"));
+    } finally {
+      setFormSaving(false);
+    }
+  };
+
+  const confirmServerDelete = async () => {
+    if (!deleteTarget) return;
+    if (!selectedPlayer) {
+      setDeleteError(trServerErr("ERR_NO_GAME_DATA"));
+      return false;
+    }
+    setDeleting(true);
+    setDeleteError("");
+    try {
+      const code = await (minecraft as any)?.DeleteServer?.(
+        currentVersionName || "",
+        selectedPlayer,
+        deleteTarget.index,
+      );
+      const err = String(code || "");
+      if (err) {
+        setDeleteError(trServerErr(err));
+        return false;
+      }
+      addToast({
+        title: t("serverspage.delete_success"),
+        color: "success",
+      });
+      await refreshAll();
+    } catch (e: any) {
+      setDeleteError(e?.message || trServerErr("ERR_WRITE_TARGET"));
+      return false;
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handlePlayServer = async (srv: Server) => {
+    if (!currentVersionName) {
+      addToast({
+        description: t("serverspage.no_version"),
+        color: "warning",
+      });
+      return;
+    }
+    const key = `${srv.index}`;
+    setLaunchingIndex(key);
+    try {
+      const code = await LaunchVersionByName(currentVersionName);
+      const err = String(code || "");
+      if (err) {
+        addToast({ description: trServerErr(err), color: "danger" });
+      } else {
+        addToast({
+          title: srv.name,
+          description: t("serverspage.launch_hint"),
+          color: "success",
+        });
+      }
+    } catch (e: any) {
+      addToast({
+        description: e?.message || trServerErr("ERR_LAUNCH_GAME"),
+        color: "danger",
+      });
+    } finally {
+      setLaunchingIndex(null);
     }
   };
 
@@ -304,6 +539,17 @@ export default function ServersPage() {
             title={t("contentpage.servers")}
             endContent={
               <div className="flex items-center gap-2">
+                <Button
+                  radius="full"
+                  variant="flat"
+                  color="primary"
+                  startContent={<FaPlus />}
+                  isDisabled={!selectedPlayer || loading}
+                  onPress={openAddServer}
+                  className="font-medium"
+                >
+                  {t("serverspage.add_server")}
+                </Button>
                 <Dropdown classNames={COMPONENT_STYLES.dropdown}>
                   <DropdownTrigger>
                     <Button
@@ -503,11 +749,99 @@ export default function ServersPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.05 }}
             >
-              <ServerRow server={srv} />
+              <ServerRow
+                server={srv}
+                onPlay={handlePlayServer}
+                onEdit={openEditServer}
+                onDelete={(s) => {
+                  setDeleteTarget(s);
+                  setDeleteError("");
+                }}
+                playLoading={launchingIndex === `${srv.index}`}
+              />
             </motion.div>
           ))}
         </div>
       )}
+
+      <UnifiedModal
+        isOpen={serverModalOpen}
+        onOpenChange={setServerModalOpen}
+        type="primary"
+        title={
+          editingServer
+            ? t("serverspage.edit_server")
+            : t("serverspage.add_server")
+        }
+        icon={<FaServer className="w-6 h-6" />}
+        onConfirm={confirmServerForm}
+        confirmText={t("common.save")}
+        showCancelButton
+        onCancel={() => setServerModalOpen(false)}
+        isDismissable={!formSaving}
+        hideCloseButton={formSaving}
+        confirmButtonProps={{
+          isLoading: formSaving,
+          isDisabled: formSaving,
+        }}
+      >
+        <div className="flex flex-col gap-3">
+          <Input
+            label={t("serverspage.form_name")}
+            placeholder={t("serverspage.form_name_ph")}
+            value={formName}
+            onValueChange={setFormName}
+            variant="flat"
+            radius="lg"
+            classNames={COMPONENT_STYLES.input}
+          />
+          <div className="flex gap-3" dir="ltr">
+            <Input
+              label={t("serverspage.form_address")}
+              placeholder={t("serverspage.form_address_ph")}
+              value={formAddress}
+              onValueChange={setFormAddress}
+              variant="flat"
+              radius="lg"
+              className="flex-1"
+              classNames={COMPONENT_STYLES.input}
+            />
+            <Input
+              label={t("serverspage.form_port")}
+              placeholder={t("serverspage.form_port_ph")}
+              value={formPort}
+              onValueChange={setFormPort}
+              variant="flat"
+              radius="lg"
+              inputMode="numeric"
+              className="w-28"
+              classNames={COMPONENT_STYLES.input}
+            />
+          </div>
+          {formError && (
+            <div className="text-small text-white bg-danger-500/90 px-3 py-2 rounded-lg">
+              {formError}
+            </div>
+          )}
+        </div>
+      </UnifiedModal>
+
+      <DeleteConfirmModal
+        isOpen={!!deleteTarget}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTarget(null);
+        }}
+        onConfirm={confirmServerDelete}
+        title={t("serverspage.delete_server")}
+        description={t("serverspage.delete_confirm")}
+        itemName={
+          deleteTarget
+            ? `${deleteTarget.name} (${deleteTarget.ip}:${deleteTarget.port})`
+            : ""
+        }
+        isPending={deleting}
+        error={deleteError || null}
+      />
     </PageContainer>
   );
 }

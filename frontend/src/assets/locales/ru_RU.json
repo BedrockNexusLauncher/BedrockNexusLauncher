@@ -180,7 +180,8 @@
   },
   "downloadpage": {
     "error": {
-      "already_downloading": "Этот файл уже загружается"
+      "already_downloading": "Этот файл уже загружается",
+      "download_failed": "Не удалось скачать"
     },
     "changelog": {
       "title": "Последний журнал изменений"
@@ -202,7 +203,8 @@
       },
       "type": {
         "release": "Релиз",
-        "preview": "Предрелиз"
+        "preview": "Предрелиз",
+        "beta": "Бета"
       }
     },
     "topcontent": {
@@ -215,7 +217,8 @@
       "loader": "Загрузчик",
       "input": {
         "placeholder": "Поиск по версии..."
-      }
+      },
+      "package_all": "Все пакеты"
     },
     "actions": {
       "delete_installer": "Удалить установщик"
@@ -299,6 +302,14 @@
           }
         }
       }
+    },
+    "uwp": {
+      "resolving": "Подготовка…",
+      "install_title": "Установка UWP-инстанса",
+      "install_button": "Установить",
+      "folder_label": "Имя папки инстанса",
+      "installing": "Извлечение и регистрация…",
+      "install_success": "UWP-инстанс установлен"
     }
   },
   "settings": {
@@ -332,17 +343,17 @@
       "desc": "Включить получение предварительных версий (prerelease)"
     },
     "experimental": {
-      "title": "Experimental Features",
-      "desc": "Try unfinished capabilities here. These features may change, break, or disappear without notice.",
+      "title": "Экспериментальные функции",
+      "desc": "Здесь можно попробовать незавершённые возможности. Они могут меняться, ломаться или исчезать без предупреждения.",
       "instance_backup": {
-        "title": "Instance backup (Experimental)",
-        "desc": "Enable backup and restore actions in instance settings. This feature is still experimental.",
+        "title": "Резервная копия экземпляра (экспериментально)",
+        "desc": "Включает действия резервного копирования и восстановления в настройках экземпляра. Функция пока экспериментальная.",
         "warning": {
-          "title": "Enable experimental instance backup?",
-          "body_1": "This feature is intended for developers and testers only. Do not use production data casually.",
-          "body_2": "Backup format, included scope, and restore compatibility may change in future builds, and forward compatibility is not guaranteed.",
-          "body_3": "Please make sure you understand the risks, and decide whether to enable it only after reading this warning in full for 10 seconds.",
-          "confirm": "I understand the risks"
+          "title": "Включить экспериментальное резервное копирование?",
+          "body_1": "Функция предназначена только для разработчиков и тестировщиков. Не используйте её с важными данными.",
+          "body_2": "Формат копии, состав данных и совместимость восстановления могут измениться в будущих сборках, совместимость вперёд не гарантируется.",
+          "body_3": "Убедитесь, что понимаете риски, и решайте о включении только после полного прочтения предупреждения и 10 секунд ожидания.",
+          "confirm": "Я понимаю риски"
         }
       },
       "mcpedl": {
@@ -517,7 +528,32 @@
       "theme_start_time": "Время начала ночного режима",
       "theme_end_time": "Время окончания ночного режима",
       "theme_schedule_desc": "Автоматическое переключение в ночной режим в указанный период",
-      "theme_auto_desc": "Автоматическое переключение тем в зависимости от местного времени восхода и заката"
+      "theme_auto_desc": "Автоматическое переключение тем в зависимости от местного времени восхода и заката",
+      "material": {
+        "title": "Материал",
+        "description": "Прозрачность, размытие и наложение поверхностей поверх обоев, сохраняются отдельно для светлой и тёмной тем",
+        "edit_mode": "Редактировать тему",
+        "presets": "Пресеты",
+        "balanced": "Сбалансированный",
+        "balanced_desc": "Читаемое стекло с мягким размытием",
+        "clear": "Прозрачный",
+        "clear_desc": "Максимальная видимость обоев",
+        "solid": "Сплошной",
+        "solid_desc": "Непрозрачные поверхности, без размытия",
+        "opacity": "Непрозрачность поверхностей",
+        "blur": "Размытие поверхностей",
+        "overlay": "Наложение обоев",
+        "readability": "Защита читаемости",
+        "readability_desc": "Автоматически повышает непрозрачность, чтобы текст оставался читаемым на светлых или пёстрых обоях",
+        "reset": "Сбросить",
+        "preview": "Предпросмотр",
+        "preview_label": "Предпросмотр материала",
+        "preview_text": "Поверхности следуют за обоями с настроенными прозрачностью и размытием.",
+        "no_image": "Установите изображение обоев, чтобы предпросматривать материал вживую",
+        "protected": "Защита читаемости включена",
+        "unprotected": "Защита читаемости выключена",
+        "protected_opacity": "Защищённая непрозрачность {{value}}%"
+      }
     },
     "process": {
       "title": "Управление процессами",
@@ -543,6 +579,10 @@
       "register_mode_latest_preview": "Последняя версия Preview",
       "register_mode_last_launched": "Последняя запущенная версия",
       "register_mode_off": "Никогда не регистрировать автоматически"
+    },
+    "search": {
+      "placeholder": "Поиск по настройкам",
+      "count": "Совпадающих разделов: {{count}}"
     }
   },
   "downloadmodal": {
@@ -641,7 +681,8 @@
     "count": {
       "worlds": "Миры",
       "resource_packs": "Ресурспаки",
-      "behavior_packs": "Поведенческие паки"
+      "behavior_packs": "Поведенческие паки",
+      "skin_packs": "Наборы скинов"
     }
   },
   "contentpage": {
@@ -781,8 +822,8 @@
         "title": "Резервная копия экземпляра",
         "hint": "Создайте резервную копию этого экземпляра перед изменением настроек, установкой mods или любыми экспериментами",
         "section_body": "Можно выбрать игровые данные и mods, которые нужно сохранить вместе; сам лаунчер в архив не входит",
-        "experimental_badge": "Experimental",
-        "experimental_disabled": "Enable this in {{settingsPath}} before using instance backup and restore.",
+        "experimental_badge": "Экспериментально",
+        "experimental_disabled": "Включите это в {{settingsPath}} перед использованием резервного копирования и восстановления.",
         "button": "Создать резервную копию",
         "dialog_title": "Выберите, что сохранить",
         "dialog_body": "Отметьте, что нужно включить в эту резервную копию",
@@ -1000,17 +1041,23 @@
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_INSTALL_FAILED": "Не удалось установить некоторые пакеты, управляемые через lip",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_MISSING": "Некоторые пакеты, управляемые через lip, не были восстановлены",
     "ERR_INSTANCE_BACKUP_RESTORE_LIP_VERSION_MISMATCH": "Версии некоторых пакетов, управляемых через lip, не совпадают с резервной копией",
-    "ERR_LL_NOT_SUPPORTED": "LeviLamina is not supported for this game version",
-    "ERR_FETCH_LL_DB": "Failed to fetch LeviLamina version database",
-    "ERR_INVALID_VERSION_FORMAT": "Invalid game version format",
-    "ERR_LIP_INSTALL_FAILED": "Failed to install LeviLamina via lip",
-    "ERR_LIP_PACKAGE_INVALID_IDENTIFIER": "Invalid lip package identifier",
-    "ERR_LIP_PACKAGE_VERSION_REQUIRED": "lip package version is required",
-    "ERR_LIP_PACKAGE_INSTALL_FAILED": "Failed to install lip package",
-    "ERR_LIP_PACKAGE_UNINSTALL_FAILED": "Failed to uninstall lip package",
-    "ERR_LIP_PACKAGE_QUERY_FAILED": "Failed to query lip package state",
-    "ERR_LIP_CACHE_CLEAN_FAILED": "Failed to clean lip cache",
-    "ERR_LL_MANAGED_IN_VERSION_SETTINGS": "LeviLamina can only be managed in Version Settings"
+    "ERR_LL_NOT_SUPPORTED": "LeviLamina не поддерживается в этой версии игры",
+    "ERR_FETCH_LL_DB": "Не удалось получить базу данных версий LeviLamina",
+    "ERR_INVALID_VERSION_FORMAT": "Неверный формат версии игры",
+    "ERR_LIP_INSTALL_FAILED": "Не удалось установить LeviLamina через lip",
+    "ERR_LIP_PACKAGE_INVALID_IDENTIFIER": "Недопустимый идентификатор пакета lip",
+    "ERR_LIP_PACKAGE_VERSION_REQUIRED": "Требуется версия пакета lip",
+    "ERR_LIP_PACKAGE_INSTALL_FAILED": "Не удалось установить пакет lip",
+    "ERR_LIP_PACKAGE_UNINSTALL_FAILED": "Не удалось удалить пакет lip",
+    "ERR_LIP_PACKAGE_QUERY_FAILED": "Не удалось запросить состояние пакета lip",
+    "ERR_LIP_CACHE_CLEAN_FAILED": "Не удалось очистить кэш lip",
+    "ERR_LL_MANAGED_IN_VERSION_SETTINGS": "LeviLamina можно настроить только в настройках версии",
+    "ERR_LAUNCH_TIMEOUT": "Minecraft не появился в течение таймаута запуска. Проверьте, что выбранный инстанс зарегистрирован и Minecraft может запускаться нормально.",
+    "ERR_PATCH_RUN_FAILED": "Не удалось выполнить скрипт патча",
+    "ERR_SERVER_INVALID_NAME": "Недопустимое название сервера",
+    "ERR_SERVER_INVALID_ADDRESS": "Недопустимый адрес сервера",
+    "ERR_SERVER_INVALID_PORT": "Порт должен быть числом от 1 до 65535",
+    "ERR_SERVER_NOT_FOUND": "Сервер не найден — список мог измениться"
   },
   "filemanager": {
     "sort": {
@@ -1085,19 +1132,19 @@
     "action_promote_install": "Сделать явной установкой",
     "action_promote_install_success": "{{name}} переведен в явную установку",
     "action_promote_install_failed_no_version": "Не найдена установленная версия этого пакета",
-    "action_update": "Update",
-    "action_uninstall": "Uninstall",
-    "batch_update_title": "Batch Update Mods",
-    "batch_update_body": "Selected {{selected}} mods. {{updatable}} mod(s) can be updated from lip. Continue?",
-    "batch_uninstall_title": "Batch Uninstall Mods",
-    "batch_uninstall_body": "You are about to uninstall {{count}} mod(s). Continue?",
-    "update_available": "Update to {{version}}",
-    "update_latest": "Already latest",
-    "no_update_source": "No lip update source",
-    "err_ll_managed_in_version_settings": "LeviLamina can only be managed in Version Settings",
-    "action_result_title_done": "Operation Completed",
-    "action_result_title_partial": "Operation Completed (Partial Failures)",
-    "action_result_title_failed": "Operation Failed",
+    "action_update": "Обновить",
+    "action_uninstall": "Удалить",
+    "batch_update_title": "Пакетное обновление модов",
+    "batch_update_body": "Выбрано модов: {{selected}}. Через lip можно обновить: {{updatable}}. Продолжить?",
+    "batch_uninstall_title": "Пакетное удаление модов",
+    "batch_uninstall_body": "Будет удалено модов: {{count}}. Продолжить?",
+    "update_available": "Обновить до {{version}}",
+    "update_latest": "Уже последняя версия",
+    "no_update_source": "Нет источника обновлений lip",
+    "err_ll_managed_in_version_settings": "LeviLamina можно настроить только в настройках версии",
+    "action_result_title_done": "Операция завершена",
+    "action_result_title_partial": "Операция завершена (частичные ошибки)",
+    "action_result_title_failed": "Операция не удалась",
     "lip_sync_loading": "Локальные моды уже загружены. Дополняем информацию lip...",
     "lip_sync_error": "Информация lip временно недоступна. Показаны только локальные моды."
   },
@@ -1187,22 +1234,22 @@
       "next": "Далее",
       "close": "Закрыть"
     },
-    "mod_details_aria_label": "Mod Details",
-    "loading_description": "Loading description...",
+    "mod_details_aria_label": "Детали мода",
+    "loading_description": "Загрузка описания...",
     "mod_tabs": {
-      "description": "Description",
-      "files": "Files"
+      "description": "Описание",
+      "files": "Файлы"
     },
     "mod_files": {
-      "title": "All Files",
-      "table_aria_label": "Mod files table",
+      "title": "Все файлы",
+      "table_aria_label": "Таблица файлов мода",
       "columns": {
-        "type": "Type",
-        "name": "Name",
-        "uploaded": "Uploaded",
-        "size": "Size",
-        "downloads": "Downloads",
-        "actions": "Actions"
+        "type": "Тип",
+        "name": "Название",
+        "uploaded": "Загружено",
+        "size": "Размер",
+        "downloads": "Скачивания",
+        "actions": "Действия"
       }
     }
   },
@@ -1213,48 +1260,48 @@
     "order_by": "Порядок",
     "select_order": "Выберите порядок",
     "no_description": "Нет описания",
-    "ll_version_label": "LeviLamina version",
-    "ll_version_placeholder": "Select LeviLamina version",
-    "ll_all_versions": "All LeviLamina versions",
-    "game_version_label": "Game version",
-    "game_version_placeholder": "Select game version",
-    "game_all_versions": "All game versions",
+    "ll_version_label": "Версия LeviLamina",
+    "ll_version_placeholder": "Выберите версию LeviLamina",
+    "ll_all_versions": "Все версии LeviLamina",
+    "game_version_label": "Версия игры",
+    "game_version_placeholder": "Выберите версию игры",
+    "game_all_versions": "Все версии игры",
     "mapping_unavailable_hint": "Сопоставление версий игры для LeviLamina сейчас недоступно. Фильтры, связанные с версиями, отключены, чтобы избежать неверных совпадений.",
     "files": {
-      "game_versions_label": "Game Versions",
-      "game_versions_unrestricted": "No game version restriction",
-      "game_versions_unavailable": "Game version mapping unavailable",
-      "ll_requirement": "LL Requirement",
-      "dependencies": "Dependencies",
-      "action": "Action",
-      "dependencies_count": "{{count}} dependencies",
-      "install": "Install",
+      "game_versions_label": "Версии игры",
+      "game_versions_unrestricted": "Без ограничения версии игры",
+      "game_versions_unavailable": "Сопоставление версий игры недоступно",
+      "ll_requirement": "Требование LL",
+      "dependencies": "Зависимости",
+      "action": "Действие",
+      "dependencies_count": "Зависимостей: {{count}}",
+      "install": "Установить",
       "upgrade": "Обновить",
       "downgrade": "Понизить версию",
       "reinstall": "Переустановить",
       "redirect": "Перейти к Loader",
-      "instance_game_version_label": "Game version",
-      "select_instance_title": "Select Target Instance",
-      "installing_version_label": "Installing package version",
-      "variant_label": "Variant",
-      "variant_hint_keep_default": "Usually no change needed",
-      "variant_placeholder": "Select a variant",
+      "instance_game_version_label": "Версия игры",
+      "select_instance_title": "Выбор целевого экземпляра",
+      "installing_version_label": "Устанавливаемая версия пакета",
+      "variant_label": "Вариант",
+      "variant_hint_keep_default": "Обычно менять не нужно",
+      "variant_placeholder": "Выберите вариант",
       "variant_default": "default",
-      "select_version_incompatible_hint": "Version {{version}} is not compatible with game version {{gameVersion}}.",
-      "checking_ll_state": "Checking LeviLamina status...",
+      "select_version_incompatible_hint": "Версия {{version}} несовместима с версией игры {{gameVersion}}.",
+      "checking_ll_state": "Проверка состояния LeviLamina...",
       "mapping_unavailable_blocked_hint": "Сейчас невозможно проверить сопоставление между LeviLamina и версией игры, поэтому эта установка заблокирована во избежание неправильной установки.",
       "ll_missing_redirect_hint": "Для этого экземпляра LeviLamina не установлен. При нажатии «Перейти к Loader» откроется вкладка Loader в настройках экземпляра, чтобы вы сначала установили его вручную.",
       "ll_missing_redirect_to_loader": "LeviLamina не установлен. Выполняется переход на вкладку Loader в настройках экземпляра.",
-      "ll_installed_incompatible_hint": "Installed LeviLamina version {{installedVersion}} is incompatible with this package. Please adjust LeviLamina manually first.",
-      "action_failed": "Operation failed: {{error}}",
-      "tab_label": "Files",
-      "table_aria_label": "Package files table",
-      "install_success": "Installation completed successfully",
+      "ll_installed_incompatible_hint": "Установленная версия LeviLamina {{installedVersion}} несовместима с этим пакетом. Сначала настройте LeviLamina вручную.",
+      "action_failed": "Операция не удалась: {{error}}",
+      "tab_label": "Файлы",
+      "table_aria_label": "Таблица файлов пакета",
+      "install_success": "Установка успешно завершена",
       "upgrade_success": "Обновление выполнено успешно",
       "downgrade_success": "Понижение версии выполнено успешно",
       "reinstall_success": "Переустановка выполнена успешно",
-      "current_installed_version_label": "Current installed version",
-      "checking_current_installed_version": "Checking currently installed version..."
+      "current_installed_version_label": "Текущая установленная версия",
+      "checking_current_installed_version": "Проверка текущей установленной версии..."
     },
     "guide": {
       "open_button": "Руководство для разработчиков",
@@ -1269,39 +1316,39 @@
       "title": "lipd не установлен",
       "description": "lipd пока не установлен. Чтобы продолжить пользоваться страницами lip или установить LeviLamina, сначала откройте «Настройки > Сторонние компоненты» и установите его."
     },
-    "title": "lip Content",
+    "title": "Контент lip",
     "sort_options": {
-      "hotness": "Hotness",
-      "updated": "Updated",
-      "name": "Name"
+      "hotness": "Популярное",
+      "updated": "Обновлённые",
+      "name": "Название"
     },
     "order_options": {
-      "desc": "Desc",
-      "asc": "Asc"
+      "desc": "По убыванию",
+      "asc": "По возрастанию"
     },
-    "by_author_inline": "| By {{author}}",
-    "package_details_aria_label": "Package Details",
+    "by_author_inline": "| Автор: {{author}}",
+    "package_details_aria_label": "Детали пакета",
     "task_console": {
-      "title_install": "Installing",
+      "title_install": "Установка",
       "title_upgrade": "Обновление",
       "title_downgrade": "Понижение версии",
       "title_reinstall": "Переустановка",
-      "title_update": "Updating",
-      "title_uninstall": "Uninstalling",
-      "title_generic": "lip Task",
-      "status_running": "Running",
-      "status_success": "Success",
-      "status_failed": "Failed",
-      "target_label": "Target",
-      "progress_label": "Progress",
-      "log_title": "Log Output",
-      "no_output": "No output yet",
-      "waiting_start": "Waiting for lipd output...",
-      "copy_logs": "Copy Logs",
-      "copy_success": "Logs copied",
-      "close": "Close",
-      "stage_install_pkg": "Installing target package",
-      "stage_fallback_delete": "Package uninstall unavailable, fallback to directory delete"
+      "title_update": "Обновление",
+      "title_uninstall": "Удаление",
+      "title_generic": "Задача lip",
+      "status_running": "Выполняется",
+      "status_success": "Успешно",
+      "status_failed": "Не удалось",
+      "target_label": "Цель",
+      "progress_label": "Прогресс",
+      "log_title": "Журнал",
+      "no_output": "Пока пусто",
+      "waiting_start": "Ожидание вывода lipd...",
+      "copy_logs": "Копировать журнал",
+      "copy_success": "Журнал скопирован",
+      "close": "Закрыть",
+      "stage_install_pkg": "Установка целевого пакета",
+      "stage_fallback_delete": "Удаление пакета недоступно, удаление каталога вручную"
     },
     "package": {
       "confirm_install_title": "Подтвердите установку",
@@ -1381,5 +1428,103 @@
     "download": "Скачать",
     "open_page": "Открыть страницу",
     "download_started": "Загрузка началась"
+  },
+  "marketplace": {
+    "title": "Маркетплейс",
+    "search_placeholder": "Поиск предметов маркетплейса...",
+    "search": "Поиск",
+    "refresh": "Обновить",
+    "index_source": "Источник индекса",
+    "apply": "Применить",
+    "type": "Тип",
+    "select_type": "Выберите тип",
+    "all_types": "Все типы",
+    "tag": "Тег",
+    "select_tag": "Выберите тег",
+    "all_tags": "Все теги",
+    "sort_by": "Сортировать по",
+    "select_sort": "Выберите сортировку",
+    "sort": {
+      "newest": "Сначала новые",
+      "name": "Имя А-Я"
+    },
+    "no_results": "Ничего не найдено",
+    "load_error": "Не удалось загрузить индекс маркетплейса, попробуйте ещё раз",
+    "no_description": "Описание отсутствует.",
+    "by_author": "Автор: {{author}}",
+    "by": "Автор:",
+    "version": "Версия",
+    "updated": "Обновлено",
+    "updated_date": "Обновлено {{date}}",
+    "item_not_found": "Предмет не найден",
+    "go_back": "Назад",
+    "install_action": "Установить",
+    "homepage": "Домашняя страница",
+    "item_details_aria_label": "Детали предмета маркетплейса",
+    "tabs": {
+      "description": "Описание",
+      "files": "Файлы"
+    },
+    "types": {
+      "mcaddon": "Аддон",
+      "mcpack": "Пак",
+      "mcworld": "Мир",
+      "skinpack": "Набор скинов",
+      "dll": "Мод LeviLamina",
+      "lip": "Пакет lip"
+    },
+    "files": {
+      "title": "Все версии",
+      "table_aria_label": "Таблица файлов предмета",
+      "columns": {
+        "version": "Версия",
+        "date": "Дата",
+        "size": "Размер",
+        "changelog": "Изменения",
+        "actions": "Действия"
+      }
+    },
+    "no_files_found": "Файлы не найдены",
+    "install": {
+      "downloading_title": "Скачивание контента",
+      "select_version_title": "Выбор игрового инстанса",
+      "select_player_title": "Выбор игрока",
+      "importing_title": "Импорт контента",
+      "success_title": "Успешно",
+      "error_title": "Ошибка",
+      "downloading_body": "Скачивание файла...",
+      "select_version_body": "Выберите игровой инстанс для импорта:",
+      "local_installation": "Локальный инстанс",
+      "select_version_placeholder": "Выберите инстанс",
+      "registered": "Зарегистрирован",
+      "select_player_body": "Для этого контента нужно выбрать игрока:",
+      "player_label": "Игрок",
+      "select_player_placeholder": "Выберите игрока",
+      "importing_body": "Импорт контента...",
+      "success_msg": "Импорт успешен",
+      "success_desc": "Контент успешно импортирован в выбранный инстанс.",
+      "failed_msg": "Импорт не удался",
+      "next": "Далее",
+      "close": "Закрыть"
+    }
+  },
+  "serverspage": {
+    "add_server": "Добавить сервер",
+    "edit_server": "Редактировать сервер",
+    "delete_server": "Удалить сервер",
+    "delete_confirm": "Этот сервер также будет удалён из списка сохранённых серверов в игре.",
+    "play": "Играть",
+    "form_name": "Название сервера",
+    "form_name_ph": "Мой сервер",
+    "form_address": "Адрес сервера",
+    "form_address_ph": "play.example.net",
+    "form_port": "Порт",
+    "form_port_ph": "19132",
+    "add_success": "Сервер добавлен",
+    "update_success": "Сервер обновлён",
+    "delete_success": "Сервер удалён",
+    "launch_hint": "Запуск игры — выберите этот сервер в игре, чтобы зайти.",
+    "no_version": "Сначала выберите версию игры",
+    "no_player": "Сначала выберите игрока"
   }
 }

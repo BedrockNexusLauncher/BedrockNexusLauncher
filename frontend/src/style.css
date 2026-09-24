@@ -476,6 +476,14 @@ html.rtl-locale .settings-rtl-lock {
   direction: rtl;
   text-align: right;
 }
+/* Section headers (icon + title rows, e.g. the About page cards) mirror for
+   RTL locales: the engine stays LTR, so the header forces RTL base direction —
+   a lone title group hugs the right edge (icon rightmost, title left of it),
+   and with an action slot the title stays right while the action goes left.
+   No effect in LTR locales. */
+html.rtl-locale .section-header {
+  direction: rtl;
+}
 
 /* ---- RTL typography polish ----
    فونت MiSans گلیف فارسی/عربی ندارد؛ برای زبان‌های RTL یک زنجیره‌ی فونت

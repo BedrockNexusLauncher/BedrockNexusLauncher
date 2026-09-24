@@ -65,7 +65,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
   iconWrapperClassName = "bg-primary-500/10 text-primary-600 dark:text-primary-500",
 }) => {
   return (
-    <div className={`flex flex-col gap-1 ${className}`}>
+    <div className={`section-header flex flex-col gap-1 ${className}`}>
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-2">
           {icon && (
