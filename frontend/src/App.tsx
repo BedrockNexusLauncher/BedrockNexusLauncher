@@ -34,6 +34,7 @@ import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { useAppModals } from "@/hooks/useAppModals";
 import { ROUTES } from "@/constants/routes";
 import { markStartupVisualReady } from "@/utils/startupState";
+import { OfflineBanner } from "@/components/OfflineBanner";
 
 // Lazy load pages
 const LauncherPage = lazy(() =>
@@ -386,6 +387,7 @@ function App() {
                             layoutMode === "sidebar" ? "ps-14" : ""
                           }`}
                         >
+                          <OfflineBanner />
                           <Suspense
                             fallback={
                               <div className="w-full h-full flex items-center justify-center">

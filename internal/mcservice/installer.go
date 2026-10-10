@@ -190,6 +190,13 @@ func GetVersionStatus(version string, versionType string) VersionStatus {
 	if name := ResolveDownloadedMsixvc(version, versionType); strings.TrimSpace(name) != "" {
 		status.IsDownloaded = true
 	}
+	// UWP rows use .appx installer files, not .msixvc — without this check a
+	// downloaded UWP package always reported "not downloaded" after restart.
+	if !status.IsDownloaded {
+		if path := ResolveDownloadedUWP(version, strings.ToLower(strings.TrimSpace(versionType))); strings.TrimSpace(path) != "" {
+			status.IsDownloaded = true
+		}
+	}
 	return status
 }
 

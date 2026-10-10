@@ -29,3 +29,15 @@ func TestDeleteDownloadedUWPBadChannel(t *testing.T) {
 		t.Fatalf("expected ERR_UWP_PACKAGE_NOT_FOUND, got %q", code)
 	}
 }
+
+func TestGetVersionStatusMissingUWP(t *testing.T) {
+	st := GetVersionStatus("9.9.9.9", "release")
+	if st.IsDownloaded {
+		t.Fatalf("expected IsDownloaded=false for missing UWP download")
+	}
+	// Channel matching is case-insensitive; a bogus channel must not report downloaded.
+	st = GetVersionStatus("9.9.9.9", "Release")
+	if st.IsDownloaded {
+		t.Fatalf("expected IsDownloaded=false for missing UWP download with capitalized channel")
+	}
+}

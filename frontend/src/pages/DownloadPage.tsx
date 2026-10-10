@@ -42,6 +42,7 @@ import {
 import { Events } from "@wailsio/runtime";
 import { createPortal } from "react-dom";
 import { useVersionStatus } from "@/utils/VersionStatusContext";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useLeviLamina } from "@/utils/LeviLaminaContext";
 import { useTranslation } from "react-i18next";
 import { motion, Variants } from "framer-motion";
@@ -87,6 +88,11 @@ export const DownloadPage: React.FC = () => {
     setCurrentDownloadingInfo,
     refreshing,
   } = useVersionStatus();
+  const { isOnline } = useOnlineStatus();
+  const isOnlineRef = useRef(isOnline);
+  useEffect(() => {
+    isOnlineRef.current = isOnline;
+  }, [isOnline]);
 
   const [query, setQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<"all" | ItemType>("all");
@@ -359,11 +365,13 @@ export const DownloadPage: React.FC = () => {
     packageType: "all" | PackageType = packageFilter,
   ): Promise<VersionItem[]> => {
     if (packageType === "all") {
-      const catalogs = await Promise.all([
+      // Per-source resilience: the GDK catalog needs network but the UWP
+      // catalog is embedded — one failing must not hide the other offline.
+      const settled = await Promise.allSettled([
         fetchVersionItems("gdk"),
         fetchVersionItems("uwp"),
       ]);
-      return [...catalogs[0], ...catalogs[1]];
+      return settled.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
     }
     if (packageType === "uwp") {
       if (
@@ -426,6 +434,14 @@ export const DownloadPage: React.FC = () => {
         } catch {}
       } catch (e) {
         console.error("Failed to fetch versions", e);
+        // Offline: keep serving the cached catalog; the global banner
+        // already tells the user why the list may be stale.
+        if (!isOnlineRef.current) {
+          addToast({
+            description: t("downloadpage.error.fetch_failed"),
+            color: "warning",
+          });
+        }
       }
     };
     try {
@@ -440,6 +456,9 @@ export const DownloadPage: React.FC = () => {
 
   useEffect(() => {
     let cancelled = false;
+    // Offline: don't refetch (would only fail); cached + embedded UWP
+    // catalog stay visible. Re-runs automatically on reconnect.
+    if (!isOnline) return;
     (async () => {
       try {
         const newItems = await fetchVersionItems();
@@ -455,9 +474,16 @@ export const DownloadPage: React.FC = () => {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [packageFilter]);
+  }, [packageFilter, isOnline]);
 
   const reloadAll = async () => {
+    if (!isOnlineRef.current) {
+      addToast({
+        description: t("downloadpage.error.fetch_failed"),
+        color: "warning",
+      });
+      return;
+    }
     refreshLLDB();
     try {
       const newItems = await fetchVersionItems();
@@ -599,7 +625,7 @@ export const DownloadPage: React.FC = () => {
       }
       if (!item.uuid) {
         addToast({
-          description: "ERR_UWP_INVALID_VERSION",
+          description: trErr("ERR_UWP_INVALID_VERSION"),
           color: "danger",
         });
         return;
@@ -676,7 +702,7 @@ export const DownloadPage: React.FC = () => {
         color: "success",
       });
     } catch (e: any) {
-      setUwpInstallError(e?.message || "Install failed");
+      setUwpInstallError(trErr(e?.message) || t("uwp.install_failed"));
     } finally {
       setUwpInstalling(false);
     }
