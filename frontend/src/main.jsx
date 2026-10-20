@@ -109,21 +109,19 @@ window.addEventListener(
 
     const activeElement = document.activeElement;
 
+    // The custom Tab cycling exists for form fields: it walks editable
+    // element to editable element. For anything else (buttons, links,
+    // tabs, sliders, …) leave the event alone so native keyboard focus
+    // navigation keeps working.
+    if (!isEditableFocusableElement(activeElement)) {
+      return;
+    }
+
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
 
-    if (isEditableFocusableElement(activeElement)) {
-      focusAdjacentEditableElement(activeElement, event.shiftKey ? -1 : 1);
-      return;
-    }
-
-    if (
-      activeElement instanceof HTMLElement &&
-      activeElement !== document.body
-    ) {
-      activeElement.blur();
-    }
+    focusAdjacentEditableElement(activeElement, event.shiftKey ? -1 : 1);
   },
   true,
 );
@@ -275,6 +273,7 @@ const bootstrapApp = async () => {
   try {
     const [
       { default: App },
+      { ErrorBoundary },
       { default: i18n, i18nReady },
       { I18nextProvider },
       { ThemeProvider: NextThemesProvider },
@@ -282,6 +281,7 @@ const bootstrapApp = async () => {
       { createHashRouter, RouterProvider, createRoutesFromElements, Route },
     ] = await Promise.all([
       import("./App"),
+      import("./components/ErrorBoundary"),
       import("./i18n"),
       import("react-i18next"),
       import("next-themes"),
@@ -306,7 +306,16 @@ const bootstrapApp = async () => {
     );
 
     const router = createHashRouter(
-      createRoutesFromElements(<Route path="/*" element={<App />} />),
+      createRoutesFromElements(
+        <Route
+          path="/*"
+          element={
+            <ErrorBoundary>
+              <App />
+            </ErrorBoundary>
+          }
+        />,
+      ),
     );
 
     startTransition(() => {

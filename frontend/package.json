@@ -16,7 +16,7 @@
     "@react-stately/utils": "^3.11.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/vite": "^4.1.18",
-    "@wailsio/runtime": "latest",
+    "@wailsio/runtime": "3.0.0-alpha.77",
     "dompurify": "^3.4.17",
     "framer-motion": "^12.26.1",
     "i18next": "^25.7.4",
