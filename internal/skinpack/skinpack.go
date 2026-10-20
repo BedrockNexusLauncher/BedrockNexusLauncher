@@ -377,6 +377,50 @@ func makeHeightGeometry(legHeight, bodyHeight, armWidth int) map[string]any {
 	return geometry
 }
 
+// maxTextureBytes caps a single skin texture read: textures are small
+// PNGs, and Entries returns them base64-encoded, so an unbounded read
+// would let a crafted pack exhaust memory.
+const maxTextureBytes = 16 << 20
+
+// texturePathWithin resolves a texture path taken from a pack's
+// skins.json to a file inside the pack directory. The texture value is
+// pack-controlled data, so absolute paths and any cleaned path that
+// escapes the pack directory are rejected (without this, Entries would
+// read — and Update would delete — arbitrary files).
+func texturePathWithin(packDir string, texture string) (string, bool) {
+	if texture == "" || filepath.IsAbs(texture) {
+		return "", false
+	}
+	absRoot, err := filepath.Abs(packDir)
+	if err != nil {
+		return "", false
+	}
+	absPath, err := filepath.Abs(filepath.Join(absRoot, filepath.FromSlash(texture)))
+	if err != nil {
+		return "", false
+	}
+	if absPath == absRoot || !strings.HasPrefix(absPath, absRoot+string(os.PathSeparator)) {
+		return "", false
+	}
+	return absPath, true
+}
+
+func readTextureFile(path string) ([]byte, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	data, err := io.ReadAll(io.LimitReader(f, maxTextureBytes+1))
+	if err != nil {
+		return nil, err
+	}
+	if len(data) > maxTextureBytes {
+		return nil, fmt.Errorf("skin texture exceeds the %d byte limit: %s", maxTextureBytes, path)
+	}
+	return data, nil
+}
+
 func Entries(packDir string) ([]Entry, error) {
 	data, err := os.ReadFile(filepath.Join(packDir, "skins.json"))
 	if err != nil {
@@ -388,7 +432,11 @@ func Entries(packDir string) ([]Entry, error) {
 	}
 	entries := make([]Entry, 0, len(raw.Skins))
 	for _, item := range raw.Skins {
-		imageData, err := os.ReadFile(filepath.Join(packDir, filepath.FromSlash(item.Texture)))
+		texturePath, ok := texturePathWithin(packDir, item.Texture)
+		if !ok {
+			return nil, fmt.Errorf("skin texture path escapes the pack directory: %q", item.Texture)
+		}
+		imageData, err := readTextureFile(texturePath)
 		if err != nil {
 			return nil, err
 		}
@@ -430,7 +478,9 @@ func Update(packDir, packName string, inputs []SkinInput) error {
 	}
 	old, _ := Entries(packDir)
 	for _, entry := range old {
-		_ = os.Remove(filepath.Join(packDir, filepath.FromSlash(entry.Texture)))
+		if texturePath, ok := texturePathWithin(packDir, entry.Texture); ok {
+			_ = os.Remove(texturePath)
+		}
 	}
 	return renderFiles(packDir, packName, entries, nil)
 }

@@ -175,7 +175,10 @@ func fullExtract(path string, key []byte, keyID string) {
 	udLen := uint64(binary.LittleEndian.Uint32(h[0x28c:]))
 	xvcLen := uint64(binary.LittleEndian.Uint32(h[0x290:]))
 	dynLen := uint64(binary.LittleEndian.Uint32(h[0x294:]))
-	if dynLen != 0 || udLen < 544 || udLen > 32<<20 || xvcLen > 32<<20 {
+	// xvcLen also needs a minimum: the XVC header fields below are read at
+	// offsets up to 0xd3c+4 (0xd40) before any other length check, and a
+	// shorter region would panic on slicing instead of failing typed.
+	if dynLen != 0 || udLen < 544 || udLen > 32<<20 || xvcLen < 0xd40 || xvcLen > 32<<20 {
 		fail("unsupported metadata size")
 	}
 	hashed := pages(binary.LittleEndian.Uint64(h[0x218:])) + pages(udLen) + pages(xvcLen)
