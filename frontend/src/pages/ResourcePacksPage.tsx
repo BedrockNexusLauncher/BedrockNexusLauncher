@@ -359,7 +359,7 @@ export default function ResourcePacksPage() {
                 );
               }
             })
-            .catch(() => {});
+            .catch((err) => console.error("[ResourcePacksPage] Failed to scan resource pack details", err));
         }
       } catch (e) {
         setError(t("contentpage.error_resolve_paths") as string);
