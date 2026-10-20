@@ -399,10 +399,34 @@ func quoteWinArg(arg string) string {
 	if arg == "" {
 		return `""`
 	}
-	if strings.ContainsAny(arg, " \t") {
-		return `"` + strings.ReplaceAll(arg, `"`, "") + `"`
+	if !strings.ContainsAny(arg, " \t\"") {
+		return arg
 	}
-	return arg
+	// Standard CommandLineToArgvW quoting: wrap in quotes, escape embedded
+	// quotes as \", and double any backslashes that precede a quote or the
+	// closing quote. The previous implementation silently stripped quote
+	// characters, which mangled arguments that legitimately contained them
+	// on the elevated relaunch path.
+	var b strings.Builder
+	b.WriteByte('"')
+	backslashes := 0
+	for _, r := range arg {
+		switch r {
+		case '\\':
+			backslashes++
+		case '"':
+			b.WriteString(strings.Repeat("\\", backslashes*2+1))
+			b.WriteByte('"')
+			backslashes = 0
+		default:
+			b.WriteString(strings.Repeat("\\", backslashes))
+			backslashes = 0
+			b.WriteRune(r)
+		}
+	}
+	b.WriteString(strings.Repeat("\\", backslashes*2))
+	b.WriteByte('"')
+	return b.String()
 }
 
 // relaunchElevated لانچر را با دسترسی مدیر (UAC) دوباره اجرا می‌کند؛ true یعنی درخواست ارسال شد
