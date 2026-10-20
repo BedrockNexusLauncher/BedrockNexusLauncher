@@ -216,7 +216,11 @@ func proxyURLFromAutoConfig(reqURL *url.URL, cfg ieProxyConfig) (*url.URL, bool,
 	if options.flags == 0 {
 		return nil, false, nil
 	}
-	options.autoLogonIfChallenged = 1
+	// autoLogonIfChallenged deliberately stays 0: with WPAD/PAC
+	// auto-detection the proxy is chosen by the (possibly hostile)
+	// network, and automatic logon would hand the user's credentials
+	// to a rogue proxy that challenges for authentication.
+	options.autoLogonIfChallenged = 0
 
 	requestURL, err := windows.UTF16PtrFromString(reqURL.String())
 	if err != nil {

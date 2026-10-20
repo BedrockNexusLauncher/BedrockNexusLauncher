@@ -2,11 +2,16 @@ package mcservice
 
 import (
 	"fmt"
+	"io"
 	"time"
 
-	json "github.com/goccy/go-json"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/httpx"
+	json "github.com/goccy/go-json"
 )
+
+// maxGeoResponseBytes caps the geolocation response we are willing
+// to decode.
+const maxGeoResponseBytes = 1 << 20
 
 type SunTimes struct {
 	Sunrise string `json:"sunrise"`
@@ -15,19 +20,31 @@ type SunTimes struct {
 }
 
 func GetSunTimes() SunTimes {
-	resp, err := httpx.Get("http://ip-api.com/json")
+	// Geolocation goes over HTTPS: the previous plain-HTTP lookup
+	// exposed the user's IP/coarse location unencrypted and trusted
+	// an unauthenticated response.
+	geoClient := httpx.NewClient(10 * time.Second)
+	resp, err := geoClient.Get("https://ipapi.co/json/")
 	if err != nil {
 		return SunTimes{Sunrise: "06:00", Sunset: "18:00"}
 	}
 	defer resp.Body.Close()
 
+	// ipapi.co's schema differs from ip-api.com's: the address is in
+	// "ip", coordinates in "latitude"/"longitude", and failures come
+	// back as {"error": true, "reason": ...} rather than a status
+	// string.
 	var geo struct {
-		Status    string  `json:"status"`
-		IP        string  `json:"query"`
-		Longitude float64 `json:"lon"`
-		Latitude  float64 `json:"lat"`
+		Error     bool    `json:"error"`
+		IP        string  `json:"ip"`
+		Longitude float64 `json:"longitude"`
+		Latitude  float64 `json:"latitude"`
 	}
-	if err := json.NewDecoder(resp.Body).Decode(&geo); err != nil || geo.Status != "success" {
+	body, err := io.ReadAll(io.LimitReader(resp.Body, maxGeoResponseBytes+1))
+	if err != nil || int64(len(body)) > maxGeoResponseBytes {
+		return SunTimes{Sunrise: "06:00", Sunset: "18:00"}
+	}
+	if err := json.Unmarshal(body, &geo); err != nil || geo.Error {
 		return SunTimes{Sunrise: "06:00", Sunset: "18:00"}
 	}
 
