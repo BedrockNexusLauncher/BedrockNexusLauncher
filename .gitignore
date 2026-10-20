@@ -60,3 +60,7 @@ locale_diff.json
 
 # Private patch payload (dropped in locally for private builds; never committed)
 Patch/install.ps1
+
+# CurseForge API key (never commit; use the CURSEFORGE_API_KEY env var
+# or the -ldflags "-X main.curseForgeAPIKeyBuild=..." build injection)
+assets/curseforge.key

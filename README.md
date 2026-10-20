@@ -74,6 +74,10 @@ Bedrock Nexus is built with [Go](https://go.dev) + [Wails v3](https://v3alpha.wa
 - [Wails v3 CLI](https://v3alpha.wails.io/reference/cli): `go install github.com/wailsapp/wails/v3/cmd/wails3@latest`
 - [Task](https://taskfile.dev): `go install github.com/go-task/task/v3/cmd/task@latest`
 
+### CurseForge API key
+
+CurseForge features need an API key at runtime. Set the `CURSEFORGE_API_KEY` environment variable, or inject the key when building a release: `go build -ldflags "-X main.curseForgeAPIKeyBuild=<key>"`. Never commit a key to the repository.
+
 ### Run & build
 
 ```bash
