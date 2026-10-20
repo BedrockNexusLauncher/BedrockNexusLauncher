@@ -322,8 +322,22 @@ export const DownloadPage: React.FC = () => {
     return 0;
   };
 
-  const sanitizeUrl = (u: any): string =>
-    String(u).trim().replace(/^`|`$/g, "");
+  const sanitizeUrl = (u: any): string => {
+    const cleaned = String(u)
+      .trim()
+      .replace(/^`|`$/g, "");
+    // Only http(s) URLs may flow on to window.open / the backend
+    // downloader; anything else (javascript:, file:, …) becomes "" and
+    // is filtered out by normalizeUrls.
+    try {
+      const parsed = new URL(cleaned);
+      return parsed.protocol === "http:" || parsed.protocol === "https:"
+        ? cleaned
+        : "";
+    } catch {
+      return "";
+    }
+  };
   const labelFromUrl = (u: string): string => {
     try {
       const url = new URL(u);
@@ -660,7 +674,7 @@ export const DownloadPage: React.FC = () => {
           if (!d || d === dest) {
             offDone();
             offErr();
-            reject(new Error(typeof raw === "string" ? raw : String(raw?.Error || "Download failed")));
+            reject(new Error(typeof raw === "string" ? raw : String(raw?.Error || t("downloadpage.error.download_failed"))));
           }
         });
       });
