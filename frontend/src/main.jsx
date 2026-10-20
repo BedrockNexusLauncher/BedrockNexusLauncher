@@ -3,6 +3,7 @@ import "./material.css";
 import React, { startTransition } from "react";
 import { createRoot } from "react-dom/client";
 import { ROUTES } from "./constants/routes";
+import enUS from "./assets/locales/en_US.json";
 import {
   markStartupInteractive,
   markStartupPhase,
@@ -270,6 +271,9 @@ const useHeroUILocale = (i18nInstance) => {
 };
 
 const bootstrapApp = async () => {
+  // Captured as soon as the i18n module resolves so the failure screen
+  // below can localize; stays null when startup dies before i18n exists.
+  let bootstrappedI18n = null;
   try {
     const [
       { default: App },
@@ -288,6 +292,8 @@ const bootstrapApp = async () => {
       import("@heroui/react"),
       import("react-router-dom"),
     ]);
+
+    bootstrappedI18n = i18n;
 
     markStartupPhase("ll-startup-app-bundle-loaded");
     measureStartupPhase(
@@ -342,9 +348,18 @@ const bootstrapApp = async () => {
     });
   } catch (error) {
     console.error("[startup] Failed to bootstrap app", error);
-    root.render(
-      <StartupShell errorMessage="启动失败，请查看日志或稍后重试。" />,
-    );
+    // i18n is dynamically imported as part of bootstrap, so it may not
+    // exist yet when startup fails (and React providers certainly don't).
+    // Use the initialized instance when we have one; otherwise fall back
+    // to the bundled en_US string rather than a hardcoded message.
+    let bootstrapMessage = enUS.app.bootstrap_failed;
+    try {
+      const translated = bootstrappedI18n?.t?.("app.bootstrap_failed");
+      if (translated && translated !== "app.bootstrap_failed") {
+        bootstrapMessage = translated;
+      }
+    } catch {}
+    root.render(<StartupShell errorMessage={bootstrapMessage} />);
   }
 };
 

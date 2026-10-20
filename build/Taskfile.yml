@@ -5,9 +5,9 @@ tasks:
     summary: Checks required tools for building Bedrock Nexus
     preconditions:
       - sh: go version
-        msg: "Go is required. Install Go 1.25.3 or newer."
+        msg: "Go is required. Install Go 1.25 or newer (see go.mod)."
       - sh: node --version
-        msg: "Node.js is required. Install the current LTS release."
+        msg: "Node.js is required. Install Node.js 20.19+ or 22.12+ (Vite 7 requirement, see frontend/package.json engines)."
       - sh: npm --version
         msg: "npm is required. Install it with Node.js."
       - sh: wails3 version

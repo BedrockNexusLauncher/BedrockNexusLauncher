@@ -3,7 +3,6 @@ import { defineConfig, type DefaultTheme } from "vitepress";
 const repo = "https://github.com/BedrockNexusLauncher/BedrockNexusLauncher";
 const releases = `${repo}/releases`;
 const discord = "https://discord.gg/v5R5P4vRZk";
-const lanzou = "https://levimc.lanzoue.com/b016ke39hc";
 
 const base = "/BedrockNexusLauncher/";
 
@@ -433,7 +432,6 @@ function buildEnglishNav(): DefaultTheme.NavItem[] {
   return [
     { text: "Guide", link: "/guide/quick-start" },
     { text: "Downloads", link: releases },
-    { text: "Mirror", link: lanzou },
     { text: "Community", link: discord },
     { text: "GitHub", link: repo },
   ];
@@ -443,7 +441,6 @@ function buildSpanishNav(): DefaultTheme.NavItem[] {
   return [
     { text: "Guía", link: "/es-ES/guide/quick-start" },
     { text: "Descargas", link: releases },
-    { text: "Espejo", link: lanzou },
     { text: "Comunidad", link: discord },
     { text: "GitHub", link: repo },
   ];
@@ -453,7 +450,6 @@ function buildChineseCNNav(): DefaultTheme.NavItem[] {
   return [
     { text: "文档", link: "/zh-CN/guide/quick-start" },
     { text: "下载", link: releases },
-    { text: "蓝奏云", link: lanzou },
     { text: "社区", link: discord },
     { text: "GitHub", link: repo },
   ];
@@ -463,7 +459,6 @@ function buildChineseHKNav(): DefaultTheme.NavItem[] {
   return [
     { text: "文檔", link: "/zh-HK/guide/quick-start" },
     { text: "下載", link: releases },
-    { text: "藍奏雲", link: lanzou },
     { text: "社群", link: discord },
     { text: "GitHub", link: repo },
   ];
@@ -473,7 +468,6 @@ function buildRussianNav(): DefaultTheme.NavItem[] {
   return [
     { text: "Документация", link: "/ru-RU/guide/quick-start" },
     { text: "Загрузки", link: releases },
-    { text: "Зеркало", link: lanzou },
     { text: "Сообщество", link: discord },
     { text: "GitHub", link: repo },
   ];
@@ -483,7 +477,6 @@ function buildGermanNav(): DefaultTheme.NavItem[] {
   return [
     { text: "Dokumentation", link: "/de-DE/guide/quick-start" },
     { text: "Downloads", link: releases },
-    { text: "Spiegel", link: lanzou },
     { text: "Community", link: discord },
     { text: "GitHub", link: repo },
   ];
@@ -493,7 +486,6 @@ function buildJapaneseNav(): DefaultTheme.NavItem[] {
   return [
     { text: "ドキュメント", link: "/ja-JP/guide/quick-start" },
     { text: "ダウンロード", link: releases },
-    { text: "ミラー", link: lanzou },
     { text: "コミュニティ", link: discord },
     { text: "GitHub", link: repo },
   ];
@@ -503,7 +495,6 @@ function buildKoreanNav(): DefaultTheme.NavItem[] {
   return [
     { text: "가이드", link: "/ko-KR/guide/quick-start" },
     { text: "다운로드", link: releases },
-    { text: "미러", link: lanzou },
     { text: "커뮤니티", link: discord },
     { text: "GitHub", link: repo },
   ];
@@ -514,7 +505,6 @@ function buildFrenchNav(): DefaultTheme.NavItem[] {
   return [
     { text: "Guide", link: "/fr-FR/guide/quick-start" },
     { text: "Téléchargements", link: releases },
-    { text: "Miroir", link: lanzou },
     { text: "Communauté", link: discord },
     { text: "GitHub", link: repo },
   ];
@@ -711,7 +701,7 @@ export default defineConfig({
       themeConfig: {
         nav: buildKoreanNav(),
         sidebar: {
-          "/ko-KR/gnowledge/": buildKoreanSidebar("/ko-KR/guide/"),
+          "/ko-KR/guide/": buildKoreanSidebar("/ko-KR/guide/"),
         },
         outline: { level: [2, 3] },
         docFooter: { prev: "이전 페이지", next: "다음 페이지" },
