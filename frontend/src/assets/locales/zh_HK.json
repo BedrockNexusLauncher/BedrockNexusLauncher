@@ -1,5 +1,6 @@
 {
   "app": {
+    "bootstrap_failed": "啟動失敗，請查看日誌或稍後重試。",
     "settings": "設定",
     "error_boundary": {
       "title": "出錯了",
@@ -984,6 +985,10 @@
     }
   },
   "errors": {
+    "detection_failed": "偵測失敗",
+    "download_failed": "下載失敗",
+    "download_start_failed": "下載啟動失敗",
+    "import_failed": "匯入失敗",
     "ERR_GAME_ALREADY_RUNNING": "偵測到目前實例 Minecraft 已在執行，請先關閉再啟動或切換其他實例",
     "ERR_TARGET_DIR_NOT_SPECIFIED": "未指定目標目錄",
     "ERR_CREATE_TARGET_DIR": "無法建立目標目錄",
