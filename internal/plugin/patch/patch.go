@@ -1,7 +1,10 @@
 package patch
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -46,6 +49,98 @@ func ResolveDir() (string, error) {
 	return dir, nil
 }
 
+// PayloadFile is one file that will be executed as part of the patch
+// payload, together with its SHA-256 fingerprint.
+type PayloadFile struct {
+	Path   string
+	SHA256 string
+}
+
+// payloadScriptEnvVar mirrors run_patch.cmd: it names the private payload
+// script beside the runner when set, instead of the single *.ps1 glob.
+const payloadScriptEnvVar = "BN_PATCH_PAYLOAD"
+
+func sha256File(path string) (string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+	h := sha256.New()
+	if _, err := io.Copy(h, f); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(h.Sum(nil)), nil
+}
+
+// resolvePayloadScript finds the private payload script the runner will
+// execute: $BN_PATCH_PAYLOAD beside the runner when set, otherwise the
+// first *.ps1 in patchDir (filepath.Glob returns sorted order, matching
+// the runner's "single *.ps1 beside this file" convention). Returns ""
+// when no payload script is present.
+func resolvePayloadScript(patchDir string) string {
+	if name := strings.TrimSpace(os.Getenv(payloadScriptEnvVar)); name != "" {
+		candidate := filepath.Join(patchDir, name)
+		if st, err := os.Stat(candidate); err == nil && !st.IsDir() {
+			return candidate
+		}
+		return ""
+	}
+	matches, err := filepath.Glob(filepath.Join(patchDir, "*.ps1"))
+	if err != nil || len(matches) == 0 {
+		return ""
+	}
+	return matches[0]
+}
+
+// PayloadFingerprint computes the SHA-256 hashes of every file that will
+// run when the patch executes from patchDir: patch.bat, run_patch.cmd,
+// and the resolved private payload script (*.ps1) when one is present.
+// The payload is dropped-in, unaudited code that runs with Administrator
+// rights, so its fingerprint is the identity the consent decision and
+// the logs actually refer to. The hash of the private payload is only
+// ever computed at runtime from the file on disk — it is not (and must
+// not be) pinned in the source tree.
+func PayloadFingerprint(patchDir string) ([]PayloadFile, error) {
+	required := []string{patchScriptName, patchRunnerName}
+	out := make([]PayloadFile, 0, len(required)+1)
+	for _, name := range required {
+		p := filepath.Join(patchDir, name)
+		sum, err := sha256File(p)
+		if err != nil {
+			return nil, fmt.Errorf("fingerprint %s: %w", p, err)
+		}
+		out = append(out, PayloadFile{Path: p, SHA256: sum})
+	}
+	if payload := resolvePayloadScript(patchDir); payload != "" {
+		sum, err := sha256File(payload)
+		if err != nil {
+			return nil, fmt.Errorf("fingerprint %s: %w", payload, err)
+		}
+		out = append(out, PayloadFile{Path: payload, SHA256: sum})
+	}
+	return out, nil
+}
+
+// logPayloadFingerprint records what is about to run, by hash, before
+// any elevated execution. It fails closed: if the payload that is about
+// to be executed cannot be fingerprinted, it must not run unnamed.
+func logPayloadFingerprint(patchDir string) error {
+	files, err := PayloadFingerprint(patchDir)
+	if err != nil {
+		return err
+	}
+	label := plugin.PatchPluginName
+	if m, merr := plugin.ReadManifest(plugin.PatchPluginName); merr == nil {
+		label = fmt.Sprintf("%s (id=%s, version=%s)", m.Name, m.ID, m.Version)
+	}
+	log.Printf("[patcher] payload fingerprint for plugin %s at %s:", label, patchDir)
+	for _, f := range files {
+		log.Printf("[patcher]   sha256=%s  path=%s", f.SHA256, f.Path)
+	}
+	return nil
+}
+
 func executePatchScriptWithAdmin(patchDir string) error {
 	scriptPath := filepath.Join(patchDir, patchScriptName)
 
@@ -56,6 +151,10 @@ func executePatchScriptWithAdmin(patchDir string) error {
 	runnerPath := filepath.Join(patchDir, patchRunnerName)
 	if _, err := os.Stat(runnerPath); err != nil {
 		return fmt.Errorf("patch runner not found at %s: %w", runnerPath, err)
+	}
+
+	if err := logPayloadFingerprint(patchDir); err != nil {
+		return fmt.Errorf("patch payload fingerprint failed: %w", err)
 	}
 
 	params := "/c " + patchScriptName + " & " + patchRunnerName

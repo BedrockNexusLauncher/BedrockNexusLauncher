@@ -10,6 +10,7 @@ package plugin
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -46,25 +47,29 @@ type Manifest struct {
 	UiPlacement UiPlacement `json:"uiPlacement"`
 }
 
-// PluginsDir resolves the plugin root. Candidates in order:
-// 1. <executable dir>/plugins (production / installed layout)
-// 2. <cwd>/plugins (dev / repo root layout)
-// Returns the first candidate that exists; otherwise the exe-side path.
+// pluginsDirEnvVar optionally overrides the plugin root for development.
+// It is empty by default and must never be set in production: plugins are
+// trusted, potentially elevated code (see the patch plugin), so whoever
+// controls this directory controls what runs.
+const pluginsDirEnvVar = "BEDROCKNEXUS_PLUGINS_DIR"
+
+// PluginsDir resolves the plugin root: <executable dir>/plugins.
+//
+// There is deliberately no <cwd>/plugins fallback. The previous fallback
+// meant that anything able to write a "plugins" folder into whatever
+// directory the launcher happened to be started from (an extracted
+// "plugin pack", another app, a crafted working directory) could get its
+// payload executed — for the patch plugin, with Administrator rights.
+// The executable directory is the install location, which is the trust
+// boundary the user actually chose. Development overrides go through the
+// BEDROCKNEXUS_PLUGINS_DIR environment variable and are logged loudly.
 func PluginsDir() string {
-	candidates := []string{}
+	if override := strings.TrimSpace(os.Getenv(pluginsDirEnvVar)); override != "" {
+		log.Printf("[plugin] WARNING: plugins directory overridden by %s=%q — plugins are trusted code, use this only for development", pluginsDirEnvVar, override)
+		return override
+	}
 	if exe, err := os.Executable(); err == nil && strings.TrimSpace(exe) != "" {
-		candidates = append(candidates, filepath.Join(filepath.Dir(exe), "plugins"))
-	}
-	if cwd, err := os.Getwd(); err == nil && strings.TrimSpace(cwd) != "" {
-		candidates = append(candidates, filepath.Join(cwd, "plugins"))
-	}
-	for _, c := range candidates {
-		if st, err := os.Stat(c); err == nil && st.IsDir() {
-			return c
-		}
-	}
-	if len(candidates) > 0 {
-		return candidates[0]
+		return filepath.Join(filepath.Dir(exe), "plugins")
 	}
 	return "plugins"
 }
