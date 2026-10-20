@@ -1,5 +1,6 @@
 {
   "app": {
+    "bootstrap_failed": "起動に失敗しました。ログを確認するか、後でもう一度お試しください。",
     "settings": "設定",
     "error_boundary": {
       "title": "問題が発生しました",
@@ -984,6 +985,10 @@
     }
   },
   "errors": {
+    "detection_failed": "検出に失敗しました",
+    "download_failed": "ダウンロードに失敗しました",
+    "download_start_failed": "ダウンロードを開始できませんでした",
+    "import_failed": "インポートに失敗しました",
     "ERR_GAME_ALREADY_RUNNING": "現在、このバージョンの Minecraft が既に実行されています。起動前に閉じるか、別のバージョンに切り替えてください。",
     "ERR_TARGET_DIR_NOT_SPECIFIED": "ターゲットディレクトリが指定されていません",
     "ERR_CREATE_TARGET_DIR": "ターゲットディレクトリの作成に失敗しました",
