@@ -518,6 +518,9 @@ export default defineConfig({
     "User documentation for Bedrock Nexus, a desktop launcher for Minecraft Bedrock Edition (GDK) on Windows.",
   lang: "en-US",
   base,
+  // Internal planning notes (docs/superpowers/) are not user documentation
+  // and must not be published on the public docs site.
+  srcExclude: ["superpowers/**"],
   cleanUrls: true,
   lastUpdated: true,
   head: [

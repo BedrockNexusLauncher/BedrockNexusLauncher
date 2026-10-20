@@ -10,7 +10,7 @@ info:
   productIdentifier: "org.bedrocknexus.launcher" # The unique product identifier
   description: "A Modern Minecraft Bedrock Edition Launcher" # The application description
   copyright: "(c) 2024-2026, BedrockNexus" # Copyright text
-  comments: "Some Product Comments" # Comments
+  comments: "A Modern Minecraft Bedrock Edition Launcher" # Comments
   version: "1.0.0" # The application version
   beta: "false" # Whether the application is in beta or not
 
@@ -59,6 +59,4 @@ fileAssociations:
 #    role: Editor
 #    mimeType: image/jpeg  # (optional)
 
-# Other data
-other:
-  - name: My Other Data
+

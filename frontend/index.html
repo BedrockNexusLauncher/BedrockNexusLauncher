@@ -6,33 +6,18 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
       name="viewport"
     />
+    <!-- Defense in depth for the WebView: only same-origin scripts may run
+         (head initialisation lives in /head-init.js for this reason), no
+         plugins/frames, and remote content is limited to images/media and
+         HTTPS fetches the UI performs. If a future feature needs another
+         source, extend the matching directive here — do not drop the CSP. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https: ws: wss:; media-src 'self' data: blob: https:; object-src 'none'; base-uri 'self'; frame-src 'none'"
+    />
     <title>Bedrock Nexus</title>
     <link rel="icon" href="/favicon.ico" sizes="any" />
-    <script>
-      window._wails = window._wails || {};
-      window._wails.flags = window._wails.flags || {};
-    </script>
-         <script>
-      // The launcher engine is always LTR. Before first paint we only set the
-      // `rtl-locale` class for RTL locales (fa) so the CSS text-alignment
-      // rules in style.css (e.g. `html.rtl-locale body { text-align: right }`)
-      // take effect on first paint. Without this, text renders left-aligned
-      // until i18n.ts runs — which can lag behind due to async i18next
-      // resource loading, causing a visible FOUC.
-      (function () {
-        try {
-          var _lang = (
-            localStorage.getItem("i18nextLng") ||
-            navigator.language ||
-            "en"
-          ).toLowerCase();
-          var _isRtl = _lang.indexOf("fa") === 0;
-          var _html = document.documentElement;
-          _html.setAttribute("dir", "ltr");
-          _html.classList.toggle("rtl-locale", _isRtl);
-        } catch (e) {}
-      })();
-    </script>
+    <script src="./head-init.js"></script>
   </head>
 
   <body>
