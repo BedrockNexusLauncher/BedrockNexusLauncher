@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -328,7 +329,15 @@ func (m *Manager) run(s *state) {
 		if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusPartialContent {
 			resp.Body.Close()
 			cancel()
-			m.emitError(fmt.Sprintf("HTTP %s", resp.Status), local.dest)
+			statusErr := fmt.Errorf("HTTP %s", resp.Status)
+			// Transient statuses (429 rate limiting, 5xx server
+			// errors) deserve the same retry budget/backoff as
+			// transport errors; other 4xx are deterministic
+			// request failures and stay fatal.
+			if isRetryableStatus(resp.StatusCode) && m.retry(local, attempt, statusErr) {
+				continue
+			}
+			m.emitError(statusErr.Error(), local.dest)
 			m.finishRunning(local)
 			return
 		}
@@ -377,7 +386,12 @@ func (m *Manager) run(s *state) {
 		}
 		metadata.Total = total
 		if m.opts.Resume {
-			_ = writeMetadata(metadataDest, metadata)
+			if err := writeMetadata(metadataDest, metadata); err != nil {
+				// Non-fatal (a later attempt rewrites it), but a
+				// silently dropped write would surface as a lost
+				// resume position, so it must not go unlogged.
+				log.Printf("downloader: writing resume metadata for %s: %v", local.dest, err)
+			}
 		}
 		local.total.Store(total)
 
@@ -416,7 +430,9 @@ func (m *Manager) run(s *state) {
 		var loopErr error
 		for {
 			if local.cancelled.Load() || local.paused.Load() {
-				_ = f.Sync()
+				if err := f.Sync(); err != nil {
+					log.Printf("downloader: syncing partial file for %s: %v", local.dest, err)
+				}
 				_ = f.Close()
 				resp.Body.Close()
 				watchdog.stop()
@@ -459,7 +475,9 @@ func (m *Manager) run(s *state) {
 			}
 		}
 		if loopErr != nil {
-			_ = f.Sync()
+			if err := f.Sync(); err != nil {
+				log.Printf("downloader: syncing partial file for %s: %v", local.dest, err)
+			}
 		}
 		_ = f.Close()
 		resp.Body.Close()
@@ -579,6 +597,14 @@ func (m *Manager) run(s *state) {
 		cancel()
 		return
 	}
+}
+
+// isRetryableStatus reports whether an HTTP response status is
+// transient enough to be worth retrying: 429 (rate limited) and any
+// 5xx (server-side failure). Other 4xx describe the request itself
+// and would fail identically on every attempt.
+func isRetryableStatus(code int) bool {
+	return code == http.StatusTooManyRequests || (code >= 500 && code <= 599)
 }
 
 func (m *Manager) retry(s *state, attempt int, err error) bool {
