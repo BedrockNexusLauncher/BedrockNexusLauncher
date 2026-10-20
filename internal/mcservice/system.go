@@ -25,10 +25,12 @@ func FetchHistoricalVersions(preferCN bool) map[string]interface{} {
 	const gitcodeURL = "https://raw.gitcode.com/dreamguxiang/minecraft-windows-gdk-version-db/raw/main/historical_versions.json"
 	const maxAttemptsPerURL = 2
 
+	// Same authority rule as internal/gdkversions: this catalog supplies
+	// both download URLs and their MD5s, so the project's own GitHub is
+	// always tried first and the third-party mirrors (github.bibk.top,
+	// gitcode) are fallback-only for availability. preferCN no longer
+	// promotes a mirror ahead of GitHub.
 	urls := []string{githubURL, proxyURL, gitcodeURL}
-	if preferCN {
-		urls = []string{gitcodeURL, proxyURL, githubURL}
-	}
 
 	client := httpx.NewClient(5 * time.Second)
 	var lastErr error

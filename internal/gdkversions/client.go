@@ -78,10 +78,14 @@ func (c *Client) Fetch(ctx context.Context, preferCN bool, cachePath string) Cat
 }
 
 func (c *Client) fetchHistory(ctx context.Context, preferCN bool) Catalog {
+	// The historical catalog carries both the package download URLs and
+	// their MD5s, so whoever serves it controls both the payload and its
+	// expected hash. The project's own GitHub (historyURLs[0]) is
+	// therefore always tried first; third-party mirrors are fallback-only
+	// for availability and are never promoted ahead of GitHub — not even
+	// when preferCN is set. (preferCN stays in the signature for callers;
+	// it no longer reorders the sources.)
 	urls := append([]string(nil), c.historyURLs...)
-	if preferCN && len(urls) == 2 {
-		urls[0], urls[1] = urls[1], urls[0]
-	}
 	var lastErr error
 	for _, url := range urls {
 		for attempt := 0; attempt < 2; attempt++ {

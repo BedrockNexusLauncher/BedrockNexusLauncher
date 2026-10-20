@@ -12,6 +12,7 @@ import (
 
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/apppath"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/downloader"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/gdkversions"
 )
 
 const (
@@ -65,6 +66,19 @@ type DownloadError struct {
 }
 
 func StartDownload(ctx context.Context, rawurl string, md5sum string) string {
+	// Historical-catalog URLs reach this entry point with no prior
+	// validation. Hold them to the same scheme/host policy as Store
+	// CDN roots: HTTPS anywhere, HTTP only on Microsoft's delivery
+	// CDN family (see gdkversions.ValidDownloadURL). Store-discovered
+	// versions arrive here with an empty md5sum by design, so — as in
+	// gdkversions — hashless HTTP on a Microsoft delivery host cannot
+	// be rejected without breaking those downloads; the MD5 is
+	// verified whenever the catalog provides one.
+	parsed, perr := url.Parse(strings.TrimSpace(rawurl))
+	if perr != nil || !gdkversions.ValidDownloadURL(parsed) {
+		application.Get().Event.Emit(EventDownloadError, "ERR_INVALID_DOWNLOAD_URL")
+		return ""
+	}
 	dir, err := apppath.InstallersDir()
 	if err != nil {
 		application.Get().Event.Emit(EventDownloadError, err.Error())

@@ -71,8 +71,52 @@ func (p packageResponse) version(channel string) (Version, error) {
 	return Version{}, fmt.Errorf("no downloadable x64 Minecraft MSIXVC package")
 }
 
+// microsoftDeliveryHost reports whether host belongs to Microsoft's
+// package-delivery CDN family, *.dl.delivery.mp.microsoft.com.
+// Regional endpoints in this family may serve plain HTTP only —
+// internal/uwpdownload pins tlu.dl.delivery.mp.microsoft.com and
+// keeps Microsoft's scheme for exactly this reason — so this family is
+// the single exception to the HTTPS-only rule in validDownloadURL.
+func microsoftDeliveryHost(host string) bool {
+	host = strings.ToLower(host)
+	return host == "dl.delivery.mp.microsoft.com" ||
+		strings.HasSuffix(host, ".dl.delivery.mp.microsoft.com")
+}
+
+// validDownloadURL is the scheme/host policy for package download URLs:
+// HTTPS is accepted from any host (the URLs originate from Microsoft's
+// authenticated packages service or from the project catalog), while
+// plain HTTP is accepted only from Microsoft's delivery CDN family.
+// Other schemes, embedded credentials, and HTTP to arbitrary hosts are
+// rejected.
+//
+// Known limitation: this check has no access to a package hash.
+// Store-discovered versions deliberately carry an empty MD5 (see
+// packageResponse.version), so an HTTP URL on a Microsoft delivery
+// host is still trusted without any hash verification; the remaining
+// gate is the install-time manifest validation, which pins the
+// package identity and Microsoft publisher before extraction.
+// Rejecting HTTP here instead would break legitimate Store downloads
+// served by HTTP-only regional endpoints.
 func validDownloadURL(u *url.URL) bool {
-	return (u.Scheme == "https" || u.Scheme == "http") && u.Hostname() != "" && u.User == nil
+	if u == nil || u.Hostname() == "" || u.User != nil {
+		return false
+	}
+	switch u.Scheme {
+	case "https":
+		return true
+	case "http":
+		return microsoftDeliveryHost(u.Hostname())
+	default:
+		return false
+	}
+}
+
+// ValidDownloadURL exposes validDownloadURL so download entry points
+// in other packages (internal/msixvc) hold historical-catalog URLs to
+// the same policy as Store CDN roots.
+func ValidDownloadURL(u *url.URL) bool {
+	return validDownloadURL(u)
 }
 
 func numericVersion(raw string) ([4]uint64, bool) {

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -142,7 +143,7 @@ func TestSourceFallbacksAndTimeout(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if strings.HasPrefix(r.URL.Path, "/history") {
 					paths = append(paths, r.URL.Path)
-					if scenario == "mirror fallback" && r.URL.Path == "/history-cn" {
+					if scenario == "mirror fallback" && r.URL.Path == "/history" {
 						_, _ = w.Write([]byte(`{"unexpected":true}`))
 						return
 					}
@@ -188,8 +189,8 @@ func TestSourceFallbacksAndTimeout(t *testing.T) {
 			if len(got.ReleaseVersions) != want || len(got.PreviewVersions) != 0 {
 				t.Fatalf("source failure contaminated working source: %+v", got)
 			}
-			if scenario == "mirror fallback" && !reflect.DeepEqual(paths, []string{"/history-cn", "/history-cn", "/history"}) {
-				t.Fatalf("mirror preference/retries lost: %v", paths)
+			if scenario == "mirror fallback" && !reflect.DeepEqual(paths, []string{"/history", "/history", "/history-cn"}) {
+				t.Fatalf("GitHub-first order/mirror fallback lost: %v", paths)
 			}
 		})
 	}
@@ -238,5 +239,37 @@ func TestMergeKeepsChannelsDistinctAndTimestampStable(t *testing.T) {
 	merged, remaining := mergeVersions(nil, pending, latest)
 	if len(merged) != 2 || len(remaining) != 2 || merged[0].Timestamp != 10 || merged[0].URLs[0] != latest[0].URLs[0] {
 		t.Fatalf("incorrect merge: %+v, %+v", merged, remaining)
+	}
+}
+
+func TestValidDownloadURLPolicy(t *testing.T) {
+	cases := []struct {
+		raw  string
+		want bool
+	}{
+		{"https://assets1.xboxlive.com/prefix/file.msixvc", true},
+		{"https://cdn.example/file.msixvc", true},
+		{"https://tlu.dl.delivery.mp.microsoft.com/files/file.msixvc", true},
+		{"http://tlu.dl.delivery.mp.microsoft.com/files/file.msixvc", true},
+		{"http://dl.delivery.mp.microsoft.com/file.msixvc", true},
+		{"http://assets1.xboxlive.com/file.msixvc", false},
+		{"http://cdn.example/file.msixvc", false},
+		{"http://sub.dl.delivery.mp.microsoft.com.evil.example/file.msixvc", false},
+		{"http://evildl.delivery.mp.microsoft.com/file.msixvc", false},
+		{"https://user:password@example.com/file.msixvc", false},
+		{"file:///C:/file.msixvc", false},
+		{"javascript:alert(1)", false},
+	}
+	for _, tc := range cases {
+		u, err := url.Parse(tc.raw)
+		if err != nil {
+			t.Fatalf("parse %q: %v", tc.raw, err)
+		}
+		if got := validDownloadURL(u); got != tc.want {
+			t.Errorf("validDownloadURL(%q) = %v, want %v", tc.raw, got, tc.want)
+		}
+	}
+	if validDownloadURL(nil) {
+		t.Error("validDownloadURL(nil) = true, want false")
 	}
 }
