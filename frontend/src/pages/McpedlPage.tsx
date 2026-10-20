@@ -106,7 +106,7 @@ const McpedlPage: React.FC = () => {
     const filename =
       file.filename || file.name || `${file.downloadUrl.split("/").pop() || "content.mcpack"}`;
     try {
-      minecraft?.StartFileDownload?.(file.downloadUrl, filename);
+      minecraft?.StartFileDownload?.(file.downloadUrl, filename, "");
       addToast({
         title: t("mcpedl.download_started"),
         description: filename,

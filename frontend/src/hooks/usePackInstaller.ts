@@ -102,7 +102,12 @@ export const usePackInstaller = () => {
       setStep("downloading");
 
       try {
-        const dest = await StartFileDownload(downloadUrl, fileName);
+        const dest = await StartFileDownload(downloadUrl, fileName, "");
+        if (!dest) {
+          setInstallError("ERR_INVALID_DOWNLOAD");
+          setStep("error");
+          return;
+        }
 
         const cleanup = () => {
           Events.Off("file.download.progress");

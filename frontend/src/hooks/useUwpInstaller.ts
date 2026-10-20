@@ -97,7 +97,13 @@ export const useUwpInstaller = (onInstalled?: () => void) => {
         const dest = (await StartFileDownload(
           String(plan.URL),
           String(plan.Filename),
+          "",
         )) as unknown as string;
+        if (!dest) {
+          setInstallError("ERR_INVALID_DOWNLOAD");
+          setStep("error");
+          return;
+        }
         finishRef.current = { dest: String(dest), updateID, instanceName: name };
 
         const cleanup = () => {
