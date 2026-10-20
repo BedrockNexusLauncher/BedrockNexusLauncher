@@ -292,7 +292,7 @@ export default function BehaviorPacksPage() {
                 writeCache(cache);
               }
             })
-            .catch(() => {});
+            .catch((err) => console.error("[BehaviorPacksPage] Failed to scan behavior pack details", err));
         }
       } catch (e) {
         setError(t("contentpage.error_resolve_paths") as string);
