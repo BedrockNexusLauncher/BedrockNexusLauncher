@@ -1,47 +1,51 @@
 <p align="center">
-  <img src="assets/bedrock-nexus-logo.png" width="160" alt="Bedrock Nexus logo" />
+  <img src="assets/bedrock-nexus-logo.png" width="160" alt="لوگوی Bedrock Nexus" />
 </p>
 
 <h1 align="center">Bedrock Nexus</h1>
 
 <p align="center">
-  A modern, free and open-source desktop launcher for <b>Minecraft Bedrock Edition (GDK)</b> on Windows.
+  <a href="README.en.md">English</a> · <a href="README.zh-CN.md">简体中文</a> · <b>فارسی</b>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/platform-Windows%2010%2F11-blue" alt="Platform" />
-  <img src="https://img.shields.io/badge/license-GPL--3.0-green" alt="License" />
+  یک لانچر دسکتاپ مدرن، رایگان و متن‌باز برای <b>Minecraft Bedrock Edition (GDK)</b> در ویندوز.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/platform-Windows%2010%2F11-blue" alt="پلتفرم" />
+  <img src="https://img.shields.io/badge/license-GPL--3.0-green" alt="مجوز" />
 </p>
 
 ---
 
-## ✨ Features
+## ✨ ویژگی‌ها
 
-- **Instance management** — install, isolate and run multiple Release and Preview builds side by side, each with its own content and settings.
-- **One-click launch** — at startup the launcher checks Microsoft Gaming Services, Microsoft GameInput, the Visual C++ runtime and the WebView2 runtime, and can install GameInput and the Visual C++ runtime for you. If Gaming Services is missing, you'll be asked to install it from the Microsoft Store.
-- **Content management** — import, organize, transfer between instances and delete worlds, resource packs, behavior packs and skin packs, and back up worlds to `.mcworld` files; drag-and-drop `.mcpack`, `.mcaddon` and `.mcworld` files onto the Content page (or `.zip`/`.dll` mods onto the Mods page) to import them.
-- **Modding** — first-class [LeviLamina](https://github.com/LiteLDev/LeviLamina) support with per-instance installation, updates and version pinning, plus [lip](https://github.com/LiteLDev/lip) package browsing and management.
-- **CurseForge integration** — search and install Bedrock mods directly from CurseForge.
-- **Community marketplace** — browse and install packs from a GitHub-hosted community index.
-- **World tools** — a built-in `level.dat` editor for world properties, and a per-version screenshot gallery.
-- **Download manager** — resumable downloads with automatic retries and live progress for versions, mods and runtime dependencies.
-- **Beautiful and personal** — light/dark themes, custom accent colors, wallpapers, optional themed strokes, and smooth animations with a disable-animations kill switch.
-- **Truly multilingual** — 12 locales (English, 简体中文, 繁體中文, Русский, 日本語, Deutsch, Español, Français, Italiano, 한국어, Português, فارسی) with full translation parity, and right-to-left text support for Persian (RTL text alignment, mirrored settings layout and a Persian-friendly font stack).
-- **Discord Rich Presence** — show what you're playing while the game runs.
-- **Automatic updates** — the launcher checks GitHub Releases for new versions and can download and install an update, restarting itself to finish. (Active once releases are published.)
-- **Built-in diagnostics & bug reporting** — generate a diagnostics report (app and OS version, architecture, and a startup-log excerpt with your user-profile path redacted) and open pre-filled GitHub issues from inside the app.
+- **مدیریت اینستنس‌ها** — نصب، ایزوله‌سازی و اجرای هم‌زمان چند بیلد Release و Preview در کنار هم، هرکدام با محتوا و تنظیمات مخصوص خودشان.
+- **اجرای تک‌کلیکی** — لانچر هنگام اجرا Microsoft Gaming Services، ‏Microsoft GameInput، ران‌تایم Visual C++‎ و ران‌تایم WebView2 را بررسی می‌کند و می‌تواند GameInput و ران‌تایم Visual C++‎ را برایتان نصب کند. اگر Gaming Services نصب نباشد، از شما خواسته می‌شود آن را از Microsoft Store نصب کنید.
+- **مدیریت محتوا** — وارد کردن، سازمان‌دهی، انتقال بین اینستنس‌ها و حذف جهان‌ها، ریسورس‌پک‌ها، بیهیویرپک‌ها و اسکین‌پک‌ها، و پشتیبان‌گیری از جهان‌ها در فایل‌های ‎.mcworld‎؛ کافی است فایل‌های ‎.mcpack‎، ‎.mcaddon‎ و ‎.mcworld‎ را روی صفحه‌ی محتوا (یا مادهای ‎.zip/.dll‎ را روی صفحه‌ی مادها) بکشید و رها کنید تا وارد شوند.
+- **مادینگ** — پشتیبانی کامل از [LeviLamina](https://github.com/LiteLDev/LeviLamina) با نصب، به‌روزرسانی و پین‌کردن نسخه برای هر اینستنس، به‌علاوه‌ی مرور و مدیریت پکیج‌های [lip](https://github.com/LiteLDev/lip).
+- **یکپارچه‌سازی CurseForge** — جست‌وجو و نصب مستقیم مادهای Bedrock از CurseForge.
+- **مارکت‌پلیس کامیونیتی** — مرور و نصب پک‌ها از یک ایندکس کامیونیتی میزبانی‌شده روی GitHub.
+- **ابزارهای جهان** — ویرایشگر داخلی ‎level.dat‎ برای ویژگی‌های جهان، و گالری اسکرین‌شات برای هر نسخه.
+- **مدیر دانلود** — دانلودهای قابل ازسرگیری با تلاش مجدد خودکار و نمایش زنده‌ی پیشرفت، برای نسخه‌ها، مادها و وابستگی‌های ران‌تایم.
+- **زیبا و شخصی** — تم‌های روشن و تیره، رنگ‌های تاکیدی سفارشی، والپیپر، استروک‌های تم‌دار اختیاری، و انیمیشن‌های نرم با یک کلید قطع انیمیشن.
+- **واقعاً چندزبانه** — ۱۲ زبان (English، ‏简体中文، ‏繁體中文، ‏Русский، ‏日本語، ‏Deutsch، ‏Español، ‏Français، ‏Italiano، ‏한국어، ‏Português، ‏فارسی) با برابری کامل ترجمه‌ها، و پشتیبانی از متن راست‌به‌چپ برای فارسی (تراز متن RTL، چیدمان آینه‌ای تنظیمات و دسته‌فونت مناسب فارسی).
+- **Discord Rich Presence** — وقتی بازی در حال اجراست، نشان دهید چه بازی می‌کنید.
+- **به‌روزرسانی خودکار** — لانچر GitHub Releases را برای نسخه‌های جدید بررسی می‌کند و می‌تواند به‌روزرسانی را دانلود و نصب کند و برای اتمام کار، خودش را دوباره اجرا کند. (پس از انتشار ریلیزها فعال می‌شود.)
+- **عیب‌یابی و گزارش باگ داخلی** — تولید گزارش عیب‌یابی (نسخه‌ی برنامه و سیستم‌عامل، معماری، و گزیده‌ای از لاگ اجرا با حذف مسیر پروفایل کاربر) و باز کردن ایشوهای از پیش پرشده‌ی GitHub از داخل خود برنامه.
 
-## 📥 Downloads
+## 📥 دانلودها
 
-No public release has been published yet, so there is currently no installer to download. You can build Bedrock Nexus from source — see [Development](#️-development) below. Installers will be published on [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases).
+هنوز هیچ ریلیز عمومی‌ای منتشر نشده است، پس فعلاً نصب‌کننده‌ای برای دانلود وجود ندارد. می‌توانید Bedrock Nexus را از سورس بسازید — بخش [توسعه](#️-توسعه) در پایین را ببینید. نصب‌کننده‌ها روی [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) منتشر خواهند شد.
 
-## 📋 Requirements
+## 📋 نیازمندی‌ها
 
-- Windows 10 or 11 (x64)
-- A licensed copy of Minecraft Bedrock Edition (GDK) from the Microsoft Store
-- Microsoft Gaming Services and Microsoft GameInput — the launcher checks for these at startup; it can set up GameInput (and the Visual C++ runtime) automatically, while Gaming Services must be installed from the Microsoft Store if it is missing
+- ویندوز ۱۰ یا ۱۱ (x64)
+- یک نسخه‌ی لایسنس‌دار از Minecraft Bedrock Edition (GDK) از Microsoft Store
+- ‏Microsoft Gaming Services و Microsoft GameInput — لانچر هنگام اجرا این‌ها را بررسی می‌کند؛ می‌تواند GameInput (و ران‌تایم Visual C++‎) را به‌صورت خودکار راه‌اندازی کند، اما Gaming Services اگر نصب نباشد باید از Microsoft Store نصب شود
 
-## 📖 Documentation
+## 📖 مستندات
 
 - **English:** https://bedrocknexuslauncher.github.io/BedrockNexusLauncher/
 - **简体中文:** https://bedrocknexuslauncher.github.io/BedrockNexusLauncher/zh-CN/
@@ -53,53 +57,53 @@ No public release has been published yet, so there is currently no installer to 
 - **한국어:** https://bedrocknexuslauncher.github.io/BedrockNexusLauncher/ko-KR/
 - **Français:** https://bedrocknexuslauncher.github.io/BedrockNexusLauncher/fr-FR/
 
-## 💬 Community
+## 💬 کامیونیتی
 
 - **Discord:** https://discord.gg/v5R5P4vRZk
 - **QQ Group:** https://qm.qq.com/q/1z791rJgJG
 
-## 🐛 Reporting Issues
+## 🐛 گزارش مشکلات
 
-Found a bug or have a feature idea? Please [open an issue](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/issues).
-The quickest way is **Settings → Report a Problem** (or **About → Report a Problem**) in the launcher — it attaches a diagnostics report (with your user-profile path redacted) automatically.
+باگی پیدا کردید یا ایده‌ای برای یک قابلیت جدید دارید؟ لطفاً [یک ایشو باز کنید](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/issues).
+سریع‌ترین راه، گزینه‌ی **تنظیمات ← گزارش مشکل** (یا **درباره ← گزارش مشکل**) داخل لانچر است — گزارش عیب‌یابی (با حذف مسیر پروفایل کاربر) به‌صورت خودکار ضمیمه می‌شود.
 
-## 🛠️ Development
+## 🛠️ توسعه
 
-Bedrock Nexus is built with [Go](https://go.dev) + [Wails v3](https://v3alpha.wails.io) on the backend and React 19 + TypeScript + Tailwind CSS 4 + HeroUI on the frontend.
+Bedrock Nexus در بک‌اند با [Go](https://go.dev) و [Wails v3](https://v3alpha.wails.io) و در فرانت‌اند با React 19، ‏TypeScript، ‏Tailwind CSS 4 و HeroUI ساخته شده است.
 
-### Prerequisites
+### پیش‌نیازها
 
-- [Go](https://go.dev/dl/) 1.25.3 or newer
-- [Node.js](https://nodejs.org) 20 or newer (npm)
-- [Wails v3 CLI](https://v3alpha.wails.io/reference/cli): `go install github.com/wailsapp/wails/v3/cmd/wails3@latest`
-- [Task](https://taskfile.dev): `go install github.com/go-task/task/v3/cmd/task@latest`
+- [Go](https://go.dev/dl/) نسخه‌ی ۱.۲۵.۳ یا جدیدتر
+- [Node.js](https://nodejs.org) نسخه‌ی ۲۰ یا جدیدتر (npm)
+- [Wails v3 CLI](https://v3alpha.wails.io/reference/cli): ‏`go install github.com/wailsapp/wails/v3/cmd/wails3@latest`
+- [Task](https://taskfile.dev): ‏`go install github.com/go-task/task/v3/cmd/task@latest`
 
-### CurseForge API key
+### کلید API ‏CurseForge
 
-CurseForge features need an API key at runtime. Set the `CURSEFORGE_API_KEY` environment variable, or inject the key when building a release: `go build -ldflags "-X main.curseForgeAPIKeyBuild=<key>"`. Never commit a key to the repository.
+قابلیت‌های CurseForge هنگام اجرا به یک کلید API نیاز دارند. متغیر محیطی `CURSEFORGE_API_KEY` را تنظیم کنید، یا هنگام بیلد ریلیز کلید را تزریق کنید: ‏`go build -ldflags "-X main.curseForgeAPIKeyBuild=<key>"`. هرگز کلیدی را در ریپازیتوری کامیت نکنید.
 
-### Run & build
+### اجرا و بیلد
 
 ```bash
-# Install frontend dependencies
+# نصب وابستگی‌های فرانت‌اند
 cd frontend && npm install && cd ..
 
-# Start the app in development mode (hot reload)
+# اجرای برنامه در حالت توسعه (هات ریلود)
 wails3 task dev
 
-# Production build
+# بیلد نهایی
 wails3 task build
 
-# Package an installer (Inno Setup)
+# ساخت نصب‌کننده (Inno Setup)
 wails3 task package:inno
 
-# Type-check and validate the frontend
+# تایپ‌چک و اعتبارسنجی فرانت‌اند
 wails3 task verify
 ```
 
-### Documentation site
+### سایت مستندات
 
-The user guide is a VitePress site in [`docs/`](docs/):
+راهنمای کاربر یک سایت VitePress در [‎docs/‎](docs/) است:
 
 ```bash
 cd docs
@@ -107,16 +111,16 @@ npm install
 npm run docs:dev
 ```
 
-## 🤝 Contributing
+## 🤝 مشارکت
 
-Pull requests are welcome! For substantial changes, please open an issue first to discuss what you would like to change, and follow the existing code style (the backend is grouped under `internal/`, the frontend under `frontend/src/`).
+از پول‌ریکوئست‌ها استقبال می‌شود! برای تغییرات اساسی، لطفاً اول یک ایشو باز کنید تا درباره‌ی تغییری که می‌خواهید بدهید گفت‌وگو کنیم، و از سبک کدنویسی موجود پیروی کنید (بک‌اند زیر ‎internal/‎ و فرانت‌اند زیر ‎frontend/src/‎ گروه‌بندی شده‌اند).
 
-## 📄 License
+## 📄 مجوز
 
-This project is licensed under the **GNU General Public License v3.0 only (GPL-3.0-only)** — see [COPYING](COPYING) for the full text.
+این پروژه تحت **مجوز GNU General Public License v3.0 only (GPL-3.0-only)** منتشر شده است — متن کامل را در [COPYING](COPYING) ببینید.
 
-Bedrock Nexus is a fork of [LiteLDev/LeviLauncher](https://github.com/LiteLDev/LeviLauncher), which is also licensed under GPL-3.0-only. Bundled components are listed in [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES) and remain under their own terms where stated there.
+Bedrock Nexus فورکی از [LiteLDev/LeviLauncher](https://github.com/LiteLDev/LeviLauncher) است که آن هم تحت GPL-3.0-only منتشر شده است. کامپوننت‌های همراه در [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES) فهرست شده‌اند و هرجا در آن فایل ذکر شده باشد، تحت شرایط خودشان باقی می‌مانند.
 
-## ⚠️ Disclaimer
+## ⚠️ سلب مسئولیت
 
-Bedrock Nexus is an unofficial community launcher and is not affiliated with, endorsed by, or associated with Mojang Studios or Microsoft. You must own a legitimate licensed copy of Minecraft Bedrock Edition to use it. "Minecraft" is a trademark of Mojang Studios.
+Bedrock Nexus یک لانچر کامیونیتی غیررسمی است و با Mojang Studios یا Microsoft وابستگی، تأیید یا ارتباطی ندارد. برای استفاده از آن باید یک نسخه‌ی قانونی و لایسنس‌دار از Minecraft Bedrock Edition داشته باشید. «Minecraft» علامت تجاری Mojang Studios است.
