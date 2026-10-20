@@ -23,6 +23,7 @@ import {
 } from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/versionservice";
 import { GetLocalUserGamertag } from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/userservice";
 import { Events, Browser } from "@wailsio/runtime";
+import DOMPurify from "dompurify";
 import { VersionMeta } from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/versions/models";
 import { File as ModFile } from "bindings/github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/curseforge/client/types";
 import {
@@ -782,7 +783,13 @@ const CurseForgeModPage: React.FC = () => {
                   <div className="prose dark:prose-invert max-w-none prose-img:rounded-xl prose-img:mx-auto prose-a:text-primary-600 dark:prose-a:text-primary-500">
                     {description ? (
                       <div
-                        dangerouslySetInnerHTML={{ __html: description }}
+                        dangerouslySetInnerHTML={{
+                          // The description is third-party HTML from the
+                          // CurseForge API: always sanitize before it
+                          // reaches the WebView (it can call Wails
+                          // bindings), keeping only presentational markup.
+                          __html: DOMPurify.sanitize(description),
+                        }}
                         onClick={handleDescriptionClick}
                       />
                     ) : (
