@@ -4,6 +4,8 @@ import (
 	"archive/tar"
 	"compress/gzip"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -607,14 +609,55 @@ func lipDotNetInstallScriptPath() string {
 	return filepath.Join(dir, fileName)
 }
 
+// maxDotNetInstallScriptBytes caps the dotnet-install script download.
+// The real script is ~77 KB (verified 2026-10-20); 1 MiB leaves ample
+// headroom while keeping a hostile endpoint from streaming unbounded
+// content into a file that is about to be executed.
+const maxDotNetInstallScriptBytes = 1 << 20
+
+// dotNetInstallScriptHosts is the host allowlist for the dotnet-install
+// script download and every redirect it follows. The script is executed
+// (powershell -ExecutionPolicy Bypass / bash), so its whole fetch chain
+// is pinned to Microsoft's official distribution hosts: dot.net is the
+// documented entry point, and it 301-redirects to
+// builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.*
+// (verified live 2026-10-20). download.visualstudio.microsoft.com is
+// Microsoft's other official distribution host for the same tooling.
+// The script itself is mutable ("latest"), so no fixed hash is pinned;
+// instead its SHA-256 is computed and logged before execution.
+var dotNetInstallScriptHosts = map[string]bool{
+	"dot.net":                             true,
+	"builds.dotnet.microsoft.com":         true,
+	"download.visualstudio.microsoft.com": true,
+}
+
+func dotNetInstallScriptClient() *http.Client {
+	client := httpx.NewClient(0)
+	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		if len(via) >= 10 {
+			return fmt.Errorf("too many redirects")
+		}
+		if req.URL.Scheme != "https" || !dotNetInstallScriptHosts[strings.ToLower(req.URL.Hostname())] {
+			return fmt.Errorf("redirect to untrusted host %q blocked", req.URL.Host)
+		}
+		return nil
+	}
+	return client
+}
+
 func downloadLipDotNetInstallScript(ctx context.Context, dest string) error {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, lipDotNetInstallScriptURL(), nil)
+	scriptURL := lipDotNetInstallScriptURL()
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, scriptURL, nil)
 	if err != nil {
 		return fmt.Errorf("ERR_LIP_DOWNLOAD_DOTNET_INSTALLER: %w", err)
 	}
 	httpx.ApplyDefaultHeaders(req)
 
-	resp, err := httpx.Do(req)
+	if req.URL.Scheme != "https" || !dotNetInstallScriptHosts[strings.ToLower(req.URL.Hostname())] {
+		return fmt.Errorf("ERR_LIP_DOWNLOAD_DOTNET_INSTALLER: untrusted script URL %q", scriptURL)
+	}
+
+	resp, err := dotNetInstallScriptClient().Do(req)
 	if err != nil {
 		return fmt.Errorf("ERR_LIP_DOWNLOAD_DOTNET_INSTALLER: %w", err)
 	}
@@ -630,10 +673,17 @@ func downloadLipDotNetInstallScript(ctx context.Context, dest string) error {
 		return fmt.Errorf("ERR_LIP_DOWNLOAD_DOTNET_INSTALLER: %w", err)
 	}
 
-	if _, err := io.Copy(file, resp.Body); err != nil {
+	hash := sha256.New()
+	written, err := io.Copy(io.MultiWriter(file, hash), io.LimitReader(resp.Body, maxDotNetInstallScriptBytes+1))
+	if err != nil {
 		_ = file.Close()
 		_ = os.Remove(tmp)
 		return fmt.Errorf("ERR_LIP_DOWNLOAD_DOTNET_INSTALLER: %w", err)
+	}
+	if written > maxDotNetInstallScriptBytes {
+		_ = file.Close()
+		_ = os.Remove(tmp)
+		return fmt.Errorf("ERR_LIP_DOWNLOAD_DOTNET_INSTALLER: script exceeds %d bytes", maxDotNetInstallScriptBytes)
 	}
 	if err := file.Close(); err != nil {
 		_ = os.Remove(tmp)
@@ -645,6 +695,8 @@ func downloadLipDotNetInstallScript(ctx context.Context, dest string) error {
 		_ = os.Remove(tmp)
 		return fmt.Errorf("ERR_LIP_DOWNLOAD_DOTNET_INSTALLER: %w", err)
 	}
+
+	log.Printf("[lip] dotnet-install script downloaded from %s: %d bytes, sha256=%s (executed next)", scriptURL, written, hex.EncodeToString(hash.Sum(nil)))
 	return nil
 }
 
