@@ -9,8 +9,10 @@ import (
 	"io"
 	"log"
 	"net/http"
+	neturl "net/url"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -21,13 +23,13 @@ import (
 
 	json "github.com/goccy/go-json"
 
-	"github.com/Masterminds/semver/v3"
 	buildcfg "github.com/BedrockNexusLauncher/BedrockNexusLauncher/build"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/apppath"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/config"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/httpx"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/types"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/utils"
+	"github.com/Masterminds/semver/v3"
 	"github.com/mouuff/go-rocket-update/pkg/provider"
 	"github.com/mouuff/go-rocket-update/pkg/updater"
 	"github.com/wailsapp/wails/v3/pkg/application"
@@ -61,6 +63,7 @@ type githubReleaseAsset struct {
 	Name               string `json:"name"`
 	BrowserDownloadURL string `json:"browser_download_url"`
 	Size               int64  `json:"size"`
+	Digest             string `json:"digest"`
 }
 
 const (
@@ -168,26 +171,22 @@ func newTimedRequest(parent context.Context, method string, target string, timeo
 }
 
 func getReleaseAPIURLs() []string {
+	// Release metadata is the root of trust for the whole self-update flow:
+	// it decides whether an update exists and which binary gets executed.
+	// It must only ever come from GitHub itself. Third-party proxy mirrors
+	// may help availability, but they must never be an authority — a
+	// compromised mirror could fabricate a release and trigger installation
+	// of an attacker-controlled binary.
 	return []string{
 		"https://api.github.com/repos/BedrockNexusLauncher/BedrockNexusLauncher/releases",
-		"https://cdn.gh-proxy.org/https://api.github.com/repos/BedrockNexusLauncher/BedrockNexusLauncher/releases",
-		"https://edgeone.gh-proxy.org/https://api.github.com/repos/BedrockNexusLauncher/BedrockNexusLauncher/releases",
-		"https://gh-proxy.org/https://api.github.com/repos/BedrockNexusLauncher/BedrockNexusLauncher/releases",
-		"https://hk.gh-proxy.org/https://api.github.com/repos/BedrockNexusLauncher/BedrockNexusLauncher/releases",
-		"https://ghproxy.vip/https://api.github.com/repos/BedrockNexusLauncher/BedrockNexusLauncher/releases",
 	}
 }
 
 func fetchReleases(ctx context.Context) ([]githubRelease, error) {
 	apis := getReleaseAPIURLs()
-	useReverse := isChinaUser()
 	var lastErr error
 	for i := 0; i < len(apis); i++ {
-		idx := i
-		if useReverse {
-			idx = len(apis) - 1 - i
-		}
-		target := apis[idx]
+		target := apis[i]
 		req, cancel, err := newTimedRequest(ctx, http.MethodGet, target, updateMetadataTimeout)
 		if err != nil {
 			lastErr = err
@@ -275,29 +274,90 @@ func expectedZipAssetName() string {
 }
 
 func buildAssetCandidateURLs(target string) []string {
+	// Direct URL only. Release assets are executable payloads (or the
+	// checksums that vouch for them), so — like the release metadata —
+	// they are never fetched through third-party proxy mirrors.
 	target = strings.TrimSpace(target)
 	if target == "" {
 		return nil
 	}
-	proxies := []string{
-		"https://edgeone.gh-proxy.org/",
-		"https://gh-proxy.org/",
-		"https://hk.gh-proxy.org/",
-		"https://cdn.gh-proxy.org/",
+	return []string{target}
+}
+
+// validateReleaseAssetURL ensures a release asset is downloaded from
+// GitHub itself: the release page host or a GitHub content host.
+func validateReleaseAssetURL(raw string) error {
+	u, err := neturl.Parse(strings.TrimSpace(raw))
+	if err != nil {
+		return fmt.Errorf("invalid asset URL: %w", err)
 	}
-	out := make([]string, 0, len(proxies)+1)
-	if isChinaUser() {
-		for _, prefix := range proxies {
-			out = append(out, prefix+target)
+	if u.Scheme != "https" {
+		return fmt.Errorf("asset URL must be https: %q", raw)
+	}
+	if u.User != nil {
+		return fmt.Errorf("asset URL must not contain credentials: %q", raw)
+	}
+	host := strings.ToLower(u.Hostname())
+	if host == "github.com" || host == "githubusercontent.com" || strings.HasSuffix(host, ".githubusercontent.com") {
+		return nil
+	}
+	return fmt.Errorf("asset URL host is not a GitHub host: %q", host)
+}
+
+// parseSHA256ForAsset extracts the expected SHA-256 for one asset from
+// checksum-file content. It accepts both a bare hash and the standard
+// "<hash>  <filename>" lines produced by sha256sum; when several files
+// are listed, the line naming assetName wins.
+func parseSHA256ForAsset(content string, assetName string) (string, error) {
+	var single string
+	for _, line := range strings.Split(content, "\n") {
+		fields := strings.Fields(strings.TrimSpace(line))
+		if len(fields) == 0 {
+			continue
+		}
+		hash := fields[0]
+		if len(hash) != 64 {
+			continue
+		}
+		if _, err := hex.DecodeString(hash); err != nil {
+			continue
+		}
+		name := ""
+		if len(fields) > 1 {
+			name = strings.TrimPrefix(fields[1], "*")
+			name = path.Base(name)
+		}
+		if name == assetName {
+			return strings.ToLower(hash), nil
+		}
+		if single == "" {
+			single = strings.ToLower(hash)
 		}
 	}
-	out = append(out, target)
-	if !isChinaUser() {
-		for _, prefix := range proxies[:1] {
-			out = append(out, prefix+target)
-		}
+	if single != "" {
+		return single, nil
 	}
-	return out
+	return "", fmt.Errorf("no sha256 checksum found for %s", assetName)
+}
+
+// expectedUpdateSHA256 resolves the trusted SHA-256 for the update ZIP:
+// first the release's "<zip>.sha256" checksum asset, then the digest
+// GitHub itself reports for the asset. No checksum, no update.
+func expectedUpdateSHA256(ctx context.Context, release githubRelease, zipAsset *githubReleaseAsset) (string, error) {
+	if sumAsset := findAssetByName(release, zipAsset.Name+".sha256"); sumAsset != nil {
+		if err := validateReleaseAssetURL(sumAsset.BrowserDownloadURL); err != nil {
+			return "", err
+		}
+		text, err := downloadTextWithCandidates(ctx, buildAssetCandidateURLs(sumAsset.BrowserDownloadURL), updateChecksumTimeout)
+		if err != nil {
+			return "", err
+		}
+		return parseSHA256ForAsset(text, zipAsset.Name)
+	}
+	if d := strings.TrimSpace(zipAsset.Digest); strings.HasPrefix(strings.ToLower(d), "sha256:") {
+		return parseSHA256Checksum(strings.TrimPrefix(strings.ToLower(d), "sha256:"))
+	}
+	return "", fmt.Errorf("release %s publishes no sha256 checksum for %s", release.TagName, zipAsset.Name)
 }
 
 func downloadTextWithCandidates(ctx context.Context, urls []string, timeout time.Duration) (string, error) {
@@ -457,13 +517,6 @@ func downloadUpdateAsset(ctx context.Context, urls []string, dest string) error 
 	return lastErr
 }
 
-func buildSelfUpdateCandidateURLs(ver string) []string {
-	return []string{
-		"https://goproxy.io/github.com/!bedrock!nexus!launcher/!bedrock!nexus!launcher/@v/" + ver + ".zip",
-		"https://mirrors.aliyun.com/goproxy/github.com/!bedrock!nexus!launcher/!bedrock!nexus!launcher/@v/" + ver + ".zip",
-	}
-}
-
 func startSelfUpdateElevated(exePath string, curVer string) error {
 	verb, err := syscall.UTF16PtrFromString("runas")
 	if err != nil {
@@ -561,12 +614,41 @@ func Update(version string) error {
 		return emitUpdateError("ERR_UPDATE_WRITE_FAILED", err)
 	}
 	zipPath := filepath.Join(updDir, archName)
+
+	// The update ZIP is executed, so it is only ever taken from the
+	// release's own GitHub asset and only installed after its SHA-256
+	// matches the checksum published with the release. A ZIP left over
+	// in the updates folder is never trusted on its own: it is reused
+	// only when it verifies against the freshly fetched release.
+	zipAsset := findAssetByName(release, expectedZipAssetName())
+	if zipAsset == nil {
+		return emitUpdateError("ERR_UPDATE_ASSET_MISSING", fmt.Errorf("release %s has no %s asset", target, expectedZipAssetName()))
+	}
+	if err := validateReleaseAssetURL(zipAsset.BrowserDownloadURL); err != nil {
+		return emitUpdateError("ERR_UPDATE_VERIFY_FAILED", err)
+	}
+	expectedSHA, err := expectedUpdateSHA256(ctx, release, zipAsset)
+	if err != nil {
+		return emitUpdateError("ERR_UPDATE_VERIFY_FAILED", err)
+	}
+
+	verified := false
 	if fi, statErr := os.Stat(zipPath); statErr == nil && fi.Size() > 0 {
-		application.Get().Event.Emit(EventAppUpdateStatus, "downloaded")
-		application.Get().Event.Emit(EventAppUpdateProgress, AppUpdateProgress{Phase: "download", Downloaded: fi.Size(), Total: fi.Size()})
-	} else {
-		if err := downloadUpdateAsset(ctx, buildSelfUpdateCandidateURLs(ver), zipPath); err != nil {
+		if err := verifyFileSHA256(zipPath, expectedSHA); err == nil {
+			verified = true
+			application.Get().Event.Emit(EventAppUpdateStatus, "downloaded")
+			application.Get().Event.Emit(EventAppUpdateProgress, AppUpdateProgress{Phase: "download", Downloaded: fi.Size(), Total: fi.Size()})
+		} else {
+			_ = os.Remove(zipPath)
+		}
+	}
+	if !verified {
+		if err := downloadUpdateAsset(ctx, buildAssetCandidateURLs(zipAsset.BrowserDownloadURL), zipPath); err != nil {
 			return emitUpdateError("ERR_UPDATE_DOWNLOAD_FAILED", err)
+		}
+		if err := verifyFileSHA256(zipPath, expectedSHA); err != nil {
+			_ = os.Remove(zipPath)
+			return emitUpdateError("ERR_UPDATE_VERIFY_FAILED", err)
 		}
 	}
 
