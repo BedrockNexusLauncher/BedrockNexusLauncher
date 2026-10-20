@@ -1,5 +1,6 @@
 {
   "app": {
+    "bootstrap_failed": "شروع برنامه ناموفق بود. لطفاً گزارش‌ها را بررسی کنید یا بعداً دوباره تلاش کنید.",
     "settings": "تنظیمات",
     "error_boundary": {
       "title": "مشکلی پیش آمد",
@@ -996,6 +997,10 @@
     "target": "نمونه مقصد"
   },
   "errors": {
+    "detection_failed": "شناسایی ناموفق بود",
+    "download_failed": "دانلود ناموفق بود",
+    "download_start_failed": "شروع دانلود ناموفق بود",
+    "import_failed": "وارد کردن ناموفق بود",
     "ERR_GAME_ALREADY_RUNNING": "نمونهٔ فعلی Minecraft از قبل در حال اجراست. لطفاً پیش از اجرا آن را ببندید یا به نمونهٔ دیگری سوئیچ کنید.",
     "ERR_TARGET_DIR_NOT_SPECIFIED": "پوشهٔ مقصد مشخص نشده است",
     "ERR_CREATE_TARGET_DIR": "ساخت پوشهٔ مقصد ناموفق بود",
