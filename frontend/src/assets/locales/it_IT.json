@@ -1,6 +1,11 @@
 {
   "app": {
-    "settings": "Impostazioni"
+    "settings": "Impostazioni",
+    "error_boundary": {
+      "title": "Qualcosa è andato storto",
+      "description": "Si è verificato un errore imprevisto. Ricaricare l'app di solito risolve il problema.",
+      "reload": "Ricarica app"
+    }
   },
   "nav": {
     "versions": "Istanze",
