@@ -1,5 +1,6 @@
 {
   "app": {
+    "bootstrap_failed": "Falha ao iniciar. Verifique os registos ou tente novamente mais tarde.",
     "settings": "Definições",
     "error_boundary": {
       "title": "Algo correu mal",
@@ -996,6 +997,10 @@
     "target": "Instância de destino"
   },
   "errors": {
+    "detection_failed": "A deteção falhou",
+    "download_failed": "A transferência falhou",
+    "download_start_failed": "Não foi possível iniciar a transferência",
+    "import_failed": "A importação falhou",
     "ERR_GAME_ALREADY_RUNNING": "Foi detetado que a instância atual do Minecraft já está em execução. Feche-a antes de iniciar ou mude para outra instância.",
     "ERR_TARGET_DIR_NOT_SPECIFIED": "Diretório de destino não especificado",
     "ERR_CREATE_TARGET_DIR": "Falha ao criar diretório de destino",
