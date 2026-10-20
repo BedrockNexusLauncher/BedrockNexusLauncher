@@ -5,7 +5,7 @@ const releases = `${repo}/releases`;
 const discord = "https://discord.gg/v5R5P4vRZk";
 const lanzou = "https://levimc.lanzoue.com/b016ke39hc";
 
-const base = "/";
+const base = "/BedrockNexusLauncher/";
 
 // --- Sidebar Builders ---
 
