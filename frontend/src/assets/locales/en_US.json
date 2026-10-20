@@ -1,6 +1,11 @@
 {
   "app": {
-    "settings": "Settings"
+    "settings": "Settings",
+    "error_boundary": {
+      "title": "Something went wrong",
+      "description": "An unexpected error occurred. Reloading the app usually fixes this.",
+      "reload": "Reload app"
+    }
   },
   "nav": {
     "versions": "Instances",
