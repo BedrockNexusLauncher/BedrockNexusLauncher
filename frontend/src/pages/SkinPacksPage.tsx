@@ -381,7 +381,7 @@ export default function SkinPacksPage() {
                 writeCache(cache);
               }
             })
-            .catch(() => {});
+            .catch((err) => console.error("[SkinPacksPage] Failed to scan skin pack details", err));
         }
       } catch (e: any) {
         setError(e.toString());
