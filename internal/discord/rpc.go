@@ -2,6 +2,7 @@ package discord
 
 import (
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/config"
@@ -9,9 +10,17 @@ import (
 	"github.com/axrona/go-discordrpc/client"
 )
 
-var rpc *client.Client
+// rpc is touched from UI and game-monitor goroutines; rpcMu serialises
+// every access (login, activity updates, logout) so the client can never
+// be logged in twice or used while Close is tearing it down.
+var (
+	rpc   *client.Client
+	rpcMu sync.Mutex
+)
 
-func ensure() *client.Client {
+// ensureLocked returns the shared client, logging it in on first use.
+// Callers must hold rpcMu.
+func ensureLocked() *client.Client {
 	if config.GetDiscordRPCDisabled() {
 		return nil
 	}
@@ -27,6 +36,8 @@ func ensure() *client.Client {
 }
 
 func Close() {
+	rpcMu.Lock()
+	defer rpcMu.Unlock()
 	if rpc != nil {
 		_ = rpc.Logout()
 		rpc = nil
@@ -34,15 +45,13 @@ func Close() {
 }
 
 func Init() {
-	c := ensure()
-	if c == nil {
-		return
-	}
 	SetLauncherIdle()
 }
 
 func SetLauncherIdle() {
-	c := ensure()
+	rpcMu.Lock()
+	defer rpcMu.Unlock()
+	c := ensureLocked()
 	if c == nil {
 		return
 	}
@@ -65,7 +74,9 @@ func SetLauncherIdle() {
 }
 
 func SetPlayingVersion(version string) {
-	c := ensure()
+	rpcMu.Lock()
+	defer rpcMu.Unlock()
+	c := ensureLocked()
 	if c == nil {
 		return
 	}

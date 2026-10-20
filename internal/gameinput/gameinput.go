@@ -19,14 +19,20 @@ var (
 	ensuring bool
 )
 
+// keyExists reports whether the given registry key can be opened. The
+// handle is closed on every path — the OpenKey results were previously
+// discarded, leaking a handle per call.
+func keyExists(path string) bool {
+	key, err := winreg.OpenKey(winreg.LOCAL_MACHINE, path, winreg.READ)
+	if err != nil {
+		return false
+	}
+	_ = key.Close()
+	return true
+}
+
 func IsInstalled() bool {
-	if _, err := winreg.OpenKey(winreg.LOCAL_MACHINE, `SOFTWARE\\Microsoft\\GameInputRedist`, winreg.READ); err == nil {
-		return true
-	}
-	if _, err := winreg.OpenKey(winreg.LOCAL_MACHINE, `SOFTWARE\\Microsoft\\GameInput`, winreg.READ); err == nil {
-		return true
-	}
-	return false
+	return keyExists(`SOFTWARE\\Microsoft\\GameInputRedist`) || keyExists(`SOFTWARE\\Microsoft\\GameInput`)
 }
 
 func EnsureInteractive(ctx context.Context) {
@@ -94,11 +100,7 @@ func EnsureInteractive(ctx context.Context) {
 	}
 	installed := false
 	for i := 0; i < 30; i++ {
-		if _, err := winreg.OpenKey(winreg.LOCAL_MACHINE, `SOFTWARE\\Microsoft\\GameInput`, winreg.READ); err == nil {
-			installed = true
-			break
-		}
-		if _, err := winreg.OpenKey(winreg.LOCAL_MACHINE, `SOFTWARE\\Microsoft\\GameInputRedist`, winreg.READ); err == nil {
+		if keyExists(`SOFTWARE\\Microsoft\\GameInput`) || keyExists(`SOFTWARE\\Microsoft\\GameInputRedist`) {
 			installed = true
 			break
 		}

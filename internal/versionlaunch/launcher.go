@@ -136,6 +136,10 @@ func (l *Launcher) Launch(ctx context.Context, name string, checkRunning bool) s
 				log.Printf("Launch protocol failed for %s: %v", name, err)
 				return "ERR_LAUNCH_GAME"
 			}
+			// Nothing reads this child's output or exit state, but the
+			// process handle still has to be released — reap it in the
+			// background instead of leaking the handle until GC.
+			go func() { _ = cmd.Wait() }()
 			gameVer = strings.TrimSpace(m.GameVersion)
 			discord.SetPlayingVersion(gameVer)
 			go launch.MonitorGameProcess(ctx, dir, 0)
@@ -167,6 +171,9 @@ func (l *Launcher) Launch(ctx context.Context, name string, checkRunning bool) s
 		log.Printf("Launch executable failed for %s: %v", name, err)
 		return "ERR_LAUNCH_GAME"
 	}
+	// Reap the game process in the background so its handle is released;
+	// the monitor tracks liveness by PID independently of this Cmd.
+	go func() { _ = cmd.Wait() }()
 	discord.SetPlayingVersion(gameVer)
 	launchPID := 0
 	if cmd.Process != nil {

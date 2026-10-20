@@ -94,15 +94,38 @@ func cleanName(name string) string {
 	return name
 }
 
+const (
+	// maxSkins caps how many skins a single pack may contain; a skin
+	// pack is a handful of textures, so anything beyond this is abuse.
+	maxSkins = 256
+	// maxSkinImageBytes caps the decoded size of one skin texture
+	// (8 MiB — orders of magnitude above a real 128x128 PNG).
+	maxSkinImageBytes = 8 << 20
+	// maxSkinImageEncoded is the largest base64 string that can decode
+	// to maxSkinImageBytes; oversized payloads are rejected before the
+	// decode allocates anything.
+	maxSkinImageEncoded = 4 * (maxSkinImageBytes/3 + 1)
+)
+
 func decodeInputs(inputs []SkinInput) ([]Entry, error) {
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("ERR_SKINPACK_EMPTY")
 	}
+	if len(inputs) > maxSkins {
+		return nil, fmt.Errorf("ERR_SKINPACK_TOO_MANY_SKINS")
+	}
 	entries := make([]Entry, 0, len(inputs))
 	for i, input := range inputs {
-		data, err := base64.StdEncoding.DecodeString(strings.TrimSpace(input.Data))
+		encoded := strings.TrimSpace(input.Data)
+		if len(encoded) > maxSkinImageEncoded {
+			return nil, fmt.Errorf("ERR_SKINPACK_IMAGE_TOO_LARGE_%d", i+1)
+		}
+		data, err := base64.StdEncoding.DecodeString(encoded)
 		if err != nil || len(data) == 0 {
 			return nil, fmt.Errorf("ERR_SKINPACK_INVALID_IMAGE_%d", i+1)
+		}
+		if len(data) > maxSkinImageBytes {
+			return nil, fmt.Errorf("ERR_SKINPACK_IMAGE_TOO_LARGE_%d", i+1)
 		}
 		cfg, _, err := image.DecodeConfig(strings.NewReader(string(data)))
 		if err != nil || (cfg.Width != 64 && cfg.Width != 128) || (cfg.Height != 32 && cfg.Height != 64 && cfg.Height != 128) {
@@ -222,8 +245,29 @@ func Create(packName string, inputs []SkinInput) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	archivePath := filepath.Join(outDir, cleanName(packName)+".mcpack")
-	return archivePath, os.WriteFile(archivePath, skinPack, 0o644)
+	// Never silently overwrite an earlier export of the same pack name:
+	// claim the first free file name with O_EXCL and write to that.
+	base := cleanName(packName)
+	archivePath := filepath.Join(outDir, base+".mcpack")
+	for suffix := 2; ; suffix++ {
+		f, err := os.OpenFile(archivePath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o644)
+		if err != nil {
+			if os.IsExist(err) {
+				archivePath = filepath.Join(outDir, fmt.Sprintf("%s_%d.mcpack", base, suffix))
+				continue
+			}
+			return "", err
+		}
+		_, writeErr := f.Write(skinPack)
+		closeErr := f.Close()
+		if writeErr != nil {
+			return "", writeErr
+		}
+		if closeErr != nil {
+			return "", closeErr
+		}
+		return archivePath, nil
+	}
 }
 
 func hasCustomHeight(entries []Entry) bool {
@@ -476,11 +520,21 @@ func Update(packDir, packName string, inputs []SkinInput) error {
 	if err != nil {
 		return err
 	}
-	old, _ := Entries(packDir)
+	old, err := Entries(packDir)
+	if err != nil {
+		return err
+	}
 	for _, entry := range old {
 		if texturePath, ok := texturePathWithin(packDir, entry.Texture); ok {
 			_ = os.Remove(texturePath)
 		}
 	}
-	return renderFiles(packDir, packName, entries, nil)
+	// Preserve the pack's existing icon across the rewrite; passing nil
+	// here would make renderFiles replace it with the first skin's
+	// texture.
+	var icon []byte
+	if data, readErr := os.ReadFile(filepath.Join(packDir, "pack_icon.png")); readErr == nil {
+		icon = data
+	}
+	return renderFiles(packDir, packName, entries, icon)
 }
