@@ -38,6 +38,17 @@ const (
 	instanceBackupManifestName  = "backup-manifest.json"
 )
 
+// Zip-bomb limits for backup archives, mirroring internal/uwp: a cap
+// on the number of archive entries and a cumulative budget for
+// decompressed bytes, enforced both from the declared entry sizes
+// and again while copying (a lying header cannot bypass the copy
+// limit), plus a small cap for the in-memory manifest read.
+const (
+	instanceBackupMaxZipEntries    = 100000
+	instanceBackupMaxExtractBytes  = int64(20) << 30
+	instanceBackupMaxManifestBytes = int64(16) << 20
+)
+
 var (
 	errInstanceBackupReadSource   = errors.New("instance backup read source")
 	errInstanceBackupWriteArchive = errors.New("instance backup write archive")
@@ -2672,7 +2683,14 @@ func readInstanceBackupZipFile(files []*zip.File, name string) ([]byte, error) {
 			return nil, err
 		}
 		defer rc.Close()
-		return io.ReadAll(rc)
+		data, err := io.ReadAll(io.LimitReader(rc, instanceBackupMaxManifestBytes+1))
+		if err != nil {
+			return nil, err
+		}
+		if int64(len(data)) > instanceBackupMaxManifestBytes {
+			return nil, fmt.Errorf("backup entry %q exceeds the size limit", name)
+		}
+		return data, nil
 	}
 	return nil, os.ErrNotExist
 }
@@ -2683,6 +2701,18 @@ func extractInstanceBackupArchive(archivePath string, destDir string) error {
 		return wrapInstanceBackupExtractError(err)
 	}
 	defer reader.Close()
+
+	if len(reader.File) > instanceBackupMaxZipEntries {
+		return wrapInstanceBackupExtractError(fmt.Errorf("too many archive entries"))
+	}
+	var declaredExtractTotal int64
+	for _, file := range reader.File {
+		if file.UncompressedSize64 > uint64(instanceBackupMaxExtractBytes-declaredExtractTotal) {
+			return wrapInstanceBackupExtractError(fmt.Errorf("archive exceeds the decompressed size limit"))
+		}
+		declaredExtractTotal += int64(file.UncompressedSize64)
+	}
+	extractRemaining := instanceBackupMaxExtractBytes
 
 	if err := utils.CreateDir(destDir); err != nil {
 		return wrapInstanceBackupExtractError(err)
@@ -2723,10 +2753,17 @@ func extractInstanceBackupArchive(archivePath string, destDir string) error {
 			rc.Close()
 			return wrapInstanceBackupExtractError(err)
 		}
-		if _, err := io.Copy(out, rc); err != nil {
+		written, copyErr := io.Copy(out, io.LimitReader(rc, extractRemaining+1))
+		extractRemaining -= written
+		if copyErr != nil {
 			out.Close()
 			rc.Close()
-			return wrapInstanceBackupExtractError(err)
+			return wrapInstanceBackupExtractError(copyErr)
+		}
+		if extractRemaining < 0 {
+			out.Close()
+			rc.Close()
+			return wrapInstanceBackupExtractError(fmt.Errorf("archive exceeds the decompressed size limit"))
 		}
 		if err := out.Close(); err != nil {
 			rc.Close()
