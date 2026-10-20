@@ -1,6 +1,11 @@
 {
   "app": {
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "error_boundary": {
+      "title": "Un problème est survenu",
+      "description": "Une erreur inattendue s'est produite. Recharger l'application résout généralement le problème.",
+      "reload": "Recharger l'application"
+    }
   },
   "nav": {
     "versions": "Instances",
