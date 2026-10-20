@@ -1,5 +1,6 @@
 {
   "app": {
+    "bootstrap_failed": "Failed to start. Please check the logs or try again later.",
     "settings": "Settings",
     "error_boundary": {
       "title": "Something went wrong",
@@ -996,6 +997,10 @@
     "target": "Target Instance"
   },
   "errors": {
+    "detection_failed": "Detection failed",
+    "download_failed": "Download failed",
+    "download_start_failed": "Download start failed",
+    "import_failed": "Import failed",
     "ERR_GAME_ALREADY_RUNNING": "Detected the current instance of Minecraft is already running. Please close it before launching or switch to another instance.",
     "ERR_TARGET_DIR_NOT_SPECIFIED": "Target directory not specified",
     "ERR_CREATE_TARGET_DIR": "Failed to create target directory",
