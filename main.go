@@ -3,7 +3,11 @@ package main
 import (
 	"bufio"
 	"context"
+	"crypto/hmac"
+	"crypto/rand"
+	"crypto/sha256"
 	"embed"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"io/fs"
@@ -11,6 +15,7 @@ import (
 	"log/slog"
 	"net"
 	"os"
+	"os/user"
 	"path/filepath"
 	"runtime/debug"
 	"strconv"
@@ -34,8 +39,8 @@ import (
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/msixvc"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/peeditor"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/resourcerules"
-	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/types"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/tray"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/types"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/update"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/vcruntime"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/versionlaunch"
@@ -54,7 +59,114 @@ var trayIcon []byte
 
 var singleInstanceGuard win.Handle
 
-const singleInstancePipe = `\\.\pipe\BedrockNexus_SingleInstance_Pipe`
+var (
+	singleInstancePipeOnce  sync.Once
+	singleInstancePipeCache string
+)
+
+// singleInstancePipeName returns the single-instance pipe name for the
+// current user. The suffix is derived from the user's SID, so the name is
+// stable across this user's processes (second instance finds the first) but
+// cannot be predicted — or squatted in advance — by other local users.
+func singleInstancePipeName() string {
+	singleInstancePipeOnce.Do(func() {
+		uid := ""
+		if u, err := user.Current(); err == nil {
+			uid = u.Uid
+		}
+		if uid == "" {
+			uid = os.Getenv("USERNAME")
+		}
+		sum := sha256.Sum256([]byte("BedrockNexus/SingleInstance/" + uid))
+		singleInstancePipeCache = `\\.\pipe\BedrockNexus_SingleInstance_` + hex.EncodeToString(sum[:8])
+	})
+	return singleInstancePipeCache
+}
+
+var (
+	singleInstanceTokenOnce  sync.Once
+	singleInstanceTokenCache []byte
+)
+
+// singleInstanceAuthToken loads (or creates on first use) the per-user
+// secret that authenticates single-instance pipe peers. It lives under the
+// user config dir, which other local users cannot read; the pipe handshake
+// below proves possession of it via HMAC without ever sending it, so a
+// squatted pipe cannot harvest it either.
+func singleInstanceAuthToken() []byte {
+	singleInstanceTokenOnce.Do(func() {
+		dir, err := os.UserConfigDir()
+		if err != nil {
+			log.Printf("single-instance auth token unavailable: %v", err)
+			return
+		}
+		dir = filepath.Join(dir, "BedrockNexus")
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			log.Printf("single-instance auth token dir: %v", err)
+			return
+		}
+		path := filepath.Join(dir, "single-instance.token")
+		if b, err := os.ReadFile(path); err == nil && len(b) >= 32 {
+			singleInstanceTokenCache = b
+			return
+		}
+		tok := make([]byte, 32)
+		if _, err := rand.Read(tok); err != nil {
+			log.Printf("single-instance auth token generation: %v", err)
+			return
+		}
+		if err := os.WriteFile(path, tok, 0o600); err != nil {
+			log.Printf("single-instance auth token write: %v", err)
+			return
+		}
+		singleInstanceTokenCache = tok
+	})
+	return singleInstanceTokenCache
+}
+
+func singleInstanceAuthMAC(token, nonce []byte) string {
+	m := hmac.New(sha256.New, token)
+	m.Write(nonce)
+	return hex.EncodeToString(m.Sum(nil))
+}
+
+// dialSingleInstance connects to the running instance's pipe and completes
+// the challenge-response handshake before returning, so commands are only
+// ever sent to a peer that proved possession of the per-user token.
+func dialSingleInstance(timeout time.Duration) (net.Conn, error) {
+	conn, err := npipe.DialTimeout(singleInstancePipeName(), timeout)
+	if err != nil {
+		return nil, err
+	}
+	token := singleInstanceAuthToken()
+	if len(token) == 0 {
+		// Token storage unavailable: keep legacy behaviour (logged above).
+		return conn, nil
+	}
+	fail := func(err error) (net.Conn, error) {
+		conn.Close()
+		return nil, err
+	}
+	_ = conn.SetReadDeadline(time.Now().Add(2 * time.Second))
+	r := bufio.NewReader(conn)
+	line, err := r.ReadString('\n')
+	if err != nil {
+		return fail(err)
+	}
+	nonceHex, ok := strings.CutPrefix(strings.TrimSpace(line), "BN-CHALLENGE ")
+	if !ok {
+		return fail(fmt.Errorf("unexpected single-instance pipe greeting"))
+	}
+	nonce, err := hex.DecodeString(nonceHex)
+	if err != nil || len(nonce) == 0 {
+		return fail(fmt.Errorf("invalid single-instance pipe challenge"))
+	}
+	if _, err := conn.Write([]byte("BN-AUTH " + singleInstanceAuthMAC(token, nonce) + "\n")); err != nil {
+		return fail(err)
+	}
+	_ = conn.SetReadDeadline(time.Time{})
+	return conn, nil
+}
 
 const eventFilesOpened = "files-opened"
 
@@ -542,7 +654,7 @@ func sendLaunchToExistingInstance(version string) bool {
 		return false
 	}
 	for i := 0; i < 8; i++ {
-		conn, err := npipe.DialTimeout(singleInstancePipe, 200*time.Millisecond)
+		conn, err := dialSingleInstance(200 * time.Millisecond)
 		if err == nil && conn != nil {
 			func() {
 				defer conn.Close()
@@ -560,7 +672,7 @@ func sendImportToExistingInstance(files []string) bool {
 		return false
 	}
 	for i := 0; i < 16; i++ {
-		conn, err := npipe.DialTimeout(singleInstancePipe, 250*time.Millisecond)
+		conn, err := dialSingleInstance(250 * time.Millisecond)
 		if err == nil && conn != nil {
 			func() {
 				defer conn.Close()
@@ -578,7 +690,7 @@ func sendImportToExistingInstance(files []string) bool {
 var singleInstanceImportQueue = make(chan string, 32)
 
 func startSingleInstanceServer(versionService *VersionService) {
-	ln, err := npipe.Listen(singleInstancePipe)
+	ln, err := npipe.Listen(singleInstancePipeName())
 	if err != nil {
 		return
 	}
@@ -590,7 +702,31 @@ func startSingleInstanceServer(versionService *VersionService) {
 			}
 			go func(c net.Conn) {
 				defer c.Close()
-				s := bufio.NewScanner(c)
+				r := bufio.NewReader(c)
+				// Authenticate the peer before accepting any command: it
+				// must prove possession of the per-user token (HMAC of a
+				// fresh nonce). Unauthenticated local processes are dropped.
+				if token := singleInstanceAuthToken(); len(token) > 0 {
+					nonce := make([]byte, 16)
+					if _, err := rand.Read(nonce); err != nil {
+						return
+					}
+					if _, err := c.Write([]byte("BN-CHALLENGE " + hex.EncodeToString(nonce) + "\n")); err != nil {
+						return
+					}
+					_ = c.SetReadDeadline(time.Now().Add(2 * time.Second))
+					line, err := r.ReadString('\n')
+					_ = c.SetReadDeadline(time.Time{})
+					if err != nil {
+						return
+					}
+					got, ok := strings.CutPrefix(strings.TrimSpace(line), "BN-AUTH ")
+					if !ok || !hmac.Equal([]byte(got), []byte(singleInstanceAuthMAC(token, nonce))) {
+						log.Printf("Rejected unauthenticated single-instance pipe connection")
+						return
+					}
+				}
+				s := bufio.NewScanner(r)
 				for s.Scan() {
 					line := strings.TrimSpace(s.Text())
 					if line == "" {
