@@ -1,6 +1,11 @@
 {
   "app": {
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "error_boundary": {
+      "title": "Etwas ist schiefgelaufen",
+      "description": "Ein unerwarteter Fehler ist aufgetreten. Ein Neuladen der App behebt das Problem normalerweise.",
+      "reload": "App neu laden"
+    }
   },
   "nav": {
     "versions": "Instanzen",
