@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
   StartFileDownload,
   CancelFileDownload,
@@ -45,6 +46,7 @@ export interface InstallFileInfo {
  * برای هر فایل دانلودی مارکت‌پلیس (mcaddon/mcpack/mcworld/skinpack).
  */
 export const usePackInstaller = () => {
+  const { t } = useTranslation();
   const [step, setStep] = useState<InstallStep>("idle");
   const [installFile, setInstallFile] = useState<InstallFileInfo | null>(null);
   const [downloadProgress, setDownloadProgress] = useState<{
@@ -158,7 +160,7 @@ export const usePackInstaller = () => {
 
             setStep("version_select");
           } catch (e: any) {
-            setInstallError(e?.message || "Detection failed");
+            setInstallError(e?.message || t("errors.detection_failed"));
             setStep("error");
           }
         });
@@ -166,12 +168,12 @@ export const usePackInstaller = () => {
         Events.On("file.download.error", (event: any) => {
           cleanup();
           if (isCancelling.current) return;
-          setInstallError(String(event.data || "Download failed"));
+          setInstallError(String(event.data || t("errors.download_failed")));
           setStep("error");
         });
       } catch (e: any) {
         if (isCancelling.current) return;
-        setInstallError(e?.message || "Download start failed");
+        setInstallError(e?.message || t("errors.download_start_failed"));
         setStep("error");
       }
     },
@@ -327,7 +329,7 @@ export const usePackInstaller = () => {
 
       setStep("success");
     } catch (e: any) {
-      setInstallError(e?.message || "Import failed");
+      setInstallError(e?.message || t("errors.import_failed"));
       setStep("error");
     }
   };

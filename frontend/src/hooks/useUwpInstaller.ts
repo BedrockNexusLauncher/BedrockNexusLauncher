@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
   StartFileDownload,
   CancelFileDownload,
@@ -31,6 +32,7 @@ export interface UwpCatalogEntry {
  * Mirrors usePackInstaller event conventions.
  */
 export const useUwpInstaller = (onInstalled?: () => void) => {
+  const { t } = useTranslation();
   const [step, setStep] = useState<UwpInstallStep>("idle");
   const [entries, setEntries] = useState<UwpCatalogEntry[]>([]);
   const [devMode, setDevMode] = useState<boolean | null>(null);
@@ -154,12 +156,12 @@ export const useUwpInstaller = (onInstalled?: () => void) => {
         Events.On("file.download.error", (event: any) => {
           cleanup();
           if (isCancelling.current) return;
-          setInstallError(String(event.data || "Download failed"));
+          setInstallError(String(event.data || t("errors.download_failed")));
           setStep("error");
         });
       } catch (e: any) {
         if (isCancelling.current) return;
-        setInstallError(e?.message || "Download start failed");
+        setInstallError(e?.message || t("errors.download_start_failed"));
         setStep("error");
       }
     },

@@ -516,7 +516,9 @@ export const useSettings = (i18n: { language: string }) => {
           }
         } catch {}
       })
-      .catch(() => {});
+      .catch((err) =>
+        console.error("[useSettings] Failed to load initial settings", err),
+      );
   }, []);
 
   useEffect(() => {
