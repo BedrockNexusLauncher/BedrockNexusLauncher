@@ -263,7 +263,7 @@ const CurseForgeModPage: React.FC = () => {
 
           setInstallStep("version_select");
         } catch (e: any) {
-          setInstallError(e.message || "Detection failed");
+          setInstallError(e.message || t("errors.detection_failed"));
           setInstallStep("error");
         }
       });
@@ -272,12 +272,12 @@ const CurseForgeModPage: React.FC = () => {
         cleanup();
         if (isCancelling.current) return;
         const err = event.data;
-        setInstallError(err || "Download failed");
+        setInstallError(err || t("errors.download_failed"));
         setInstallStep("error");
       });
     } catch (e: any) {
       if (isCancelling.current) return;
-      setInstallError(e.message || "Download start failed");
+      setInstallError(e.message || t("errors.download_start_failed"));
       setInstallStep("error");
     }
   };
@@ -434,7 +434,7 @@ const CurseForgeModPage: React.FC = () => {
 
       setInstallStep("success");
     } catch (e: any) {
-      setInstallError(e.message || "Import failed");
+      setInstallError(e.message || t("errors.import_failed"));
       setInstallStep("error");
     }
   };
