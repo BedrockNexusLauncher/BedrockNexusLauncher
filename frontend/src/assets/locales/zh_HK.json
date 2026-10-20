@@ -1,6 +1,11 @@
 {
   "app": {
-    "settings": "設定"
+    "settings": "設定",
+    "error_boundary": {
+      "title": "出錯了",
+      "description": "發生了意外錯誤。重新載入應用程式通常可以解決此問題。",
+      "reload": "重新載入應用程式"
+    }
   },
   "nav": {
     "versions": "實例",
