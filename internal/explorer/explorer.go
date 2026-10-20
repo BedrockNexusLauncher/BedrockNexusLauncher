@@ -22,7 +22,10 @@ func OpenPath(dir string) bool {
 			return false
 		}
 	}
-	cmd := exec.Command("powershell", "explorer \""+d+"\"")
+	// Invoke Explorer directly (as SelectFile does below) instead of
+	// concatenating the path into a PowerShell command string, where a
+	// crafted quote in a folder name could break out of the quoting.
+	cmd := exec.Command("explorer", d)
 	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	if err := cmd.Run(); err != nil {
 		log.Println("explorer.OpenPath error:", err)

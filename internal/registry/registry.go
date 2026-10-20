@@ -4,10 +4,18 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
+	"strings"
 	"syscall"
 
 	json "github.com/goccy/go-json"
 )
+
+// psQuote wraps a value in a PowerShell single-quoted string, doubling
+// any embedded single quotes — the same quoting the gdk and uwp
+// packages apply to values interpolated into PowerShell commands.
+func psQuote(value string) string {
+	return "'" + strings.ReplaceAll(value, "'", "''") + "'"
+}
 
 type AppxInfo struct {
 	PackageFullName   string `json:"PackageFullName"`
@@ -17,7 +25,7 @@ type AppxInfo struct {
 }
 
 func GetAppxInfo(packageName string) (*AppxInfo, error) {
-	ps := "Get-AppxPackage -Name '" + packageName + "' | Select-Object PackageFullName, PackageFamilyName, Version, InstallLocation | ConvertTo-Json"
+	ps := "Get-AppxPackage -Name " + psQuote(packageName) + " | Select-Object PackageFullName, PackageFamilyName, Version, InstallLocation | ConvertTo-Json"
 	cmd := exec.Command("powershell", "-NoProfile", "-NonInteractive", "-Command", ps)
 	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	output, err := cmd.CombinedOutput()

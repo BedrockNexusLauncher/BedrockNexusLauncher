@@ -78,9 +78,40 @@ func ListMinecraftProcesses() []types.ProcessInfo {
 	return processes
 }
 
+// isMinecraftProcess reports whether pid currently belongs to a
+// Minecraft process, using the same image-name matching as
+// ListMinecraftProcesses (and therefore KillAllMinecraftProcesses).
+func isMinecraftProcess(pid int) bool {
+	snapshot, err := windows.CreateToolhelp32Snapshot(windows.TH32CS_SNAPPROCESS, 0)
+	if err != nil {
+		return false
+	}
+	defer windows.CloseHandle(snapshot)
+
+	var entry windows.ProcessEntry32
+	entry.Size = uint32(unsafe.Sizeof(entry))
+	if err := windows.Process32First(snapshot, &entry); err != nil {
+		return false
+	}
+	for {
+		if entry.ProcessID == uint32(pid) {
+			return strings.EqualFold(windows.UTF16ToString(entry.ExeFile[:]), "Minecraft.Windows.exe")
+		}
+		if err := windows.Process32Next(snapshot, &entry); err != nil {
+			return false
+		}
+	}
+}
+
 func KillProcess(pid int) error {
 	if pid <= 0 {
 		return fmt.Errorf("invalid pid")
+	}
+	// Refuse to terminate anything that is not a Minecraft process: the
+	// caller supplies the PID, and the launcher may be running elevated,
+	// so the primitive must not be usable against arbitrary processes.
+	if !isMinecraftProcess(pid) {
+		return fmt.Errorf("refusing to kill pid %d: not a Minecraft process", pid)
 	}
 	h, err := windows.OpenProcess(windows.PROCESS_TERMINATE, false, uint32(pid))
 	if err != nil {

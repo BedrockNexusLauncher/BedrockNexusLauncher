@@ -8,13 +8,14 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
 	"syscall"
-	"unsafe"
 	"unicode/utf16"
+	"unsafe"
 
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/vcruntime"
 	"golang.org/x/sys/windows"
@@ -176,15 +177,26 @@ func bytesSHA256(b []byte) []byte {
 
 func EnsureCoreLoaded() error {
 	coreOnce.Do(func() {
-		name := os.Getenv("LAUNCHER_CORE_DLL")
-		if name == "" {
-			if p, err := prepareDLL(); err == nil && p != "" {
-				_ = os.Setenv("LAUNCHER_CORE_DLL", p)
-				name = p
-				if os.Getenv("LAUNCHER_API_DLL") == "" {
-					_ = os.Setenv("LAUNCHER_API_DLL", filepath.Join(filepath.Dir(p), "launcher_api.dll"))
-				}
-			}
+		// The core DLL must only ever be the embedded copy that
+		// prepareDLL extracts and SHA-256-verifies. A LAUNCHER_CORE_DLL
+		// or LAUNCHER_API_DLL value inherited from the process
+		// environment would substitute an arbitrary, unverified DLL
+		// path, so both are ignored and cleared; the variables are set
+		// below — from the prepared paths only — because the API load
+		// step reads them to locate the sibling DLL.
+		if v := os.Getenv("LAUNCHER_CORE_DLL"); v != "" {
+			log.Printf("launchercore: ignoring LAUNCHER_CORE_DLL environment override %q; using the embedded, hash-verified DLL", v)
+			_ = os.Unsetenv("LAUNCHER_CORE_DLL")
+		}
+		if v := os.Getenv("LAUNCHER_API_DLL"); v != "" {
+			log.Printf("launchercore: ignoring LAUNCHER_API_DLL environment override %q; using the embedded, hash-verified DLL", v)
+			_ = os.Unsetenv("LAUNCHER_API_DLL")
+		}
+		name := ""
+		if p, err := prepareDLL(); err == nil && p != "" {
+			_ = os.Setenv("LAUNCHER_CORE_DLL", p)
+			name = p
+			_ = os.Setenv("LAUNCHER_API_DLL", filepath.Join(filepath.Dir(p), "launcher_api.dll"))
 		}
 		if name == "" {
 			name = "launcher_core.dll"
