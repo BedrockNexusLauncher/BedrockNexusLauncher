@@ -850,6 +850,14 @@ func normalizeInstanceBackupFolderList(folders []string, modsPath string) []stri
 		if folder == "" || strings.Contains(folder, "/") || strings.Contains(folder, `\`) {
 			continue
 		}
+		// "." and ".." contain no separator but are path components,
+		// not folder names (filepath.Join(modsPath, "..") exists, so
+		// the existence check below would accept them). Reject them
+		// explicitly so this list can never become a traversal
+		// source if a path-joining consumer appears.
+		if folder == "." || folder == ".." {
+			continue
+		}
 		lookupKey := strings.ToLower(folder)
 		if _, ok := dedup[lookupKey]; ok {
 			continue
@@ -1075,12 +1083,17 @@ func writeInstanceBackupManifestToZip(zw *zip.Writer, manifest instanceBackupMan
 }
 
 func writeInstanceBackupSourceEntryToZip(zw *zip.Writer, entry instanceBackupSourceEntry) error {
-	info, err := os.Stat(entry.SourcePath)
+	// Lstat, not Stat: a source entry that is itself a symlink
+	// must be skipped, not archived as its target's contents.
+	info, err := os.Lstat(entry.SourcePath)
 	if err != nil {
 		return wrapInstanceBackupReadError(err)
 	}
 	if info.IsDir() {
 		return writeNamedDirToZipSkippingEmptyDirs(zw, entry.ArchivePath, entry.SourcePath)
+	}
+	if !info.Mode().IsRegular() {
+		return nil
 	}
 	return writeFileToZip(zw, entry.ArchivePath, entry.SourcePath, info)
 }
@@ -1116,6 +1129,14 @@ func writeNamedDirToZip(zw *zip.Writer, alias string, srcDir string) error {
 		archiveName := path.Join(cleanAlias, filepath.ToSlash(relPath))
 		if entry.IsDir() {
 			return writeZipDirEntry(zw, archiveName)
+		}
+		// Skip symlinks and other non-regular files instead of
+		// archiving the contents of whatever they point at:
+		// filepath.Walk reports them via Lstat, but the copy
+		// would follow the link. Matches utils.CopyDir and the
+		// safe-mode writer.
+		if !entry.Mode().IsRegular() {
+			return nil
 		}
 		return writeFileToZip(zw, archiveName, currentPath, entry)
 	})
@@ -1231,6 +1252,16 @@ func instanceBackupDirContainsPayload(dir string) (bool, error) {
 }
 
 func writeFileToZip(zw *zip.Writer, archiveName string, srcPath string, info os.FileInfo) error {
+	// Backstop for every caller: never archive a non-regular
+	// file. The info handed in may come from os.Stat (which
+	// follows symlinks), so decide from Lstat — a symlink is
+	// skipped here instead of copying its target's contents
+	// into the archive under the link's name.
+	if linfo, lerr := os.Lstat(srcPath); lerr != nil {
+		return wrapInstanceBackupReadError(lerr)
+	} else if !linfo.Mode().IsRegular() {
+		return nil
+	}
 	header, err := zip.FileInfoHeader(info)
 	if err != nil {
 		return wrapInstanceBackupWriteError(err)
@@ -2740,6 +2771,7 @@ func extractInstanceBackupArchive(archivePath string, destDir string) error {
 	safeRoot, _ := filepath.Abs(destDir)
 	safeRoot = strings.ToLower(strings.TrimRight(safeRoot, string(os.PathSeparator)))
 
+	seen := make(map[string]struct{})
 	for _, file := range reader.File {
 		name := normalizeInstanceBackupZipEntryName(file.Name)
 		if name == "" {
@@ -2757,6 +2789,19 @@ func extractInstanceBackupArchive(archivePath string, destDir string) error {
 			}
 			continue
 		}
+		// Reject symlink (and any other non-regular) entries
+		// outright, like internal/uwp does, instead of relying on
+		// the fact that nothing here recreates them.
+		if file.Mode()&os.ModeSymlink != 0 || !file.Mode().IsRegular() {
+			return wrapInstanceBackupExtractError(fmt.Errorf("non-regular archive entry %q", file.Name))
+		}
+		// Reject a second entry resolving to an already-written
+		// target (case-insensitively, as Windows sees paths)
+		// instead of silently overwriting the first entry's file.
+		if _, dup := seen[safeTarget]; dup {
+			return wrapInstanceBackupExtractError(fmt.Errorf("duplicate archive entry %q", file.Name))
+		}
+		seen[safeTarget] = struct{}{}
 		if err := os.MkdirAll(filepath.Dir(targetPath), 0o755); err != nil {
 			return wrapInstanceBackupExtractError(err)
 		}
@@ -2764,7 +2809,11 @@ func extractInstanceBackupArchive(archivePath string, destDir string) error {
 		if err != nil {
 			return wrapInstanceBackupExtractError(err)
 		}
-		mode := file.Mode()
+		// Never pass archive-supplied modes straight to OpenFile:
+		// clamp to a plain data-file permission so crafted modes
+		// (setuid/setgid/sticky, group/other write, 0o000) are not
+		// honoured in the extracted tree.
+		mode := file.Mode().Perm() & 0o644
 		if mode == 0 {
 			mode = 0o644
 		}
@@ -3041,6 +3090,34 @@ func normalizeInstanceBackupArchiveName(name string) string {
 	return strings.Trim(filepath.ToSlash(strings.TrimSpace(name)), "/")
 }
 
+// instanceBackupZipEntryComponentSafe reports whether one path
+// component of a backup archive entry name is safe to materialise
+// on Windows, mirroring the per-component rules of internal/uwp's
+// safeRelativePath: no ':' (NTFS alternate data streams), no
+// trailing dot or space (Win32 strips those, silently aliasing a
+// sibling entry), no control characters, and no reserved device
+// names (CON, PRN, AUX, NUL, COM1-9, LPT1-9, with or without
+// extension).
+func instanceBackupZipEntryComponentSafe(component string) bool {
+	if strings.Contains(component, ":") {
+		return false
+	}
+	if strings.TrimRight(component, " .") != component {
+		return false
+	}
+	for _, r := range component {
+		if r < 32 {
+			return false
+		}
+	}
+	base := strings.ToUpper(strings.SplitN(component, ".", 2)[0])
+	if base == "CON" || base == "PRN" || base == "AUX" || base == "NUL" ||
+		(len(base) == 4 && (strings.HasPrefix(base, "COM") || strings.HasPrefix(base, "LPT")) && base[3] >= '1' && base[3] <= '9') {
+		return false
+	}
+	return true
+}
+
 func normalizeInstanceBackupZipEntryName(name string) string {
 	normalized := strings.ReplaceAll(strings.TrimSpace(name), `\`, "/")
 	normalized = strings.TrimPrefix(normalized, "./")
@@ -3051,6 +3128,11 @@ func normalizeInstanceBackupZipEntryName(name string) string {
 	clean := path.Clean(normalized)
 	if clean == "." || clean == "/" || clean == ".." || strings.HasPrefix(clean, "../") {
 		return ""
+	}
+	for _, component := range strings.Split(clean, "/") {
+		if !instanceBackupZipEntryComponentSafe(component) {
+			return ""
+		}
 	}
 	return clean
 }
