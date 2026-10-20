@@ -1,6 +1,11 @@
 {
   "app": {
-    "settings": "설정"
+    "settings": "설정",
+    "error_boundary": {
+      "title": "문제가 발생했습니다",
+      "description": "예기치 않은 오류가 발생했습니다. 앱을 다시 로드하면 보통 해결됩니다.",
+      "reload": "앱 다시 로드"
+    }
   },
   "nav": {
     "versions": "인스턴스",
