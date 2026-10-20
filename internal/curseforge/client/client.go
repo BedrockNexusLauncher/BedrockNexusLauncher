@@ -8,6 +8,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	urlpkg "net/url"
 	"sync"
 	"time"
 
@@ -54,7 +55,7 @@ func NewCurseClient(apiKey string, opts ...CfgFunc) CurseClient {
 
 func (c *curseClient) GetGameVersions(ctx context.Context, gameID string) (versions *types.GameVersionsResponse, err error) {
 	log := c.opt.log
-	url := c.buildRequestPath(fmt.Sprintf(getGameVersionsPath, gameID), ApiQueryParams{})
+	url := c.buildRequestPath(fmt.Sprintf(getGameVersionsPath, urlpkg.PathEscape(gameID)), ApiQueryParams{})
 	if c.opt.debug {
 		log.Printf("GetGameVersions.Begin id: %s (url: %s)", gameID, url)
 	}

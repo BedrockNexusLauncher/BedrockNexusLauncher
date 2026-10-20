@@ -6,6 +6,7 @@ package mcpedl
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -18,6 +19,11 @@ const (
 	apiBase        = "https://api.mcpedl.com/api/submissions"
 	requestTimeout = 30 * time.Second
 	defaultPerPage = 30
+
+	// maxSearchResponseBytes caps the catalogue response we are willing
+	// to decode (matching the 8 MiB body cap the gdkversions client
+	// uses); the endpoint is third-party, so its body is untrusted.
+	maxSearchResponseBytes = 8 << 20
 )
 
 // DownloadFile is a single downloadable file of a submission. DownloadURL
@@ -76,8 +82,16 @@ func Search(query string, page int) ([]Submission, error) {
 		return nil, fmt.Errorf("api returned status: %d", resp.StatusCode)
 	}
 
+	data, err := io.ReadAll(io.LimitReader(resp.Body, maxSearchResponseBytes+1))
+	if err != nil {
+		return nil, err
+	}
+	if int64(len(data)) > maxSearchResponseBytes {
+		return nil, fmt.Errorf("api response exceeds %d bytes", maxSearchResponseBytes)
+	}
+
 	var result apiResponse
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+	if err := json.Unmarshal(data, &result); err != nil {
 		return nil, err
 	}
 	if result.Status != "" && result.Status != "success" {

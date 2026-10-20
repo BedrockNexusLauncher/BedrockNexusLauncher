@@ -77,6 +77,11 @@ const (
 	updateMetadataTimeout = 20 * time.Second
 	updateChecksumTimeout = 20 * time.Second
 	updateDownloadTimeout = 20 * time.Minute
+
+	// maxReleaseMetadataBytes caps the release-list document we are
+	// willing to decode (matching the 8 MiB body cap the gdkversions
+	// client uses).
+	maxReleaseMetadataBytes = 8 << 20
 )
 
 func Init() {
@@ -204,12 +209,19 @@ func fetchReleases(ctx context.Context) ([]githubRelease, error) {
 			lastErr = fmt.Errorf("HTTP %s", resp.Status)
 			continue
 		}
-		var releases []githubRelease
-		dec := json.NewDecoder(resp.Body)
-		err = dec.Decode(&releases)
+		body, err := io.ReadAll(io.LimitReader(resp.Body, maxReleaseMetadataBytes+1))
 		resp.Body.Close()
 		cancel()
 		if err != nil {
+			lastErr = err
+			continue
+		}
+		if int64(len(body)) > maxReleaseMetadataBytes {
+			lastErr = fmt.Errorf("release metadata exceeds %d bytes", maxReleaseMetadataBytes)
+			continue
+		}
+		var releases []githubRelease
+		if err := json.Unmarshal(body, &releases); err != nil {
 			lastErr = err
 			continue
 		}
@@ -567,7 +579,14 @@ func CheckUpdate(version string) types.CheckUpdate {
 func Update(version string) error {
 	ctx := context.Background()
 	application.Get().Event.Emit(EventAppUpdateStatus, "checking")
-	exePath, _ := os.Executable()
+	exePath, err := os.Executable()
+	if err != nil {
+		// The install dir — and with it the write-access check and the
+		// elevation decision below — is derived from our own executable
+		// path. If it cannot be determined, proceeding on an empty path
+		// would silently make that decision on garbage; fail instead.
+		return emitUpdateError("ERR_UPDATE_GENERIC", fmt.Errorf("locating own executable: %w", err))
+	}
 	instDir := filepath.Dir(exePath)
 
 	cur := strings.TrimSpace(version)

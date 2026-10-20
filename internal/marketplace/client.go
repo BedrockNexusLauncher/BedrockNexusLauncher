@@ -27,8 +27,9 @@ const maxIndexBytes = 8 << 20
 type Client struct {
 	httpClient *http.Client
 
-	mu    sync.Mutex
-	cache map[string]cacheEntry
+	mu       sync.Mutex
+	cache    map[string]cacheEntry
+	inflight map[string]*indexFetch
 }
 
 type cacheEntry struct {
@@ -36,10 +37,20 @@ type cacheEntry struct {
 	fetched time.Time
 }
 
+// indexFetch is one in-flight index fetch. Concurrent GetIndex calls
+// for the same URL wait on done and share the single outcome instead
+// of each issuing their own request for the same document.
+type indexFetch struct {
+	done  chan struct{}
+	index *Index
+	err   error
+}
+
 func NewClient() *Client {
 	return &Client{
 		httpClient: httpx.NewClient(30 * time.Second),
 		cache:      make(map[string]cacheEntry),
+		inflight:   make(map[string]*indexFetch),
 	}
 }
 
@@ -68,8 +79,33 @@ func (c *Client) GetIndex(indexURL string) (*Index, error) {
 		c.mu.Unlock()
 		return entry.index, nil
 	}
+	if pending, ok := c.inflight[url]; ok {
+		// Another goroutine is already fetching this URL; share its
+		// result (single-flight) instead of fetching a duplicate.
+		c.mu.Unlock()
+		<-pending.done
+		return pending.index, pending.err
+	}
+	pending := &indexFetch{done: make(chan struct{})}
+	c.inflight[url] = pending
 	c.mu.Unlock()
 
+	pending.index, pending.err = c.fetchIndex(url)
+
+	c.mu.Lock()
+	if pending.err == nil {
+		c.cache[url] = cacheEntry{index: pending.index, fetched: time.Now()}
+	}
+	delete(c.inflight, url)
+	c.mu.Unlock()
+	close(pending.done)
+
+	return pending.index, pending.err
+}
+
+// fetchIndex performs the actual index request for an already
+// validated URL.
+func (c *Client) fetchIndex(url string) (*Index, error) {
 	resp, err := c.httpClient.Get(url)
 	if err != nil {
 		return nil, err
@@ -92,10 +128,6 @@ func (c *Client) GetIndex(indexURL string) (*Index, error) {
 	if err := json.Unmarshal(data, &index); err != nil {
 		return nil, fmt.Errorf("invalid marketplace index: %w", err)
 	}
-
-	c.mu.Lock()
-	c.cache[url] = cacheEntry{index: &index, fetched: time.Now()}
-	c.mu.Unlock()
 
 	return &index, nil
 }
