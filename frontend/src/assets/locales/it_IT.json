@@ -1,5 +1,6 @@
 {
   "app": {
+    "bootstrap_failed": "Avvio non riuscito. Controlla i log o riprova più tardi.",
     "settings": "Impostazioni",
     "error_boundary": {
       "title": "Qualcosa è andato storto",
@@ -996,6 +997,10 @@
     "target": "Istanza di destinazione"
   },
   "errors": {
+    "detection_failed": "Rilevamento non riuscito",
+    "download_failed": "Download non riuscito",
+    "download_start_failed": "Impossibile avviare il download",
+    "import_failed": "Importazione non riuscita",
     "ERR_GAME_ALREADY_RUNNING": "È stato rilevato che l'istanza corrente di Minecraft è già in esecuzione. Chiudila prima di avviare o passa a un'altra istanza.",
     "ERR_TARGET_DIR_NOT_SPECIFIED": "Directory di destinazione non specificata",
     "ERR_CREATE_TARGET_DIR": "Creazione directory di destinazione fallita",
