@@ -617,18 +617,45 @@ func ValidateVersionFolderName(name string) string {
 	return ""
 }
 
+// versionDirWithin resolves name to a directory directly inside the
+// versions root, rejecting anything that would escape it (a bare ".."
+// passes the folder-name character checks, and names can arrive via
+// imported content/backups). Mirrors the Abs+prefix guard the mods
+// package applies before RemoveAll in DeleteMod.
+func versionDirWithin(vdir string, name string) (string, bool) {
+	absRoot, err := filepath.Abs(vdir)
+	if err != nil {
+		return "", false
+	}
+	absDir, err := filepath.Abs(filepath.Join(vdir, name))
+	if err != nil {
+		return "", false
+	}
+	lowDir := strings.ToLower(absDir)
+	lowRoot := strings.ToLower(absRoot)
+	if lowDir == lowRoot || !strings.HasPrefix(lowDir, lowRoot+string(os.PathSeparator)) {
+		return "", false
+	}
+	return absDir, true
+}
+
 func RenameVersionFolder(oldName string, newName string) string {
 	on := strings.TrimSpace(oldName)
 	nn := strings.TrimSpace(newName)
 	if on == "" || nn == "" {
 		return "ERR_INVALID_NAME"
 	}
+	if versions.ValidateFolderName(on) != "" || versions.ValidateFolderName(nn) != "" {
+		return "ERR_INVALID_NAME"
+	}
 	vdir, err := apppath.VersionsDir()
 	if err != nil || strings.TrimSpace(vdir) == "" {
 		return "ERR_ACCESS_VERSIONS_DIR"
 	}
-	oldPath := filepath.Join(vdir, on)
-	newPath := filepath.Join(vdir, nn)
+	oldPath, ok := versionDirWithin(vdir, on)
+	if !ok {
+		return "ERR_INVALID_NAME"
+	}
 	if !utils.DirExists(oldPath) {
 		return "ERR_NOT_FOUND_OLD"
 	}
@@ -639,6 +666,13 @@ func RenameVersionFolder(oldName string, newName string) string {
 			return "ERR_WRITE_TARGET"
 		}
 		return ""
+	}
+	if msg := ValidateVersionFolderName(nn); msg != "" {
+		return msg
+	}
+	newPath, ok := versionDirWithin(vdir, nn)
+	if !ok {
+		return "ERR_INVALID_NAME"
 	}
 	if utils.DirExists(newPath) {
 		return "ERR_NAME_EXISTS"
@@ -700,11 +734,17 @@ func DeleteVersionFolder(name string) string {
 	if n == "" {
 		return "ERR_INVALID_NAME"
 	}
+	if versions.ValidateFolderName(n) != "" {
+		return "ERR_INVALID_NAME"
+	}
 	vdir, err := apppath.VersionsDir()
 	if err != nil || strings.TrimSpace(vdir) == "" {
 		return "ERR_ACCESS_VERSIONS_DIR"
 	}
-	dir := filepath.Join(vdir, n)
+	dir, ok := versionDirWithin(vdir, n)
+	if !ok {
+		return "ERR_INVALID_NAME"
+	}
 	if !utils.DirExists(dir) {
 		return "ERR_NOT_FOUND_OLD"
 	}

@@ -145,6 +145,47 @@ func (err MaximumDepthReachedError) Error() string {
 	return fmt.Sprintf("nbt: maximum nesting depth of %v was reached", maximumNestingDepth)
 }
 
+// maxArrayPayloadBytes caps the payload size of a single length-prefixed
+// array or slice (TAG_ByteArray, TAG_IntArray, TAG_LongArray and their
+// TAG_List forms) accepted from untrusted input. 64 MiB is far above any
+// legitimate level.dat array, while keeping a crafted length prefix from
+// forcing a multi-gigabyte allocation — or a count*elementSize overflow
+// panic — before a single byte is read.
+const maxArrayPayloadBytes = 64 << 20
+
+// maxListElements caps the element count of a TAG_List whose element size
+// is not fixed by the tag type (compounds and nested lists). Every
+// element costs at least one byte on the wire, and a million elements is
+// far beyond any legitimate document.
+const maxListElements = 1 << 20
+
+// InvalidLengthError is returned when a length-prefixed array or list in
+// the input declares a negative length, or a length whose payload would
+// exceed the caps above.
+type InvalidLengthError struct {
+	Off int64
+	Op  string
+	N   int64
+}
+
+// Error ...
+func (err InvalidLengthError) Error() string {
+	return fmt.Sprintf("nbt: invalid length %v during op '%v' at offset %v", err.N, err.Op, err.Off)
+}
+
+// checkArrayLength validates a file-supplied element count for an array
+// whose elements are elemSize bytes wide. The byte total is computed in
+// int64 so count*elemSize cannot overflow before the comparison.
+func checkArrayLength(op string, off int64, n int32, elemSize int64) error {
+	if n < 0 {
+		return InvalidLengthError{Off: off, Op: op, N: int64(n)}
+	}
+	if int64(n)*elemSize > maxArrayPayloadBytes {
+		return InvalidLengthError{Off: off, Op: op, N: int64(n)}
+	}
+	return nil
+}
+
 const maximumNetworkOffset = 4 * 1024 * 1024
 
 // MaximumBytesReadError is returned if the maximum amount of bytes has been read for NetworkLittleEndian
