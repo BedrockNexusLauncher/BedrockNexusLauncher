@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -86,6 +86,7 @@ const CurseForgeModPage: React.FC = () => {
 
   const [mod, setMod] = useState<any | null>(null);
   const [description, setDescription] = useState<string>("");
+  const [descriptionError, setDescriptionError] = useState(false);
   const [files, setFiles] = useState<ModFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedGameVersion, setSelectedGameVersion] = useState<string>("all");
@@ -456,12 +457,13 @@ const CurseForgeModPage: React.FC = () => {
     );
   }, [files, selectedGameVersion]);
 
-  useEffect(() => {
+  const loadModDetails = useCallback(() => {
     if (!id) return;
     const modId = parseInt(id);
     if (isNaN(modId)) return;
 
     setLoading(true);
+    setDescriptionError(false);
     Promise.all([
       GetCurseForgeModsByIDs([modId]),
       GetCurseForgeModDescription(modId),
@@ -478,9 +480,16 @@ const CurseForgeModPage: React.FC = () => {
           setFiles(filesRes.data);
         }
       })
-      .catch(console.error)
+      .catch((error) => {
+        console.error(error);
+        setDescriptionError(true);
+      })
       .finally(() => setLoading(false));
   }, [id]);
+
+  useEffect(() => {
+    loadModDetails();
+  }, [loadModDetails]);
 
   const handleDescriptionClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = (e.target as HTMLElement).closest("a");
@@ -792,6 +801,17 @@ const CurseForgeModPage: React.FC = () => {
                         }}
                         onClick={handleDescriptionClick}
                       />
+                    ) : descriptionError ? (
+                      <div className="flex flex-col items-center justify-center py-12 text-default-400 gap-3">
+                        <p>{t("curseforge.load_error")}</p>
+                        <Button
+                          size="sm"
+                          variant="flat"
+                          onPress={loadModDetails}
+                        >
+                          {t("common.retry")}
+                        </Button>
+                      </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center py-12 text-default-400 gap-3">
                         <Spinner color="primary" />
