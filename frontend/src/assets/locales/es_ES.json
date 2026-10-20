@@ -1,5 +1,6 @@
 {
   "app": {
+    "bootstrap_failed": "No se pudo iniciar. Revisa los registros o inténtalo de nuevo más tarde.",
     "settings": "Configuración",
     "error_boundary": {
       "title": "Algo salió mal",
@@ -996,6 +997,10 @@
     "target": "Instancia objetivo"
   },
   "errors": {
+    "detection_failed": "La detección falló",
+    "download_failed": "La descarga falló",
+    "download_start_failed": "No se pudo iniciar la descarga",
+    "import_failed": "La importación falló",
     "ERR_GAME_ALREADY_RUNNING": "Se detectó que la instancia actual de Minecraft ya se está ejecutando. Por favor ciérrela antes de iniciar o cambie a otra instancia.",
     "ERR_TARGET_DIR_NOT_SPECIFIED": "Directorio objetivo no especificado",
     "ERR_CREATE_TARGET_DIR": "Falló la creación del directorio objetivo",
