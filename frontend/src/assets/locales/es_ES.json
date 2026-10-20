@@ -1,6 +1,11 @@
 {
   "app": {
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "error_boundary": {
+      "title": "Algo salió mal",
+      "description": "Ocurrió un error inesperado. Recargar la aplicación suele solucionarlo.",
+      "reload": "Recargar aplicación"
+    }
   },
   "nav": {
     "versions": "Instancias",
