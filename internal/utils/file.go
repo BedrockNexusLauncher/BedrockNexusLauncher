@@ -65,12 +65,9 @@ func ZipDir(srcDir, destZip string) error {
 	if err != nil {
 		return err
 	}
-	defer out.Close()
 
 	zw := zip.NewWriter(out)
-	defer zw.Close()
-
-	return filepath.Walk(srcDir, func(path string, info os.FileInfo, err error) error {
+	walkErr := filepath.Walk(srcDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -84,6 +81,13 @@ func ZipDir(srcDir, destZip string) error {
 		rel = filepath.ToSlash(rel)
 
 		if info.IsDir() {
+			return nil
+		}
+		// Skip symlinks and other non-regular files instead of
+		// archiving the contents of whatever they point at:
+		// filepath.Walk reports them via Lstat, but os.Open would
+		// follow the link. Matches CopyDir's behaviour.
+		if !info.Mode().IsRegular() {
 			return nil
 		}
 
@@ -102,10 +106,29 @@ func ZipDir(srcDir, destZip string) error {
 		if err != nil {
 			return err
 		}
-		defer f.Close()
-		_, err = io.Copy(writer, f)
-		return err
+		// Close per file, not via defer: a defer inside the walk
+		// callback would only run when ZipDir returns, accumulating
+		// one open handle per file in the tree.
+		_, copyErr := io.Copy(writer, f)
+		closeErr := f.Close()
+		if copyErr != nil {
+			return copyErr
+		}
+		return closeErr
 	})
+	if walkErr != nil {
+		_ = zw.Close()
+		_ = out.Close()
+		return walkErr
+	}
+	// The writers' Close errors are the final flush (central
+	// directory + file buffers): a failure here means the zip is
+	// corrupt and must not be reported as success.
+	if err := zw.Close(); err != nil {
+		_ = out.Close()
+		return err
+	}
+	return out.Close()
 }
 
 func DirSize(path string) int64 {
@@ -188,16 +211,24 @@ func CopyDir(src, dst string) error {
 		if err != nil {
 			return err
 		}
-		defer in.Close()
 		out, err := os.OpenFile(target, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, info.Mode())
 		if err != nil {
+			_ = in.Close()
 			return err
 		}
-		defer out.Close()
-		if _, err := io.Copy(out, in); err != nil {
-			return err
+		// Close both files per iteration, not via defer: defers
+		// inside the walk callback would only run when CopyDir
+		// returns, accumulating two open handles per copied file.
+		_, copyErr := io.Copy(out, in)
+		inCloseErr := in.Close()
+		outCloseErr := out.Close()
+		if copyErr != nil {
+			return copyErr
 		}
-		return nil
+		if inCloseErr != nil {
+			return inCloseErr
+		}
+		return outCloseErr
 	})
 }
 
