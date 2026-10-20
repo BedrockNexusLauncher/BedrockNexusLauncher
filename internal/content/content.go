@@ -6,6 +6,7 @@ import (
 	crand "crypto/rand"
 	"encoding/base64"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"io"
 	"math"
@@ -23,6 +24,76 @@ import (
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/types"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/utils"
 )
+
+// Zip-bomb limits for the pack/world importers below, mirroring the
+// limits internal/uwp already enforces for package extraction: a cap
+// on the number of archive entries, a cumulative budget for the
+// decompressed bytes an import may write, and a small cap for entries
+// read fully into memory (manifests, nested packs). Declared entry
+// sizes are checked up front, and every copy/read is additionally
+// limited while it runs, so an entry that decompresses past its
+// declared size still trips the budget instead of filling the disk
+// or memory.
+const (
+	maxImportZipEntries    = 100000
+	maxImportZipBytes      = int64(20) << 30
+	maxImportManifestBytes = int64(16) << 20
+)
+
+var errImportArchiveTooLarge = errors.New("archive exceeds the decompressed size limit")
+
+// checkImportZipLimits fails fast on the archive's declared shape:
+// too many entries, or a total declared decompressed size over the
+// import budget. It returns the import error code to propagate, or
+// "" when the archive is within limits.
+func checkImportZipLimits(zr *zip.Reader) string {
+	if len(zr.File) > maxImportZipEntries {
+		return "ERR_ARCHIVE_TOO_MANY_ENTRIES"
+	}
+	var declared int64
+	for _, f := range zr.File {
+		if f.UncompressedSize64 > uint64(maxImportZipBytes-declared) {
+			return "ERR_ARCHIVE_TOO_LARGE"
+		}
+		declared += int64(f.UncompressedSize64)
+	}
+	return ""
+}
+
+// readImportZipEntry reads one archive entry into memory under a hard
+// limit. It returns errImportArchiveTooLarge when the decompressed
+// entry is larger than limit.
+func readImportZipEntry(rc io.Reader, limit int64) ([]byte, error) {
+	b, err := io.ReadAll(io.LimitReader(rc, limit+1))
+	if err != nil {
+		return nil, err
+	}
+	if int64(len(b)) > limit {
+		return nil, errImportArchiveTooLarge
+	}
+	return b, nil
+}
+
+// copyImportZipEntry copies one decompressed entry to out, charging
+// the bytes written to the shared budget *remaining (which the caller
+// keeps across the whole import). It returns "" on success, or the
+// import error code to propagate: "ERR_ARCHIVE_TOO_LARGE" when the
+// budget is exhausted, "ERR_WRITE_FILE" for any other copy failure.
+func copyImportZipEntry(out io.Writer, rc io.Reader, remaining *int64) string {
+	limit := *remaining
+	if limit < 0 {
+		limit = 0
+	}
+	n, err := io.Copy(out, io.LimitReader(rc, limit+1))
+	*remaining -= n
+	if err != nil {
+		return "ERR_WRITE_FILE"
+	}
+	if *remaining < 0 {
+		return "ERR_ARCHIVE_TOO_LARGE"
+	}
+	return ""
+}
 
 func toInt64(v any) int64 {
 	switch t := v.(type) {
@@ -295,6 +366,10 @@ func ImportMcpackToDirs(data []byte, archiveName string, resDir string, bpDir st
 	if err != nil {
 		return "ERR_OPEN_ZIP"
 	}
+	if code := checkImportZipLimits(zr); code != "" {
+		return code
+	}
+	extractRemaining := maxImportZipBytes
 	manifestDir := ""
 	var manifest packages.RawManifest
 	for _, f := range zr.File {
@@ -306,7 +381,7 @@ func ImportMcpackToDirs(data []byte, archiveName string, resDir string, bpDir st
 			dir := path.Dir(nameInZip)
 			rc, er := f.Open()
 			if er == nil {
-				b, _ := io.ReadAll(rc)
+				b, _ := readImportZipEntry(rc, maxImportManifestBytes)
 				_ = rc.Close()
 				_ = json.Unmarshal(utils.JsonCompatBytes(b), &manifest)
 			}
@@ -401,10 +476,10 @@ func ImportMcpackToDirs(data []byte, archiveName string, resDir string, bpDir st
 				rc.Close()
 				return "ERR_WRITE_FILE"
 			}
-			if _, er = io.Copy(out, rc); er != nil {
+			if code := copyImportZipEntry(out, rc, &extractRemaining); code != "" {
 				out.Close()
 				rc.Close()
-				return "ERR_WRITE_FILE"
+				return code
 			}
 			out.Close()
 			rc.Close()
@@ -448,6 +523,10 @@ func ImportMcpackToDirs2(data []byte, archiveName string, resDir string, bpDir s
 	if err != nil {
 		return "ERR_OPEN_ZIP"
 	}
+	if code := checkImportZipLimits(zr); code != "" {
+		return code
+	}
+	extractRemaining := maxImportZipBytes
 	manifestDir := ""
 	var manifest packages.RawManifest
 	for _, f := range zr.File {
@@ -459,7 +538,7 @@ func ImportMcpackToDirs2(data []byte, archiveName string, resDir string, bpDir s
 			dir := path.Dir(nameInZip)
 			rc, er := f.Open()
 			if er == nil {
-				b, _ := io.ReadAll(rc)
+				b, _ := readImportZipEntry(rc, maxImportManifestBytes)
 				_ = rc.Close()
 				_ = json.Unmarshal(utils.JsonCompatBytes(b), &manifest)
 			}
@@ -562,10 +641,10 @@ func ImportMcpackToDirs2(data []byte, archiveName string, resDir string, bpDir s
 				rc.Close()
 				return "ERR_WRITE_FILE"
 			}
-			if _, er = io.Copy(out, rc); er != nil {
+			if code := copyImportZipEntry(out, rc, &extractRemaining); code != "" {
 				out.Close()
 				rc.Close()
-				return "ERR_WRITE_FILE"
+				return code
 			}
 			out.Close()
 			rc.Close()
@@ -582,6 +661,10 @@ func ImportMcaddonToDirs2(data []byte, resDir string, bpDir string, skinDir stri
 	if err != nil {
 		return "ERR_OPEN_ZIP"
 	}
+	if code := checkImportZipLimits(zr); code != "" {
+		return code
+	}
+	extractRemaining := maxImportZipBytes
 	imported := false
 	hadSkin := false
 	for _, f := range zr.File {
@@ -592,8 +675,15 @@ func ImportMcaddonToDirs2(data []byte, resDir string, bpDir string, skinDir stri
 			if er != nil {
 				return "ERR_OPEN_ZIP"
 			}
-			b, _ := io.ReadAll(rc)
+			b, readErr := readImportZipEntry(rc, extractRemaining)
 			_ = rc.Close()
+			if errors.Is(readErr, errImportArchiveTooLarge) {
+				return "ERR_ARCHIVE_TOO_LARGE"
+			}
+			if readErr != nil {
+				return "ERR_OPEN_ZIP"
+			}
+			extractRemaining -= int64(len(b))
 			base := strings.TrimSuffix(filepath.Base(name), filepath.Ext(name))
 			err2 := ImportMcpackToDirs2(b, base, resDir, bpDir, skinDir, overwrite)
 			if err2 != "" {
@@ -622,7 +712,7 @@ func ImportMcaddonToDirs2(data []byte, resDir string, bpDir string, skinDir stri
 			if er != nil {
 				continue
 			}
-			b, _ := io.ReadAll(rc)
+			b, _ := readImportZipEntry(rc, maxImportManifestBytes)
 			_ = rc.Close()
 			var mf packages.RawManifest
 			_ = json.Unmarshal(utils.JsonCompatBytes(b), &mf)
@@ -714,10 +804,10 @@ func ImportMcaddonToDirs2(data []byte, resDir string, bpDir string, skinDir stri
 					rc.Close()
 					return "ERR_WRITE_FILE"
 				}
-				if _, er = io.Copy(out, rc); er != nil {
+				if code := copyImportZipEntry(out, rc, &extractRemaining); code != "" {
 					out.Close()
 					rc.Close()
-					return "ERR_WRITE_FILE"
+					return code
 				}
 				out.Close()
 				rc.Close()
@@ -742,6 +832,10 @@ func ImportMcaddonToDirs(data []byte, resDir string, bpDir string, overwrite boo
 	if err != nil {
 		return "ERR_OPEN_ZIP"
 	}
+	if code := checkImportZipLimits(zr); code != "" {
+		return code
+	}
+	extractRemaining := maxImportZipBytes
 	imported := false
 	for _, f := range zr.File {
 		name := strings.TrimSpace(f.Name)
@@ -751,8 +845,15 @@ func ImportMcaddonToDirs(data []byte, resDir string, bpDir string, overwrite boo
 			if er != nil {
 				return "ERR_OPEN_ZIP"
 			}
-			b, _ := io.ReadAll(rc)
+			b, readErr := readImportZipEntry(rc, extractRemaining)
 			_ = rc.Close()
+			if errors.Is(readErr, errImportArchiveTooLarge) {
+				return "ERR_ARCHIVE_TOO_LARGE"
+			}
+			if readErr != nil {
+				return "ERR_OPEN_ZIP"
+			}
+			extractRemaining -= int64(len(b))
 			base := strings.TrimSuffix(filepath.Base(name), filepath.Ext(name))
 			err2 := ImportMcpackToDirs(b, base, resDir, bpDir, overwrite)
 			if err2 != "" {
@@ -781,7 +882,7 @@ func ImportMcaddonToDirs(data []byte, resDir string, bpDir string, overwrite boo
 			if er != nil {
 				continue
 			}
-			b, _ := io.ReadAll(rc)
+			b, _ := readImportZipEntry(rc, maxImportManifestBytes)
 			_ = rc.Close()
 			var mf packages.RawManifest
 			_ = json.Unmarshal(utils.JsonCompatBytes(b), &mf)
@@ -853,10 +954,10 @@ func ImportMcaddonToDirs(data []byte, resDir string, bpDir string, overwrite boo
 					rc.Close()
 					return "ERR_WRITE_FILE"
 				}
-				if _, er = io.Copy(out, rc); er != nil {
+				if code := copyImportZipEntry(out, rc, &extractRemaining); code != "" {
 					out.Close()
 					rc.Close()
-					return "ERR_WRITE_FILE"
+					return code
 				}
 				out.Close()
 				rc.Close()
@@ -878,6 +979,10 @@ func ImportMcworldToDir(data []byte, archiveName string, worldsDir string, overw
 	if err != nil {
 		return "ERR_OPEN_ZIP"
 	}
+	if code := checkImportZipLimits(zr); code != "" {
+		return code
+	}
+	extractRemaining := maxImportZipBytes
 	levelDir := ""
 	for _, f := range zr.File {
 		nameInZip := normalizeZipEntryName(f.Name)
@@ -944,10 +1049,10 @@ func ImportMcworldToDir(data []byte, archiveName string, worldsDir string, overw
 			rc.Close()
 			return "ERR_WRITE_FILE"
 		}
-		if _, er = io.Copy(out, rc); er != nil {
+		if code := copyImportZipEntry(out, rc, &extractRemaining); code != "" {
 			out.Close()
 			rc.Close()
-			return "ERR_WRITE_FILE"
+			return code
 		}
 		out.Close()
 		rc.Close()
@@ -1557,7 +1662,7 @@ func IsMcpackSkinPack(data []byte) bool {
 			if er != nil {
 				continue
 			}
-			b, _ := io.ReadAll(rc)
+			b, _ := readImportZipEntry(rc, maxImportManifestBytes)
 			_ = rc.Close()
 			var mf packages.RawManifest
 			_ = json.Unmarshal(utils.JsonCompatBytes(b), &mf)
