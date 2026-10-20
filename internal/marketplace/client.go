@@ -3,7 +3,9 @@ package marketplace
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	neturl "net/url"
 	"strings"
 	"sync"
 	"time"
@@ -17,6 +19,10 @@ import (
 const DefaultIndexURL = "https://cdn.jsdelivr.net/gh/BedrockNexusLauncher/Marketplace@main/index.json"
 
 const cacheTTL = 5 * time.Minute
+
+// maxIndexBytes caps the index document we are willing to decode
+// (matching the 8 MiB body cap the gdkversions client uses).
+const maxIndexBytes = 8 << 20
 
 type Client struct {
 	httpClient *http.Client
@@ -38,10 +44,23 @@ func NewClient() *Client {
 }
 
 // GetIndex fetches and caches the index from indexURL (empty = DefaultIndexURL).
+//
+// The index URL is caller-supplied (user-editable in the frontend) and
+// every item in the index becomes a download candidate, so the URL is
+// validated before any fetch: https only, no credentials, and no
+// loopback/private/link-local IP hosts (see httpx.ValidatePublicHTTPSURL).
 func (c *Client) GetIndex(indexURL string) (*Index, error) {
 	url := strings.TrimSpace(indexURL)
 	if url == "" {
 		url = DefaultIndexURL
+	}
+
+	parsed, err := neturl.Parse(url)
+	if err != nil {
+		return nil, fmt.Errorf("invalid marketplace index URL: %w", err)
+	}
+	if err := httpx.ValidatePublicHTTPSURL(parsed); err != nil {
+		return nil, fmt.Errorf("invalid marketplace index URL: %w", err)
 	}
 
 	c.mu.Lock()
@@ -61,8 +80,16 @@ func (c *Client) GetIndex(indexURL string) (*Index, error) {
 		return nil, fmt.Errorf("marketplace index returned status: %d", resp.StatusCode)
 	}
 
+	data, err := io.ReadAll(io.LimitReader(resp.Body, maxIndexBytes+1))
+	if err != nil {
+		return nil, fmt.Errorf("reading marketplace index: %w", err)
+	}
+	if int64(len(data)) > maxIndexBytes {
+		return nil, fmt.Errorf("marketplace index exceeds %d bytes", maxIndexBytes)
+	}
+
 	var index Index
-	if err := json.NewDecoder(resp.Body).Decode(&index); err != nil {
+	if err := json.Unmarshal(data, &index); err != nil {
 		return nil, fmt.Errorf("invalid marketplace index: %w", err)
 	}
 

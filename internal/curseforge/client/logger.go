@@ -45,7 +45,9 @@ func (l DefaultSlogClientLogger) Println(v ...any) {
 }
 
 func (l DefaultSlogClientLogger) DebugRequest(res *http.Response) {
-	buff, _ := io.ReadAll(res.Body)
+	// Capped read; the body is re-buffered for the caller, who keeps
+	// ownership of closing the response.
+	buff, _ := io.ReadAll(io.LimitReader(res.Body, maxAPIResponseBytes))
 	res.Body = io.NopCloser(bytes.NewReader(buff))
 	slog.With(
 		"request", map[string]any{

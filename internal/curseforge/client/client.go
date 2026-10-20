@@ -188,31 +188,43 @@ func (c *curseClient) buildRequestPath(path string, q ApiQueryParams) string {
 	return fmt.Sprintf("%s?%s", path, q.QueryString())
 }
 
-func (c *curseClient) parseResponse(res *http.Response, step string, debug bool, out types.CurseforgeAPIResponse) error {
-	if res.StatusCode/100 != 2 {
-		b, _ := io.ReadAll(res.Body)
+// maxAPIResponseBytes caps a single CurseForge API response body.
+const maxAPIResponseBytes = 16 << 20
+
+// readAPIResponseBody reads the whole response body exactly once and
+// always closes it. The body is capped so a hostile or broken endpoint
+// cannot exhaust memory.
+func readAPIResponseBody(res *http.Response) ([]byte, error) {
+	defer res.Body.Close()
+	b, err := io.ReadAll(io.LimitReader(res.Body, maxAPIResponseBytes+1))
+	if err != nil {
+		return nil, err
+	}
+	if int64(len(b)) > maxAPIResponseBytes {
+		return nil, fmt.Errorf("response body exceeds %d bytes", maxAPIResponseBytes)
+	}
+	return b, nil
+}
+
+// parseResponse parses an already-read response body. Reading and
+// closing the body is the caller's job (see readAPIResponseBody).
+func (c *curseClient) parseResponse(statusCode int, body []byte, step string, out types.CurseforgeAPIResponse) error {
+	if statusCode/100 != 2 {
 		return types.Wrap(
-			fmt.Errorf("%s request failed with status code %d", step, res.StatusCode),
-			string(b),
-			res.StatusCode,
+			fmt.Errorf("%s request failed with status code %d", step, statusCode),
+			string(body),
+			statusCode,
 		)
 	}
 
-	b, err := io.ReadAll(res.Body)
-	if err != nil {
-		return fmt.Errorf("reading get game versions response: %w", err)
-	}
-
-	bodyAsString := string(b)
-
-	if err := json.Unmarshal(b, out); err != nil {
+	if err := json.Unmarshal(body, out); err != nil {
 		return types.Wrap(
 			fmt.Errorf("decoding get game versions response: %w", err),
-			string(b),
-			res.StatusCode,
+			string(body),
+			statusCode,
 		)
 	}
-	out.SetRawResponseBody(bodyAsString)
+	out.SetRawResponseBody(string(body))
 
 	return nil
 }
@@ -221,43 +233,44 @@ func (c *curseClient) executeRequest(req *http.Request, step string, out types.C
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Content-Type", "application/json")
 
-	reqData := map[string]any{
-		"step":   step,
-		"url":    req.URL.String(),
-		"method": req.Method,
-	}
+	debug := c.opt.debug
 
-	if req.Body != nil {
+	// Request/response bodies are only captured for logging when the
+	// debug flag is on; the default log line carries just the method,
+	// URL path, status and byte count.
+	var reqBody []byte
+	if debug && req.Body != nil {
 		b, err := io.ReadAll(req.Body)
 		if err != nil {
 			return fmt.Errorf("reading api request body: %w", err)
 		}
-
-		reqData["body"] = string(b)
-
+		reqBody = b
 		req.Body = io.NopCloser(bytes.NewReader(b))
 	}
 
 	res, err := c.c.Do(req)
 	if err != nil {
 		err = fmt.Errorf("executing get minecraft mods request: %w", err)
-		slog.With("request", reqData, "error", err).Error("APIRequest")
+		if debug {
+			slog.With("step", step, "method", req.Method, "url", req.URL.String(), "request_body", string(reqBody), "error", err).Error("APIRequest")
+		} else {
+			slog.With("step", step, "method", req.Method, "path", req.URL.Path, "error", err).Error("APIRequest")
+		}
 		return types.Wrap(err, "failed to execute request", -1)
 	}
 
-	reqData["status_code"] = res.StatusCode
-
-	resBody, err := io.ReadAll(res.Body)
+	resBody, err := readAPIResponseBody(res)
 	if err != nil {
 		return fmt.Errorf("reading api response body: %w", err)
 	}
 
-	reqData["response_body"] = string(resBody)
-	res.Body = io.NopCloser(bytes.NewReader(resBody))
+	if debug {
+		slog.With("step", step, "method", req.Method, "url", req.URL.String(), "request_body", string(reqBody), "status_code", res.StatusCode, "response_body", string(resBody)).Info("APIRequest")
+	} else {
+		slog.With("step", step, "method", req.Method, "path", req.URL.Path, "status_code", res.StatusCode, "response_bytes", len(resBody)).Info("APIRequest")
+	}
 
-	slog.With("request", reqData).Info("APIRequest")
-
-	if err := c.parseResponse(res, step, c.opt.debug, out); err != nil {
+	if err := c.parseResponse(res.StatusCode, resBody, step, out); err != nil {
 		return fmt.Errorf("parsing api response response: %w", err)
 	}
 
