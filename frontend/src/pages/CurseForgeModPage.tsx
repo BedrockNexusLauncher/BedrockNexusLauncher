@@ -184,7 +184,18 @@ const CurseForgeModPage: React.FC = () => {
     isCancelling.current = false;
 
     try {
-      const dest = await StartFileDownload(file.downloadUrl, file.fileName);
+      const md5 =
+        file.hashes?.find((h) => h.algo === 2)?.value ?? "";
+      const dest = await StartFileDownload(
+        file.downloadUrl,
+        file.fileName,
+        md5,
+      );
+      if (!dest) {
+        setInstallError("ERR_INVALID_DOWNLOAD");
+        setInstallStep("error");
+        return;
+      }
 
       const cleanup = () => {
         Events.Off("file.download.progress");
