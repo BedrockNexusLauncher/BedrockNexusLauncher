@@ -1,5 +1,6 @@
 {
   "app": {
+    "bootstrap_failed": "启动失败，请查看日志或稍后重试。",
     "settings": "设置",
     "error_boundary": {
       "title": "出错了",
@@ -996,6 +997,10 @@
     "target": "目标实例"
   },
   "errors": {
+    "detection_failed": "检测失败",
+    "download_failed": "下载失败",
+    "download_start_failed": "下载启动失败",
+    "import_failed": "导入失败",
     "ERR_GAME_ALREADY_RUNNING": "检测到当前实例 Minecraft 已在运行，请先关闭再启动或者切换其他实例",
     "ERR_TARGET_DIR_NOT_SPECIFIED": "未指定目标目录",
     "ERR_CREATE_TARGET_DIR": "无法创建目标目录",
