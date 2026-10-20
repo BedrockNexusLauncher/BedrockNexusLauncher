@@ -1,5 +1,6 @@
 {
   "app": {
+    "bootstrap_failed": "Start fehlgeschlagen. Bitte prüfen Sie die Protokolle oder versuchen Sie es später erneut.",
     "settings": "Einstellungen",
     "error_boundary": {
       "title": "Etwas ist schiefgelaufen",
@@ -996,6 +997,10 @@
     "target": "Zielinstanz"
   },
   "errors": {
+    "detection_failed": "Erkennung fehlgeschlagen",
+    "download_failed": "Download fehlgeschlagen",
+    "download_start_failed": "Download konnte nicht gestartet werden",
+    "import_failed": "Import fehlgeschlagen",
     "ERR_GAME_ALREADY_RUNNING": "Es wurde erkannt, dass die aktuelle Instanz von Minecraft bereits läuft. Bitte schließen Sie sie vor dem Starten oder wechseln Sie zu einer anderen Instanz.",
     "ERR_TARGET_DIR_NOT_SPECIFIED": "Zielverzeichnis nicht angegeben",
     "ERR_CREATE_TARGET_DIR": "Erstellen des Zielverzeichnisses fehlgeschlagen",
