@@ -316,12 +316,48 @@ func (s importStaging) commit() string {
 	return ""
 }
 
+// zipEntryNameSafe reports whether a normalised archive entry name
+// is safe to materialise on Windows, applying the per-component
+// rules of internal/uwp's safeRelativePath that the plain
+// normaliser lacks: no ':' in any component (NTFS alternate data
+// streams), no reserved device names (CON, PRN, AUX, NUL, COM1-9,
+// LPT1-9, with or without extension), no component ending in a dot
+// or space (Win32 strips those, silently aliasing a sibling entry),
+// and no control characters. Traversal is handled separately by the
+// caller's containment check.
+func zipEntryNameSafe(rel string) bool {
+	rel = strings.TrimSuffix(rel, "/")
+	if rel == "" {
+		return true
+	}
+	for _, component := range strings.Split(rel, "/") {
+		if strings.Contains(component, ":") {
+			return false
+		}
+		if strings.TrimRight(component, " .") != component {
+			return false
+		}
+		for _, r := range component {
+			if r < 32 {
+				return false
+			}
+		}
+		base := strings.ToUpper(strings.SplitN(component, ".", 2)[0])
+		if base == "CON" || base == "PRN" || base == "AUX" || base == "NUL" ||
+			(len(base) == 4 && (strings.HasPrefix(base, "COM") || strings.HasPrefix(base, "LPT")) && base[3] >= '1' && base[3] <= '9') {
+			return false
+		}
+	}
+	return true
+}
+
 // extractZipIntoDir extracts the entries of zr that live under
 // prefixDir ("" = archive root) into root, charging the shared
 // extraction budget. It is the single extraction loop the importers
 // share; its containment checks and error codes are the ones the
 // per-importer loops previously duplicated.
 func extractZipIntoDir(zr *zip.Reader, prefixDir string, root string, extractRemaining *int64) string {
+	seen := make(map[string]struct{})
 	for _, f := range zr.File {
 		nameInZip := normalizeZipEntryName(f.Name)
 		var relInDir string
@@ -332,6 +368,9 @@ func extractZipIntoDir(zr *zip.Reader, prefixDir string, root string, extractRem
 			relInDir = strings.TrimPrefix(strings.TrimPrefix(nameInZip, prefixDir), "/")
 		} else {
 			relInDir = nameInZip
+		}
+		if !zipEntryNameSafe(relInDir) {
+			return "ERR_UNSAFE_ARCHIVE_ENTRY"
 		}
 		target := root
 		if relInDir != "" && relInDir != "/" {
@@ -348,6 +387,24 @@ func extractZipIntoDir(zr *zip.Reader, prefixDir string, root string, extractRem
 			}
 			continue
 		}
+		// Reject symlink (and any other non-regular) entries
+		// outright, like internal/uwp does, instead of relying on
+		// the fact that nothing here recreates them: a future
+		// symlink-preserving change must not silently re-open
+		// slip-through-symlink extraction.
+		if f.Mode()&os.ModeSymlink != 0 || !f.Mode().IsRegular() {
+			return "ERR_UNSAFE_ARCHIVE_ENTRY"
+		}
+		// Reject a second entry that resolves to an already-written
+		// target (case-insensitively, as Windows sees paths): the
+		// importers validated the first manifest.json, so a later
+		// duplicate must never silently overwrite it with an
+		// unchecked one.
+		seenKey := strings.ToLower(safeTarget)
+		if _, dup := seen[seenKey]; dup {
+			return "ERR_DUPLICATE_ENTRY"
+		}
+		seen[seenKey] = struct{}{}
 		if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
 			return "ERR_CREATE_TARGET_DIR"
 		}
@@ -365,7 +422,13 @@ func extractZipIntoDir(zr *zip.Reader, prefixDir string, root string, extractRem
 			rc.Close()
 			return code
 		}
-		out.Close()
+		// The output file's Close error is the final flush: if it
+		// fails, the file on disk is truncated and the import must
+		// not be reported as success.
+		if err := out.Close(); err != nil {
+			rc.Close()
+			return "ERR_WRITE_FILE"
+		}
 		rc.Close()
 	}
 	return ""
@@ -492,10 +555,16 @@ func findPackPathsByUuid(uuid string, dirs ...string) []string {
 	return paths
 }
 
-func generateRandomPackName() string {
+// generateRandomPackName returns a random, filename-safe directory
+// name for an imported pack/world. The crypto/rand error is
+// propagated: silently falling back to a zero-filled name on RNG
+// failure would make every import collide on the same directory.
+func generateRandomPackName() (string, error) {
 	b := make([]byte, 8)
-	_, _ = crand.Read(b)
-	return base64.URLEncoding.EncodeToString(b)
+	if _, err := crand.Read(b); err != nil {
+		return "", err
+	}
+	return base64.URLEncoding.EncodeToString(b), nil
 }
 
 func ImportMcpackToDirs(data []byte, archiveName string, resDir string, bpDir string, overwrite bool) string {
@@ -542,7 +611,10 @@ func ImportMcpackToDirs(data []byte, archiveName string, resDir string, bpDir st
 	// The existing packs are removed only at the commit step of the
 	// staged import below, once the replacement is fully extracted.
 
-	baseName := generateRandomPackName()
+	baseName, randErr := generateRandomPackName()
+	if randErr != nil {
+		return "ERR_CREATE_TARGET_DIR"
+	}
 	baseName = utils.SanitizeFilename(baseName)
 	if strings.TrimSpace(baseName) == "" {
 		baseName = "pack"
@@ -564,22 +636,6 @@ func ImportMcpackToDirs(data []byte, archiveName string, resDir string, bpDir st
 		return "ERR_INVALID_PACKAGE"
 	}
 	return importPackTargets(zr, manifestDir, targets, overwrite, existing, true, &extractRemaining)
-}
-
-func stripKnownArchiveExt(name string) string {
-	s := strings.TrimSpace(name)
-	if s == "" {
-		return ""
-	}
-	base := filepath.Base(s)
-	lower := strings.ToLower(base)
-	known := []string{".mcpack", ".mcworld", ".mcaddon", ".zip"}
-	for _, ext := range known {
-		if strings.HasSuffix(lower, ext) && len(base) > len(ext) {
-			return base[:len(base)-len(ext)]
-		}
-	}
-	return base
 }
 
 func normalizeZipEntryName(name string) string {
@@ -636,7 +692,10 @@ func ImportMcpackToDirs2(data []byte, archiveName string, resDir string, bpDir s
 	// The existing packs are removed only at the commit step of the
 	// staged import below, once the replacement is fully extracted.
 
-	baseName := generateRandomPackName()
+	baseName, randErr := generateRandomPackName()
+	if randErr != nil {
+		return "ERR_CREATE_TARGET_DIR"
+	}
 	baseName = utils.SanitizeFilename(baseName)
 	if strings.TrimSpace(baseName) == "" {
 		baseName = "pack"
@@ -747,7 +806,10 @@ func ImportMcaddonToDirs2(data []byte, resDir string, bpDir string, skinDir stri
 		// Existing packs are removed at the staged import's commit
 		// step below, not before the replacement is validated.
 
-		baseName := generateRandomPackName()
+		baseName, randErr := generateRandomPackName()
+		if randErr != nil {
+			return "ERR_CREATE_TARGET_DIR"
+		}
 		baseName = utils.SanitizeFilename(baseName)
 		if strings.TrimSpace(baseName) == "" {
 			baseName = "pack"
@@ -918,18 +980,22 @@ func ImportMcworldToDir(data []byte, archiveName string, worldsDir string, overw
 			break
 		}
 	}
-	baseName := strings.TrimSpace(archiveName)
-	if baseName != "" {
-		baseName = stripKnownArchiveExt(baseName)
-	}
-	baseName = strings.ReplaceAll(baseName, ".", "_")
-	baseName = utils.SanitizeFilename(baseName)
-	if strings.TrimSpace(baseName) == "" || baseName == "." || baseName == string(os.PathSeparator) {
-		baseName = "world"
-	}
-	randomDir := generateRandomPackName()
-	if strings.TrimSpace(randomDir) == "" {
-		randomDir = "world"
+	// The world is always imported under a fresh random directory
+	// name, and the overwrite parameter is deliberately a no-op:
+	// a .mcworld archive's file name carries no identity (nearly
+	// every export is called "world.mcworld"), so naming the folder
+	// after it would make unrelated worlds collide — and honoring
+	// overwrite against such a name could replace the wrong world.
+	// The world's display name lives inside the world itself
+	// (levelname.txt), not in its folder name. An earlier version
+	// computed a sanitised name from archiveName here and then
+	// discarded it; that dead computation is gone. Callers only
+	// consume the returned error code, never the directory name.
+	_ = archiveName
+	_ = overwrite
+	randomDir, randErr := generateRandomPackName()
+	if randErr != nil {
+		return "ERR_CREATE_TARGET_DIR"
 	}
 	targetRoot := filepath.Join(worldsDir, randomDir)
 	staged, code := stageImportTarget(targetRoot)
