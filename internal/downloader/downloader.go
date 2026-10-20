@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/httpx"
@@ -58,18 +59,31 @@ type Manager struct {
 }
 
 type state struct {
+	// Immutable after construction; safe to read from any goroutine.
 	ctx         context.Context
 	url         string
 	dest        string
 	expectedMD5 string
 	verify      func(string) error
-	retryCount  int
-	total       int64
-	downloaded  int64
-	paused      bool
-	cancelled   bool
-	running     bool
-	cancelFn    context.CancelFunc
+
+	// Mutable task state. The worker goroutine and the Manager control
+	// methods (Pause/Resume/Cancel/…) touch these concurrently, so they
+	// are atomics — previously they were plain fields written under
+	// Manager.mu by the control methods but read/written unguarded by
+	// the worker, a data race (M-5). Event emission never happens
+	// while holding a lock; it reads plain snapshots of these values.
+	retryCount atomic.Int32
+	total      atomic.Int64
+	downloaded atomic.Int64
+	paused     atomic.Bool
+	cancelled  atomic.Bool
+	running    atomic.Bool
+	// active is a CAS guard so two run() goroutines never work on the
+	// same task at once (e.g. racing Resume calls).
+	active atomic.Bool
+
+	// cancelFn is guarded by Manager.mu.
+	cancelFn context.CancelFunc
 }
 
 func NewManager(events Events, opts Options) *Manager {
@@ -98,7 +112,7 @@ func (m *Manager) start(ctx context.Context, src string, dest string, md5sum str
 	if m.tasks == nil {
 		m.tasks = map[string]*state{}
 	}
-	if existing, ok := m.tasks[dest]; ok && existing != nil && existing.running {
+	if existing, ok := m.tasks[dest]; ok && existing != nil && existing.running.Load() {
 		m.mu.Unlock()
 		m.emitStatus("started", dest)
 		return dest
@@ -111,100 +125,132 @@ func (m *Manager) start(ctx context.Context, src string, dest string, md5sum str
 	return dest
 }
 
+// The control methods below mutate task state under Manager.mu (the
+// tasks map and cancelFn) and the atomic fields, collect the events to
+// publish, and only emit after unlocking — event emission must never
+// happen while holding the lock (M-5).
+
 func (m *Manager) Pause() {
 	m.mu.Lock()
+	var dests []string
 	for _, st := range m.tasks {
 		if st == nil {
 			continue
 		}
-		st.paused = true
+		st.paused.Store(true)
 		if st.cancelFn != nil {
 			st.cancelFn()
 		}
-		m.emitStatus("paused", st.dest)
+		dests = append(dests, st.dest)
 	}
 	m.mu.Unlock()
+	for _, dest := range dests {
+		m.emitStatus("paused", dest)
+	}
 }
 
 func (m *Manager) Resume() {
 	m.mu.Lock()
+	var resumed []*state
 	for _, st := range m.tasks {
-		if st == nil || st.cancelled {
+		if st == nil || st.cancelled.Load() {
 			continue
 		}
-		if st.running {
+		if st.running.Load() {
 			continue
 		}
-		st.paused = false
+		st.paused.Store(false)
+		resumed = append(resumed, st)
+	}
+	m.mu.Unlock()
+	for _, st := range resumed {
 		go m.run(st)
 		m.emitStatus("resumed", st.dest)
 	}
-	m.mu.Unlock()
 }
 
 func (m *Manager) Cancel() {
 	m.mu.Lock()
+	var dests []string
 	for dest, st := range m.tasks {
 		if st == nil {
 			continue
 		}
-		st.cancelled = true
+		st.cancelled.Store(true)
 		if st.cancelFn != nil {
 			st.cancelFn()
 		}
-		if !st.running {
+		if !st.running.Load() {
 			delete(m.tasks, dest)
 		}
-		m.emitStatus("cancelled", st.dest)
+		dests = append(dests, st.dest)
 	}
 	m.mu.Unlock()
+	for _, dest := range dests {
+		m.emitStatus("cancelled", dest)
+	}
 }
 
 func (m *Manager) PauseTask(dest string) {
 	m.mu.Lock()
-	if st, ok := m.tasks[dest]; ok && st != nil {
-		st.paused = true
+	st, ok := m.tasks[dest]
+	if ok && st != nil {
+		st.paused.Store(true)
 		if st.cancelFn != nil {
 			st.cancelFn()
 		}
-		m.emitStatus("paused", st.dest)
 	}
 	m.mu.Unlock()
+	if ok && st != nil {
+		m.emitStatus("paused", st.dest)
+	}
 }
 
 func (m *Manager) ResumeTask(dest string) {
 	m.mu.Lock()
-	if st, ok := m.tasks[dest]; ok && st != nil && !st.cancelled && !st.running {
-		st.paused = false
+	st, ok := m.tasks[dest]
+	resume := ok && st != nil && !st.cancelled.Load() && !st.running.Load()
+	if resume {
+		st.paused.Store(false)
+	}
+	m.mu.Unlock()
+	if resume {
 		go m.run(st)
 		m.emitStatus("resumed", st.dest)
 	}
-	m.mu.Unlock()
 }
 
 func (m *Manager) CancelTask(dest string) {
 	m.mu.Lock()
-	if st, ok := m.tasks[dest]; ok && st != nil {
-		st.cancelled = true
+	st, ok := m.tasks[dest]
+	if ok && st != nil {
+		st.cancelled.Store(true)
 		if st.cancelFn != nil {
 			st.cancelFn()
 		}
-		if !st.running {
+		if !st.running.Load() {
 			delete(m.tasks, dest)
 		}
-		m.emitStatus("cancelled", st.dest)
 	}
 	m.mu.Unlock()
+	if ok && st != nil {
+		m.emitStatus("cancelled", st.dest)
+	}
 }
 
 func (m *Manager) run(s *state) {
+	if !s.active.CompareAndSwap(false, true) {
+		return
+	}
+	defer s.active.Store(false)
+
 	m.mu.Lock()
 	local := m.tasks[s.dest]
 	if local != s {
 		m.mu.Unlock()
 		return
 	}
-	if local == nil || local.cancelled || local.paused {
+	if local == nil || local.cancelled.Load() || local.paused.Load() {
 		m.mu.Unlock()
 		return
 	}
@@ -232,16 +278,17 @@ func (m *Manager) run(s *state) {
 				_ = os.Remove(metadataDest)
 			}
 		}
-		local.downloaded = cur
+		local.downloaded.Store(cur)
 		ctx, cancel := context.WithCancel(local.ctx)
 		m.mu.Lock()
 		local.cancelFn = cancel
-		local.running = true
 		m.tasks[local.dest] = local
 		m.mu.Unlock()
+		local.running.Store(true)
 
 		req, err := http.NewRequestWithContext(ctx, "GET", local.url, nil)
 		if err != nil {
+			cancel()
 			m.emitError(err.Error(), local.dest)
 			m.finishRunning(local)
 			return
@@ -257,6 +304,7 @@ func (m *Manager) run(s *state) {
 		}
 		resp, err := httpx.Do(req)
 		if err != nil {
+			cancel()
 			if !m.retry(local, attempt, err) {
 				m.emitError(err.Error(), local.dest)
 				m.finishRunning(local)
@@ -267,6 +315,7 @@ func (m *Manager) run(s *state) {
 
 		if resp.StatusCode == http.StatusRequestedRangeNotSatisfiable && cur > 0 {
 			resp.Body.Close()
+			cancel()
 			_ = os.Remove(downloadDest)
 			_ = os.Remove(metadataDest)
 			if attempt < maxDownloadRetries {
@@ -278,6 +327,7 @@ func (m *Manager) run(s *state) {
 		}
 		if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusPartialContent {
 			resp.Body.Close()
+			cancel()
 			m.emitError(fmt.Sprintf("HTTP %s", resp.Status), local.dest)
 			m.finishRunning(local)
 			return
@@ -287,24 +337,38 @@ func (m *Manager) run(s *state) {
 			_ = os.Remove(downloadDest)
 			cur = 0
 			metadata = partialMetadata{URL: local.url}
-			cur = 0
-			local.downloaded = 0
+			local.downloaded.Store(0)
+		}
+
+		// On a resumed download the server must continue exactly where
+		// the local partial ends. A 206 whose Content-Range starts
+		// anywhere else (or cannot be parsed) would silently splice two
+		// different byte streams into one file (M-2): discard the
+		// partial and restart from zero instead.
+		if resp.StatusCode == http.StatusPartialContent {
+			rangeStart, _, _, rangeOK := parseContentRange(resp.Header.Get("Content-Range"))
+			if !rangeOK || rangeStart != cur {
+				resp.Body.Close()
+				cancel()
+				_ = os.Remove(downloadDest)
+				_ = os.Remove(metadataDest)
+				if attempt < maxDownloadRetries {
+					continue
+				}
+				m.emitError("ERR_INVALID_CONTENT_RANGE", local.dest)
+				m.finishRunning(local)
+				return
+			}
 		}
 		metadata.URL = local.url
 		metadata.ETag = resp.Header.Get("ETag")
 		metadata.LastModified = resp.Header.Get("Last-Modified")
 
 		total := resp.ContentLength
-		if m.opts.Resume && total > 0 && cur > 0 {
-			if cr := resp.Header.Get("Content-Range"); cr != "" {
-				if idx := strings.LastIndex(cr, "/"); idx != -1 {
-					if all := cr[idx+1:]; all != "*" {
-						if v, e := parseInt64(all); e == nil {
-							total = v
-						}
-					}
-				}
-			} else {
+		if resp.StatusCode == http.StatusPartialContent {
+			if _, _, rangeTotal, rangeOK := parseContentRange(resp.Header.Get("Content-Range")); rangeOK && rangeTotal >= 0 {
+				total = rangeTotal
+			} else if total > 0 {
 				total = cur + total
 			}
 		}
@@ -315,7 +379,7 @@ func (m *Manager) run(s *state) {
 		if m.opts.Resume {
 			_ = writeMetadata(metadataDest, metadata)
 		}
-		local.total = total
+		local.total.Store(total)
 
 		flags := os.O_CREATE | os.O_WRONLY
 		if cur == 0 {
@@ -326,33 +390,45 @@ func (m *Manager) run(s *state) {
 		f, err := os.OpenFile(downloadDest, flags, 0o644)
 		if err != nil {
 			resp.Body.Close()
+			cancel()
 			m.emitError(err.Error(), local.dest)
 			m.finishRunning(local)
 			return
 		}
 		{
-			payload := any(DownloadProgress{Downloaded: local.downloaded, Total: local.total, Dest: local.dest})
+			snap := DownloadProgress{Downloaded: local.downloaded.Load(), Total: local.total.Load(), Dest: local.dest}
+			payload := any(snap)
 			if m.events.ProgressFactory != nil {
-				payload = m.events.ProgressFactory(DownloadProgress{Downloaded: local.downloaded, Total: local.total, Dest: local.dest})
+				payload = m.events.ProgressFactory(snap)
 			}
 			application.Get().Event.Emit(m.events.Progress, payload)
 		}
 		buf := make([]byte, 128*1024)
 		lastEmit := time.Now()
 
+		// Stall watchdog (M-1): a server that trickles or stops sending
+		// without closing the connection must not hang the attempt
+		// forever. The watchdog cancels the attempt context when no
+		// body bytes have arrived for stallTimeout; it is always joined
+		// (stop) before this attempt continues or returns.
+		watchdog := startStallWatchdog(cancel, stallTimeout)
+
 		var loopErr error
 		for {
-			if local.cancelled || local.paused {
+			if local.cancelled.Load() || local.paused.Load() {
 				_ = f.Sync()
 				_ = f.Close()
 				resp.Body.Close()
-				if local.cancelled && m.opts.RemoveOnCancel && downloadDest != "" {
+				watchdog.stop()
+				cancelled := local.cancelled.Load()
+				if cancelled && m.opts.RemoveOnCancel && downloadDest != "" {
 					_ = os.Remove(downloadDest)
 				}
 				m.finishRunning(local)
-				if local.cancelled {
+				if cancelled {
 					m.emitStatus("cancelled", local.dest)
 				}
+				cancel()
 				return
 			}
 			n, er := resp.Body.Read(buf)
@@ -361,11 +437,13 @@ func (m *Manager) run(s *state) {
 					loopErr = werr
 					break
 				}
-				local.downloaded += int64(n)
+				watchdog.touch()
+				local.downloaded.Add(int64(n))
 				if time.Since(lastEmit) >= m.opts.Throttle {
-					payload := any(DownloadProgress{Downloaded: local.downloaded, Total: local.total, Dest: local.dest})
+					snap := DownloadProgress{Downloaded: local.downloaded.Load(), Total: local.total.Load(), Dest: local.dest}
+					payload := any(snap)
 					if m.events.ProgressFactory != nil {
-						payload = m.events.ProgressFactory(DownloadProgress{Downloaded: local.downloaded, Total: local.total, Dest: local.dest})
+						payload = m.events.ProgressFactory(snap)
 					}
 					application.Get().Event.Emit(m.events.Progress, payload)
 					lastEmit = time.Now()
@@ -385,19 +463,62 @@ func (m *Manager) run(s *state) {
 		}
 		_ = f.Close()
 		resp.Body.Close()
+		watchdog.stop()
 
 		if loopErr != nil {
-			if ctx.Err() == context.Canceled || local.cancelled {
+			// Pause and cancel both abort the in-flight read by
+			// cancelling the attempt context, so the resulting read
+			// error lands here — they must not be conflated (M-6):
+			// a paused task keeps its partial file (Resume needs it)
+			// even when RemoveOnCancel is set, and reports "paused",
+			// never "cancelled".
+			cancelled := local.cancelled.Load()
+			paused := local.paused.Load()
+			switch {
+			case cancelled:
 				if m.opts.RemoveOnCancel && downloadDest != "" {
 					_ = os.Remove(downloadDest)
 				}
 				m.emitStatus("cancelled", local.dest)
-			} else if m.retry(local, attempt, loopErr) {
-				continue
-			} else {
+			case paused:
+				m.emitStatus("paused", local.dest)
+			case watchdog.fired.Load():
+				stallErr := fmt.Errorf("download stalled: no progress for %s", stallTimeout)
+				if m.retry(local, attempt, stallErr) {
+					cancel()
+					continue
+				}
+				m.emitError(stallErr.Error(), local.dest)
+			case ctx.Err() == context.Canceled:
+				if m.opts.RemoveOnCancel && downloadDest != "" {
+					_ = os.Remove(downloadDest)
+				}
+				m.emitStatus("cancelled", local.dest)
+			default:
+				if m.retry(local, attempt, loopErr) {
+					cancel()
+					continue
+				}
 				m.emitError(loopErr.Error(), local.dest)
 			}
 			m.finishRunning(local)
+			cancel()
+			return
+		}
+
+		// The transfer ended cleanly, but a clean EOF before the known
+		// total still means the file is incomplete (truncating server
+		// or proxy): never publish a short file as if it were whole
+		// (M-2). The partial stays on disk so a retry resumes from it.
+		if want := local.total.Load(); want > 0 && local.downloaded.Load() != want {
+			shortErr := fmt.Errorf("incomplete download: got %d of %d bytes", local.downloaded.Load(), want)
+			if m.retry(local, attempt, shortErr) {
+				cancel()
+				continue
+			}
+			m.emitError(shortErr.Error(), local.dest)
+			m.finishRunning(local)
+			cancel()
 			return
 		}
 
@@ -408,15 +529,17 @@ func (m *Manager) run(s *state) {
 				if !strings.EqualFold(hash, local.expectedMD5) {
 					// Mismatch
 					_ = os.Remove(downloadDest)
-					local.retryCount++
-					if local.retryCount < 3 {
-						m.emitError(fmt.Sprintf("MD5 mismatch (attempt %d/3), retrying...", local.retryCount), local.dest)
+					count := local.retryCount.Add(1)
+					if count < 3 {
+						m.emitError(fmt.Sprintf("MD5 mismatch (attempt %d/3), retrying...", count), local.dest)
 						m.emitStatus("started", local.dest)
 						time.Sleep(1 * time.Second)
+						cancel()
 						continue
 					} else {
 						m.emitError("ERR_MD5_MISMATCH", local.dest)
 						m.finishRunning(local)
+						cancel()
 						return
 					}
 				}
@@ -424,6 +547,7 @@ func (m *Manager) run(s *state) {
 				// Failed to calculate MD5, maybe treat as error?
 				m.emitError(fmt.Sprintf("MD5 calculation failed: %v", err), local.dest)
 				m.finishRunning(local)
+				cancel()
 				return
 			}
 		}
@@ -434,6 +558,7 @@ func (m *Manager) run(s *state) {
 				_ = os.Remove(downloadDest)
 				m.emitError(err.Error(), local.dest)
 				m.finishRunning(local)
+				cancel()
 				return
 			}
 		}
@@ -442,20 +567,22 @@ func (m *Manager) run(s *state) {
 			m.emitError(err.Error(), local.dest)
 		} else {
 			_ = os.Remove(metadataDest)
-			payload := any(DownloadProgress{Downloaded: local.downloaded, Total: local.total, Dest: local.dest})
+			snap := DownloadProgress{Downloaded: local.downloaded.Load(), Total: local.total.Load(), Dest: local.dest}
+			payload := any(snap)
 			if m.events.ProgressFactory != nil {
-				payload = m.events.ProgressFactory(DownloadProgress{Downloaded: local.downloaded, Total: local.total, Dest: local.dest})
+				payload = m.events.ProgressFactory(snap)
 			}
 			application.Get().Event.Emit(m.events.Progress, payload)
 			m.emitDone(local.dest)
 		}
 		m.finishRunning(local)
+		cancel()
 		return
 	}
 }
 
 func (m *Manager) retry(s *state, attempt int, err error) bool {
-	if attempt >= maxDownloadRetries || s.cancelled || s.paused {
+	if attempt >= maxDownloadRetries || s.cancelled.Load() || s.paused.Load() {
 		return false
 	}
 	m.emitStatus("retrying", s.dest)
@@ -513,16 +640,16 @@ func calculateMD5(path string) (string, error) {
 }
 
 func (m *Manager) finishRunning(s *state) {
-	m.mu.Lock()
-	s.running = false
-	if s.cancelled || !s.paused {
+	s.running.Store(false)
+	if s.cancelled.Load() || !s.paused.Load() {
+		m.mu.Lock()
 		if m.tasks != nil {
 			if cur, ok := m.tasks[s.dest]; ok && cur == s {
 				delete(m.tasks, s.dest)
 			}
 		}
+		m.mu.Unlock()
 	}
-	m.mu.Unlock()
 }
 
 func (m *Manager) emitStatus(status string, dest string) {
@@ -556,6 +683,105 @@ func (m *Manager) emitError(err string, dest string) {
 		payload = m.events.ErrorFactory(err, dest)
 	}
 	application.Get().Event.Emit(m.events.Error, payload)
+}
+
+// stallTimeout is how long a download attempt may go without a single
+// body byte arriving before the stall watchdog aborts it (M-1).
+const stallTimeout = 60 * time.Second
+
+// stallWatchdog aborts a download attempt whose body makes no
+// progress. It runs one small timer goroutine per attempt; stop()
+// joins that goroutine, so it never outlives its attempt.
+type stallWatchdog struct {
+	lastProgress atomic.Int64 // UnixNano of the last successful body read
+	fired        atomic.Bool
+	cancel       context.CancelFunc
+	stopCh       chan struct{}
+	doneCh       chan struct{}
+	stopOnce     sync.Once
+}
+
+func startStallWatchdog(cancel context.CancelFunc, timeout time.Duration) *stallWatchdog {
+	w := &stallWatchdog{
+		cancel: cancel,
+		stopCh: make(chan struct{}),
+		doneCh: make(chan struct{}),
+	}
+	w.touch()
+	go w.watch(timeout)
+	return w
+}
+
+func (w *stallWatchdog) watch(timeout time.Duration) {
+	defer close(w.doneCh)
+	interval := timeout / 6
+	if interval <= 0 {
+		interval = time.Second
+	}
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-w.stopCh:
+			return
+		case now := <-ticker.C:
+			if now.Sub(time.Unix(0, w.lastProgress.Load())) >= timeout {
+				w.fired.Store(true)
+				w.cancel()
+				return
+			}
+		}
+	}
+}
+
+// touch records body progress; called on every successful read.
+func (w *stallWatchdog) touch() {
+	w.lastProgress.Store(time.Now().UnixNano())
+}
+
+// stop terminates the watchdog goroutine and waits for it to exit.
+func (w *stallWatchdog) stop() {
+	w.stopOnce.Do(func() { close(w.stopCh) })
+	<-w.doneCh
+}
+
+// parseContentRange parses an HTTP Content-Range header value of the
+// form "bytes <start>-<end>/<total>" (total may be "*"). total is -1
+// when the server reports "*". ok is false for anything malformed —
+// the caller must treat an unparseable range on a resumed download as
+// a reason to restart from zero, never to splice blindly (M-2).
+func parseContentRange(header string) (start, end, total int64, ok bool) {
+	rest, found := strings.CutPrefix(strings.TrimSpace(header), "bytes ")
+	if !found {
+		return 0, 0, 0, false
+	}
+	rangePart, totalPart, found := strings.Cut(rest, "/")
+	if !found {
+		return 0, 0, 0, false
+	}
+	startPart, endPart, found := strings.Cut(rangePart, "-")
+	if !found || startPart == "" || endPart == "" {
+		return 0, 0, 0, false
+	}
+	start, err := parseInt64(startPart)
+	if err != nil {
+		return 0, 0, 0, false
+	}
+	end, err = parseInt64(endPart)
+	if err != nil {
+		return 0, 0, 0, false
+	}
+	total = -1
+	if tp := strings.TrimSpace(totalPart); tp == "" {
+		return 0, 0, 0, false
+	} else if tp != "*" {
+		v, err := parseInt64(tp)
+		if err != nil {
+			return 0, 0, 0, false
+		}
+		total = v
+	}
+	return start, end, total, true
 }
 
 func parseInt64(s string) (int64, error) {

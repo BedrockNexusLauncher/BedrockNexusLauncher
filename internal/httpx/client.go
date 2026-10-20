@@ -53,7 +53,22 @@ func (t *defaultHeaderTransport) RoundTrip(req *http.Request) (*http.Response, e
 	return t.base.RoundTrip(req)
 }
 
-var sharedTransport http.RoundTripper = &defaultHeaderTransport{base: newBaseTransport()}
+// responseHeaderTimeout bounds how long a request through this package
+// waits for a server to start responding. It is deliberately NOT a
+// whole-request/client timeout: callers move multi-gigabyte downloads
+// through this client, so only the wait for response headers is
+// bounded; a stalled body is the caller's concern (the downloader runs
+// its own stall watchdog). Without it, a server that accepts the
+// connection and never replies hangs an attempt forever.
+const responseHeaderTimeout = 30 * time.Second
+
+var sharedTransport http.RoundTripper = newSharedTransport()
+
+func newSharedTransport() http.RoundTripper {
+	base := newBaseTransport()
+	base.ResponseHeaderTimeout = responseHeaderTimeout
+	return &defaultHeaderTransport{base: base}
+}
 
 var sharedClient = &http.Client{
 	Transport:     sharedTransport,
