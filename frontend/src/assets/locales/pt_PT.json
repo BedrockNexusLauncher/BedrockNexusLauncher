@@ -1,6 +1,11 @@
 {
   "app": {
-    "settings": "Definições"
+    "settings": "Definições",
+    "error_boundary": {
+      "title": "Algo correu mal",
+      "description": "Ocorreu um erro inesperado. Recarregar a aplicação normalmente resolve o problema.",
+      "reload": "Recarregar aplicação"
+    }
   },
   "nav": {
     "versions": "Instâncias",
