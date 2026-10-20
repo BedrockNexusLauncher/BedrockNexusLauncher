@@ -275,6 +275,146 @@ func coerceMapTo(old map[string]any, m map[string]any) map[string]any {
 	return m
 }
 
+// importStaging is one staged import target: archive entries are
+// extracted into stage (a sibling temp dir of final) and only moved
+// into place by commit after extraction has fully succeeded, so a
+// corrupt or hostile archive can no longer destroy — or half-write
+// over — the pack that is already installed (M-12).
+type importStaging struct {
+	stage string
+	final string
+}
+
+func stageImportTarget(final string) (importStaging, string) {
+	parent := filepath.Dir(final)
+	if err := os.MkdirAll(parent, 0755); err != nil {
+		return importStaging{}, "ERR_CREATE_TARGET_DIR"
+	}
+	stage, err := os.MkdirTemp(parent, ".bnx-import-*")
+	if err != nil {
+		return importStaging{}, "ERR_CREATE_TARGET_DIR"
+	}
+	return importStaging{stage: stage, final: final}, ""
+}
+
+func discardImportStaging(list []importStaging) {
+	for _, s := range list {
+		_ = utils.RemoveDir(s.stage)
+	}
+}
+
+// commit replaces final with the staged directory.
+func (s importStaging) commit() string {
+	if utils.DirExists(s.final) {
+		if err := utils.RemoveDir(s.final); err != nil {
+			return "ERR_WRITE_FILE"
+		}
+	}
+	if err := os.Rename(s.stage, s.final); err != nil {
+		return "ERR_WRITE_FILE"
+	}
+	return ""
+}
+
+// extractZipIntoDir extracts the entries of zr that live under
+// prefixDir ("" = archive root) into root, charging the shared
+// extraction budget. It is the single extraction loop the importers
+// share; its containment checks and error codes are the ones the
+// per-importer loops previously duplicated.
+func extractZipIntoDir(zr *zip.Reader, prefixDir string, root string, extractRemaining *int64) string {
+	for _, f := range zr.File {
+		nameInZip := normalizeZipEntryName(f.Name)
+		var relInDir string
+		if prefixDir != "" {
+			if nameInZip != prefixDir && !strings.HasPrefix(nameInZip, prefixDir+"/") {
+				continue
+			}
+			relInDir = strings.TrimPrefix(strings.TrimPrefix(nameInZip, prefixDir), "/")
+		} else {
+			relInDir = nameInZip
+		}
+		target := root
+		if relInDir != "" && relInDir != "/" {
+			target = filepath.Join(root, relInDir)
+		}
+		safeTarget, _ := filepath.Abs(target)
+		safeRoot, _ := filepath.Abs(root)
+		if !strings.HasPrefix(strings.ToLower(safeTarget), strings.ToLower(safeRoot+string(os.PathSeparator))) && strings.ToLower(safeTarget) != strings.ToLower(safeRoot) {
+			continue
+		}
+		if f.FileInfo().IsDir() || strings.HasSuffix(f.Name, "/") {
+			if err := os.MkdirAll(target, 0755); err != nil {
+				return "ERR_CREATE_TARGET_DIR"
+			}
+			continue
+		}
+		if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
+			return "ERR_CREATE_TARGET_DIR"
+		}
+		rc, err := f.Open()
+		if err != nil {
+			return "ERR_READ_ZIP_ENTRY"
+		}
+		out, er := os.Create(target)
+		if er != nil {
+			rc.Close()
+			return "ERR_WRITE_FILE"
+		}
+		if code := copyImportZipEntry(out, rc, extractRemaining); code != "" {
+			out.Close()
+			rc.Close()
+			return code
+		}
+		out.Close()
+		rc.Close()
+	}
+	return ""
+}
+
+// importPackTargets imports the entries of zr under prefixDir into
+// every directory in finals, atomically per the staging pattern:
+// duplicate-folder checks run before anything is written, extraction
+// happens entirely in staging dirs, and only then are the packs in
+// deleteFirst removed (strictDelete=false tolerates their removal
+// errors, matching the mcaddon importers) and the staging dirs renamed
+// into place. On any error the staging dirs are removed and
+// pre-existing packs are left untouched.
+func importPackTargets(zr *zip.Reader, prefixDir string, finals []string, overwrite bool, deleteFirst []string, strictDelete bool, extractRemaining *int64) string {
+	for _, final := range finals {
+		if utils.DirExists(final) && !overwrite {
+			return "ERR_DUPLICATE_FOLDER"
+		}
+	}
+	staged := make([]importStaging, 0, len(finals))
+	for _, final := range finals {
+		st, code := stageImportTarget(final)
+		if code != "" {
+			discardImportStaging(staged)
+			return code
+		}
+		staged = append(staged, st)
+	}
+	for _, st := range staged {
+		if code := extractZipIntoDir(zr, prefixDir, st.stage, extractRemaining); code != "" {
+			discardImportStaging(staged)
+			return code
+		}
+	}
+	for _, p := range deleteFirst {
+		if err := utils.RemoveDir(p); err != nil && strictDelete {
+			discardImportStaging(staged)
+			return "ERR_WRITE_FILE"
+		}
+	}
+	for _, st := range staged {
+		if code := st.commit(); code != "" {
+			discardImportStaging(staged)
+			return code
+		}
+	}
+	return ""
+}
+
 func findManifestDir(dir string) string {
 	d := strings.TrimSpace(dir)
 	if d == "" {
@@ -396,16 +536,11 @@ func ImportMcpackToDirs(data []byte, archiveName string, resDir string, bpDir st
 	}
 
 	existing := findPackPathsByUuid(manifest.Header.UUID, resDir, bpDir)
-	if len(existing) > 0 {
-		if !overwrite {
-			return "ERR_DUPLICATE_UUID"
-		}
-		for _, p := range existing {
-			if err := utils.RemoveDir(p); err != nil {
-				return "ERR_WRITE_FILE"
-			}
-		}
+	if len(existing) > 0 && !overwrite {
+		return "ERR_DUPLICATE_UUID"
 	}
+	// The existing packs are removed only at the commit step of the
+	// staged import below, once the replacement is fully extracted.
 
 	baseName := generateRandomPackName()
 	baseName = utils.SanitizeFilename(baseName)
@@ -428,64 +563,7 @@ func ImportMcpackToDirs(data []byte, archiveName string, resDir string, bpDir st
 	if !hasRes && !hasData {
 		return "ERR_INVALID_PACKAGE"
 	}
-	for _, targetRoot := range targets {
-		if utils.DirExists(targetRoot) {
-			if overwrite {
-				if err := utils.RemoveDir(targetRoot); err != nil {
-					return "ERR_WRITE_FILE"
-				}
-			} else {
-				return "ERR_DUPLICATE_FOLDER"
-			}
-		}
-		for _, f := range zr.File {
-			nameInZip := normalizeZipEntryName(f.Name)
-			var relInDir string
-			if manifestDir != "" {
-				if nameInZip != manifestDir && !strings.HasPrefix(nameInZip, manifestDir+"/") {
-					continue
-				}
-				relInDir = strings.TrimPrefix(strings.TrimPrefix(nameInZip, manifestDir), "/")
-			} else {
-				relInDir = nameInZip
-			}
-			target := targetRoot
-			if relInDir != "" && relInDir != "/" {
-				target = filepath.Join(targetRoot, relInDir)
-			}
-			safeTarget, _ := filepath.Abs(target)
-			safeRoot, _ := filepath.Abs(targetRoot)
-			if !strings.HasPrefix(strings.ToLower(safeTarget), strings.ToLower(safeRoot+string(os.PathSeparator))) && strings.ToLower(safeTarget) != strings.ToLower(safeRoot) {
-				continue
-			}
-			if f.FileInfo().IsDir() || strings.HasSuffix(f.Name, "/") {
-				if err := os.MkdirAll(target, 0755); err != nil {
-					return "ERR_CREATE_TARGET_DIR"
-				}
-				continue
-			}
-			if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
-				return "ERR_CREATE_TARGET_DIR"
-			}
-			rc, err := f.Open()
-			if err != nil {
-				return "ERR_READ_ZIP_ENTRY"
-			}
-			out, er := os.Create(target)
-			if er != nil {
-				rc.Close()
-				return "ERR_WRITE_FILE"
-			}
-			if code := copyImportZipEntry(out, rc, &extractRemaining); code != "" {
-				out.Close()
-				rc.Close()
-				return code
-			}
-			out.Close()
-			rc.Close()
-		}
-	}
-	return ""
+	return importPackTargets(zr, manifestDir, targets, overwrite, existing, true, &extractRemaining)
 }
 
 func stripKnownArchiveExt(name string) string {
@@ -552,16 +630,11 @@ func ImportMcpackToDirs2(data []byte, archiveName string, resDir string, bpDir s
 		return "ERR_MANIFEST_NOT_FOUND"
 	}
 	existing := findPackPathsByUuid(manifest.Header.UUID, resDir, bpDir, skinDir)
-	if len(existing) > 0 {
-		if !overwrite {
-			return "ERR_DUPLICATE_UUID"
-		}
-		for _, p := range existing {
-			if err := utils.RemoveDir(p); err != nil {
-				return "ERR_WRITE_FILE"
-			}
-		}
+	if len(existing) > 0 && !overwrite {
+		return "ERR_DUPLICATE_UUID"
 	}
+	// The existing packs are removed only at the commit step of the
+	// staged import below, once the replacement is fully extracted.
 
 	baseName := generateRandomPackName()
 	baseName = utils.SanitizeFilename(baseName)
@@ -593,64 +666,11 @@ func ImportMcpackToDirs2(data []byte, archiveName string, resDir string, bpDir s
 		}
 		return "ERR_INVALID_PACKAGE"
 	}
-	for targetRoot := range targetsMap {
-		if utils.DirExists(targetRoot) {
-			if overwrite {
-				if err := utils.RemoveDir(targetRoot); err != nil {
-					return "ERR_WRITE_FILE"
-				}
-			} else {
-				return "ERR_DUPLICATE_FOLDER"
-			}
-		}
-		for _, f := range zr.File {
-			nameInZip := normalizeZipEntryName(f.Name)
-			var relInDir string
-			if manifestDir != "" {
-				if nameInZip != manifestDir && !strings.HasPrefix(nameInZip, manifestDir+"/") {
-					continue
-				}
-				relInDir = strings.TrimPrefix(strings.TrimPrefix(nameInZip, manifestDir), "/")
-			} else {
-				relInDir = nameInZip
-			}
-			target := targetRoot
-			if relInDir != "" && relInDir != "/" {
-				target = filepath.Join(targetRoot, relInDir)
-			}
-			safeTarget, _ := filepath.Abs(target)
-			safeRoot, _ := filepath.Abs(targetRoot)
-			if !strings.HasPrefix(strings.ToLower(safeTarget), strings.ToLower(safeRoot+string(os.PathSeparator))) && strings.ToLower(safeTarget) != strings.ToLower(safeRoot) {
-				continue
-			}
-			if f.FileInfo().IsDir() || strings.HasSuffix(f.Name, "/") {
-				if err := os.MkdirAll(target, 0755); err != nil {
-					return "ERR_CREATE_TARGET_DIR"
-				}
-				continue
-			}
-			if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
-				return "ERR_CREATE_TARGET_DIR"
-			}
-			rc, err := f.Open()
-			if err != nil {
-				return "ERR_READ_ZIP_ENTRY"
-			}
-			out, er := os.Create(target)
-			if er != nil {
-				rc.Close()
-				return "ERR_WRITE_FILE"
-			}
-			if code := copyImportZipEntry(out, rc, &extractRemaining); code != "" {
-				out.Close()
-				rc.Close()
-				return code
-			}
-			out.Close()
-			rc.Close()
-		}
+	targets := make([]string, 0, len(targetsMap))
+	for t := range targetsMap {
+		targets = append(targets, t)
 	}
-	return ""
+	return importPackTargets(zr, manifestDir, targets, overwrite, existing, true, &extractRemaining)
 }
 
 func ImportMcaddonToDirs2(data []byte, resDir string, bpDir string, skinDir string, overwrite bool) string {
@@ -721,14 +741,11 @@ func ImportMcaddonToDirs2(data []byte, resDir string, bpDir string, skinDir stri
 	}
 	for _, p := range packs {
 		existing := findPackPathsByUuid(p.manifest.Header.UUID, resDir, bpDir, skinDir)
-		if len(existing) > 0 {
-			if !overwrite {
-				return "ERR_DUPLICATE_UUID"
-			}
-			for _, ex := range existing {
-				_ = utils.RemoveDir(ex)
-			}
+		if len(existing) > 0 && !overwrite {
+			return "ERR_DUPLICATE_UUID"
 		}
+		// Existing packs are removed at the staged import's commit
+		// step below, not before the replacement is validated.
 
 		baseName := generateRandomPackName()
 		baseName = utils.SanitizeFilename(baseName)
@@ -760,58 +777,12 @@ func ImportMcaddonToDirs2(data []byte, resDir string, bpDir string, skinDir stri
 			}
 			continue
 		}
-		for targetRoot := range targetsMap {
-			if utils.DirExists(targetRoot) {
-				if overwrite {
-					if err := utils.RemoveDir(targetRoot); err != nil {
-						return "ERR_WRITE_FILE"
-					}
-				} else {
-					return "ERR_DUPLICATE_FOLDER"
-				}
-			}
-			for _, f := range zr.File {
-				nameInZip := normalizeZipEntryName(f.Name)
-				var relInDir string
-				if nameInZip != p.dir && !strings.HasPrefix(nameInZip, p.dir+"/") {
-					continue
-				}
-				relInDir = strings.TrimPrefix(strings.TrimPrefix(nameInZip, p.dir), "/")
-				target := targetRoot
-				if relInDir != "" && relInDir != "/" {
-					target = filepath.Join(targetRoot, relInDir)
-				}
-				safeTarget, _ := filepath.Abs(target)
-				safeRoot, _ := filepath.Abs(targetRoot)
-				if !strings.HasPrefix(strings.ToLower(safeTarget), strings.ToLower(safeRoot+string(os.PathSeparator))) && strings.ToLower(safeTarget) != strings.ToLower(safeRoot) {
-					continue
-				}
-				if f.FileInfo().IsDir() || strings.HasSuffix(f.Name, "/") {
-					if err := os.MkdirAll(target, 0755); err != nil {
-						return "ERR_CREATE_TARGET_DIR"
-					}
-					continue
-				}
-				if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
-					return "ERR_CREATE_TARGET_DIR"
-				}
-				rc, err := f.Open()
-				if err != nil {
-					return "ERR_READ_ZIP_ENTRY"
-				}
-				out, er := os.Create(target)
-				if er != nil {
-					rc.Close()
-					return "ERR_WRITE_FILE"
-				}
-				if code := copyImportZipEntry(out, rc, &extractRemaining); code != "" {
-					out.Close()
-					rc.Close()
-					return code
-				}
-				out.Close()
-				rc.Close()
-			}
+		targets := make([]string, 0, len(targetsMap))
+		for t := range targetsMap {
+			targets = append(targets, t)
+		}
+		if code := importPackTargets(zr, p.dir, targets, overwrite, existing, false, &extractRemaining); code != "" {
+			return code
 		}
 		imported = true
 	}
@@ -910,58 +881,8 @@ func ImportMcaddonToDirs(data []byte, resDir string, bpDir string, overwrite boo
 		if !hasRes && !hasData {
 			continue
 		}
-		for _, targetRoot := range targets {
-			if utils.DirExists(targetRoot) {
-				if overwrite {
-					if err := utils.RemoveDir(targetRoot); err != nil {
-						return "ERR_WRITE_FILE"
-					}
-				} else {
-					return "ERR_DUPLICATE_FOLDER"
-				}
-			}
-			for _, f := range zr.File {
-				nameInZip := normalizeZipEntryName(f.Name)
-				var relInDir string
-				if nameInZip != p.dir && !strings.HasPrefix(nameInZip, p.dir+"/") {
-					continue
-				}
-				relInDir = strings.TrimPrefix(strings.TrimPrefix(nameInZip, p.dir), "/")
-				target := targetRoot
-				if relInDir != "" && relInDir != "/" {
-					target = filepath.Join(targetRoot, relInDir)
-				}
-				safeTarget, _ := filepath.Abs(target)
-				safeRoot, _ := filepath.Abs(targetRoot)
-				if !strings.HasPrefix(strings.ToLower(safeTarget), strings.ToLower(safeRoot+string(os.PathSeparator))) && strings.ToLower(safeTarget) != strings.ToLower(safeRoot) {
-					continue
-				}
-				if f.FileInfo().IsDir() || strings.HasSuffix(f.Name, "/") {
-					if err := os.MkdirAll(target, 0755); err != nil {
-						return "ERR_CREATE_TARGET_DIR"
-					}
-					continue
-				}
-				if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
-					return "ERR_CREATE_TARGET_DIR"
-				}
-				rc, err := f.Open()
-				if err != nil {
-					return "ERR_READ_ZIP_ENTRY"
-				}
-				out, er := os.Create(target)
-				if er != nil {
-					rc.Close()
-					return "ERR_WRITE_FILE"
-				}
-				if code := copyImportZipEntry(out, rc, &extractRemaining); code != "" {
-					out.Close()
-					rc.Close()
-					return code
-				}
-				out.Close()
-				rc.Close()
-			}
+		if code := importPackTargets(zr, p.dir, targets, overwrite, nil, false, &extractRemaining); code != "" {
+			return code
 		}
 		imported = true
 	}
@@ -1011,53 +932,15 @@ func ImportMcworldToDir(data []byte, archiveName string, worldsDir string, overw
 		randomDir = "world"
 	}
 	targetRoot := filepath.Join(worldsDir, randomDir)
-	for _, f := range zr.File {
-		nameInZip := normalizeZipEntryName(f.Name)
-		var relInDir string
-		if levelDir != "" {
-			if nameInZip != levelDir && !strings.HasPrefix(nameInZip, levelDir+"/") {
-				continue
-			}
-			relInDir = strings.TrimPrefix(strings.TrimPrefix(nameInZip, levelDir), "/")
-		} else {
-			relInDir = nameInZip
-		}
-		target := targetRoot
-		if relInDir != "" && relInDir != "/" {
-			target = filepath.Join(targetRoot, relInDir)
-		}
-		safeTarget, _ := filepath.Abs(target)
-		safeRoot, _ := filepath.Abs(targetRoot)
-		if !strings.HasPrefix(strings.ToLower(safeTarget), strings.ToLower(safeRoot+string(os.PathSeparator))) && strings.ToLower(safeTarget) != strings.ToLower(safeRoot) {
-			continue
-		}
-		if f.FileInfo().IsDir() || strings.HasSuffix(f.Name, "/") {
-			if err := os.MkdirAll(target, 0755); err != nil {
-				return "ERR_CREATE_TARGET_DIR"
-			}
-			continue
-		}
-		if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
-			return "ERR_CREATE_TARGET_DIR"
-		}
-		rc, err := f.Open()
-		if err != nil {
-			return "ERR_READ_ZIP_ENTRY"
-		}
-		out, er := os.Create(target)
-		if er != nil {
-			rc.Close()
-			return "ERR_WRITE_FILE"
-		}
-		if code := copyImportZipEntry(out, rc, &extractRemaining); code != "" {
-			out.Close()
-			rc.Close()
-			return code
-		}
-		out.Close()
-		rc.Close()
+	staged, code := stageImportTarget(targetRoot)
+	if code != "" {
+		return code
 	}
-	return ""
+	if code := extractZipIntoDir(zr, levelDir, staged.stage, &extractRemaining); code != "" {
+		discardImportStaging([]importStaging{staged})
+		return code
+	}
+	return staged.commit()
 }
 
 func ReadPackInfoFromDir(dir string) types.PackInfo {
