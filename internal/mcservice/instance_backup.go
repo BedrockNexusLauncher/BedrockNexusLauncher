@@ -585,6 +585,21 @@ func buildInstanceBackupContext(name string) instanceBackupContext {
 		return ctx
 	}
 
+	// The instance name feeds every derived path below (backup dir,
+	// version dir, and — via GetVersionMeta/GetContentRoots — the
+	// game-data and mods paths). Sanitize it once and reject any name
+	// that does not survive sanitizing unchanged: a name carrying path
+	// separators or traversal segments must never reach a Join raw.
+	// Previously only the backup dir used the sanitized name while the
+	// version and game-data paths used the raw one, so a crafted name
+	// could point the backup/restore file operations outside the
+	// versions tree. Legitimate instance folder names are unaffected:
+	// they never contain the replaced characters.
+	if sanitizeInstanceBackupSegment(trimmedName, "instance") != trimmedName {
+		ctx.info.ErrorCode = "ERR_INSTANCE_BACKUP_INSTANCE_NOT_FOUND"
+		return ctx
+	}
+
 	ctx.info.BackupDir = filepath.Join(
 		apppath.BaseRoot(),
 		"backups",
@@ -598,7 +613,12 @@ func buildInstanceBackupContext(name string) instanceBackupContext {
 		return ctx
 	}
 
-	ctx.versionDir = filepath.Join(vdir, trimmedName)
+	versionDir, ok := versionDirWithin(vdir, trimmedName)
+	if !ok {
+		ctx.info.ErrorCode = "ERR_INSTANCE_BACKUP_INSTANCE_NOT_FOUND"
+		return ctx
+	}
+	ctx.versionDir = versionDir
 	if !utils.DirExists(ctx.versionDir) {
 		ctx.info.ErrorCode = "ERR_INSTANCE_BACKUP_INSTANCE_NOT_FOUND"
 		return ctx
