@@ -3,15 +3,15 @@ package main
 import (
 	"context"
 	"encoding/base64"
+	"encoding/hex"
 	"log"
 	"net/http"
+	neturl "net/url"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
-
-	_ "embed"
 
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/contentmgr"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/curseforge/client"
@@ -19,6 +19,7 @@ import (
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/diagnostics"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/downloader"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/gameinput"
+	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/httpx"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/lang"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/launch"
 	"github.com/BedrockNexusLauncher/BedrockNexusLauncher/internal/lip"
@@ -39,8 +40,16 @@ import (
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
-//go:embed assets/curseforge.key
-var curseForgeApiKey []byte
+// curseForgeAPIKeyBuild can carry the CurseForge API key for release
+// builds, injected at link time and never committed to the repo:
+//
+//	go build -ldflags "-X main.curseForgeAPIKeyBuild=<key>"
+//
+// The runtime environment variable CURSEFORGE_API_KEY takes precedence.
+// There is deliberately no key embedded in the source tree: the previous
+// embedded key was committed to this public repository (only XOR/base64
+// obfuscated) and must be considered public — rotate it.
+var curseForgeAPIKeyBuild string
 
 const (
 	EventGameInputEnsureStart      = "gameinput.ensure.start"
@@ -92,11 +101,45 @@ type GameInputDownloadProgress struct {
 	Total      int64
 }
 
-func (a *Minecraft) StartFileDownload(url string, filename string) string {
+// StartFileDownload downloads a catalogue file (mod pack, world, UWP
+// package, …) into the temp downloads folder. Both arguments are
+// remote, third-party-controlled data at every call site, so they are
+// validated before use:
+//
+//   - filename must be a plain file name — the same guard the MSIXVC
+//     flow already applied (internal/msixvc.StartNamedDownload) — and
+//     the destination must stay inside the downloads folder, so a
+//     crafted name cannot overwrite arbitrary files.
+//   - url must be https with a public host (see
+//     httpx.ValidatePublicHTTPSURL); redirects are policed by the
+//     shared httpx client.
+//   - md5sum, when the source API provides one (CurseForge does), is
+//     verified by the downloader before the file is published; a
+//     malformed value is ignored rather than trusted.
+func (a *Minecraft) StartFileDownload(rawurl string, filename string, md5sum string) string {
+	if filename == "" || filepath.Base(filename) != filename || strings.ContainsAny(filename, `<>:\"/\\|?*`) {
+		log.Printf("StartFileDownload: rejected invalid filename %q", filename)
+		return ""
+	}
+	parsed, err := neturl.Parse(strings.TrimSpace(rawurl))
+	if err != nil || httpx.ValidatePublicHTTPSURL(parsed) != nil {
+		log.Printf("StartFileDownload: rejected invalid download URL %q", rawurl)
+		return ""
+	}
 	tempDir := filepath.Join(os.TempDir(), "BedrockNexus", "Downloads")
 	_ = os.MkdirAll(tempDir, 0755)
 	dest := filepath.Join(tempDir, filename)
-	return fileDownloader.Start(a.ctx, url, dest, "")
+	if filepath.Dir(dest) != tempDir {
+		log.Printf("StartFileDownload: rejected out-of-folder filename %q", filename)
+		return ""
+	}
+	md5sum = strings.ToLower(strings.TrimSpace(md5sum))
+	if len(md5sum) != 32 {
+		md5sum = ""
+	} else if _, err := hex.DecodeString(md5sum); err != nil {
+		md5sum = ""
+	}
+	return fileDownloader.Start(a.ctx, rawurl, dest, md5sum)
 }
 
 func (a *Minecraft) CancelFileDownload() {
@@ -340,19 +383,14 @@ func NewMinecraftWithDeps(deps MinecraftDeps) *Minecraft {
 }
 
 func resolveCurseForgeAPIKey() string {
-	apiKey := os.Getenv("CURSEFORGE_API_KEY")
-	if apiKey == "" {
-		deobfuscated := make([]byte, len(curseForgeApiKey))
-		for i, b := range curseForgeApiKey {
-			deobfuscated[i] = b ^ 0xAF
-		}
-
-		decoded, err := base64.StdEncoding.DecodeString(string(deobfuscated))
-		if err == nil {
-			apiKey = string(decoded)
-		}
+	if k := strings.TrimSpace(os.Getenv("CURSEFORGE_API_KEY")); k != "" {
+		return k
 	}
-	return apiKey
+	if k := strings.TrimSpace(curseForgeAPIKeyBuild); k != "" {
+		return k
+	}
+	log.Printf("CurseForge API key is not configured: set the CURSEFORGE_API_KEY environment variable or build with -ldflags \"-X main.curseForgeAPIKeyBuild=<key>\"")
+	return ""
 }
 
 func (a *Minecraft) SearchLIPPackages(q string, perPage int, page int, sort string, order string) (*liptypes.SearchPackagesResponse, error) {
