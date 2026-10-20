@@ -1,5 +1,6 @@
 {
   "app": {
+    "bootstrap_failed": "Échec du démarrage. Consultez les journaux ou réessayez plus tard.",
     "settings": "Paramètres",
     "error_boundary": {
       "title": "Un problème est survenu",
@@ -996,6 +997,10 @@
     "target": "Instance cible"
   },
   "errors": {
+    "detection_failed": "La détection a échoué",
+    "download_failed": "Le téléchargement a échoué",
+    "download_start_failed": "Impossible de démarrer le téléchargement",
+    "import_failed": "L'importation a échoué",
     "ERR_GAME_ALREADY_RUNNING": "Il a été détecté que l'instance actuelle de Minecraft est déjà en cours d'exécution. Veuillez la fermer avant de lancer ou passer à une autre instance.",
     "ERR_TARGET_DIR_NOT_SPECIFIED": "Répertoire cible non spécifié",
     "ERR_CREATE_TARGET_DIR": "Échec de la création du répertoire cible",
