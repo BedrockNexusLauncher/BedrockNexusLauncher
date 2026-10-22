@@ -1,0 +1,39 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      # Advisory only: several pre-existing files under internal/ are not
+      # gofmt-clean yet, so this step warns instead of failing the build.
+      - name: gofmt (internal/) — advisory
+        shell: bash
+        run: |
+          unformatted="$(gofmt -l internal/)"
+          if [ -n "$unformatted" ]; then
+            echo "::warning::These files are not gofmt-clean:"
+            echo "$unformatted"
+          fi
+
+      - name: Build backend (windows)
+        env:
+          GOOS: windows
+        run: go build ./internal/...
+
+      - name: Vet backend
+        env:
+          GOOS: windows
+        run: go vet ./internal/...
+
+      - name: Test gdkversions
+        run: go test ./internal/gdkversions/
