@@ -2593,10 +2593,24 @@ export const SettingsPage: React.FC = () => {
                                     <li className="my-0.5">{children}</li>
                                   ),
                                   a: ({ href, children }) => {
-                                    const cleanUrl = (url: string) => {
-                                      const target = "https://github.com";
-                                      const idx = url.lastIndexOf(target);
-                                      return idx > 0 ? url.substring(idx) : url;
+                                    // Only web/mail protocols may be handed
+                                    // to the OS browser; anything else
+                                    // (file:, custom app schemes, …) is
+                                    // dropped. Same allowlist as
+                                    // LIPPackagePage's isOpenableExternalUrl.
+                                    const isOpenableExternalUrl = (
+                                      url: string,
+                                    ): boolean => {
+                                      try {
+                                        const parsed = new URL(url);
+                                        return (
+                                          parsed.protocol === "http:" ||
+                                          parsed.protocol === "https:" ||
+                                          parsed.protocol === "mailto:"
+                                        );
+                                      } catch {
+                                        return false;
+                                      }
                                     };
                                     return (
                                       <a
@@ -2606,20 +2620,15 @@ export const SettingsPage: React.FC = () => {
                                         className="text-primary-500 underline"
                                         onClick={(e) => {
                                           e.preventDefault();
-                                          if (href) {
-                                            Browser.OpenURL(cleanUrl(href));
+                                          if (
+                                            href &&
+                                            isOpenableExternalUrl(href)
+                                          ) {
+                                            Browser.OpenURL(href);
                                           }
                                         }}
                                       >
-                                        {Array.isArray(children)
-                                          ? children.map((child) =>
-                                              typeof child === "string"
-                                                ? cleanUrl(child)
-                                                : child,
-                                            )
-                                          : typeof children === "string"
-                                            ? cleanUrl(children)
-                                            : children}
+                                        {children}
                                       </a>
                                     );
                                   },
