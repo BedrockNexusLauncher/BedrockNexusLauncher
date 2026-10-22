@@ -52,7 +52,6 @@ Bedrock Nexus 面向 **Windows 上的 Minecraft Bedrock Edition (GDK)**，需要
 ## 下載渠道
 
 - **GitHub Releases（Bedrock Nexus 下載）：** [BedrockNexusLauncher/BedrockNexusLauncher Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)
-- **藍奏雲鏡像：** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — 密碼：`levi`
 
 ## 社群與回饋
 
