@@ -35,7 +35,6 @@
 ## 下载入口
 
 - **GitHub Releases（Bedrock Nexus 下载）：** [BedrockNexusLauncher/BedrockNexusLauncher Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)
-- **蓝奏云镜像：** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — 密码：`levi`
 
 ## 如何反馈问题与功能建议
 
