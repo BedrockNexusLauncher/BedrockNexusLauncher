@@ -4,7 +4,7 @@ Wenn du den kürzesten Weg von der Installation bis ins Spiel gehen möchtest, l
 
 ## 1. Bedrock Nexus installieren
 
-- Lade das Bedrock Nexus Installationspaket von der [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)-Seite oder vom [Lanzou Cloud Mirror](https://levimc.lanzoue.com/b016ke39hc) herunter (Passwort für Lanzou: `levi`).
+- Lade das Bedrock Nexus Installationspaket von der [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)-Seite herunter.
 - Führe das Installationsprogramm unter Windows aus.
 - Falls während der Installation Abhängigkeiten wie WebView2 angefordert werden, erlaube bitte deren Installation.
 

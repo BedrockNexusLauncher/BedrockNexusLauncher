@@ -35,7 +35,6 @@ Ja, dies gehört jedoch zu fortgeschrittenen Workflows. Wir empfehlen, zunächst
 ## Download-Quellen
 
 - **GitHub Releases (offizieller Download):** [BedrockNexusLauncher/BedrockNexusLauncher Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)  
-- **Lanzou Cloud Mirror:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — Passwort: `levi`
 
 ## So gibst du Probleme oder Feature-Ideen weiter
 

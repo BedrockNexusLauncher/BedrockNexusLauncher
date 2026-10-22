@@ -31,21 +31,13 @@ Bitte schließe diese Checkliste ab:
 
 ## Installation von Bedrock Nexus (Core)
 
-### Lösung A: GitHub Releases Seite
+### GitHub Releases Seite
 
 Geeignet für Nutzer, die das Installationspaket direkt von der offiziellen Bedrock Nexus Seite beziehen und gleichzeitig die Update-Logs einsehen möchten.
 
 1. Öffne die [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) Seite von Bedrock Nexus.
 2. Lade das Installationsprogramm herunter.
 3. Führe den Installationsassistenten aus und beende ihn.
-
-### Lösung B: Lanzou Cloud Mirror
-
-Wenn GitHub in deiner Region langsam ist, ist dieser Eingang normalerweise bequemer.
-
-1. Öffne [Lanzou Cloud](https://levimc.lanzoue.com/b016ke39hc).
-2. Gib das Passwort `levi` ein.
-3. Lade die Datei herunter und führe das Installationsprogramm lokal aus.
 
 ## Installation der ersten verwalteten Version
 

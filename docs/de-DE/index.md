@@ -52,7 +52,6 @@ Diese Dokumentation richtet sich an **Endnutzer**, nicht an Entwickler oder Mitw
 ## Downloadquellen
 
 - **GitHub Releases (offizieller Bedrock Nexus-Download):** [BedrockNexusLauncher/BedrockNexusLauncher Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)  
-- **Lanzou Cloud Mirror (chinesischer Mirror):** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — Passwort: `levi`
 
 ## Community & Feedback
 
