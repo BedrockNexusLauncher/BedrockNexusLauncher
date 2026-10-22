@@ -510,6 +510,174 @@ function buildFrenchNav(): DefaultTheme.NavItem[] {
   ];
 }
 
+// Italian Navbar
+function buildItalianNav(): DefaultTheme.NavItem[] {
+  return [
+    { text: "Guida", link: "/it-IT/guide/quick-start" },
+    { text: "Download", link: releases },
+    { text: "Community", link: discord },
+    { text: "GitHub", link: repo },
+  ];
+}
+
+// Italian Sidebar
+function buildItalianSidebar(prefix: string): DefaultTheme.SidebarItem[] {
+  return [
+    {
+      text: "Avvio rapido",
+      items: [
+        { text: "Per iniziare in 5 minuti", link: `${prefix}quick-start` },
+        {
+          text: "Requisiti e installazione",
+          link: `${prefix}requirements-installation`,
+        },
+        { text: "Primo avvio", link: `${prefix}first-launch` },
+      ],
+    },
+    {
+      text: "Flussi di lavoro principali",
+      items: [
+        { text: "Gestione delle versioni", link: `${prefix}version-management` },
+        { text: "Download e mirror", link: `${prefix}downloads-mirrors` },
+        { text: "Gestione dei contenuti", link: `${prefix}content-management` },
+      ],
+    },
+    {
+      text: "Funzionalità avanzate",
+      items: [
+        { text: "Mod e integrazioni", link: `${prefix}mods-integrations` },
+        { text: "Strumenti per i mondi", link: `${prefix}world-tools` },
+        {
+          text: "Impostazioni e personalizzazione",
+          link: `${prefix}settings-personalization`,
+        },
+      ],
+    },
+    {
+      text: "Assistenza",
+      items: [
+        {
+          text: "Aggiornamenti e risoluzione dei problemi",
+          link: `${prefix}update-troubleshooting`,
+        },
+        {
+          text: "Domande frequenti, community e feedback",
+          link: `${prefix}faq-community-feedback`,
+        },
+      ],
+    },
+  ];
+}
+
+// Portuguese Navbar
+function buildPortugueseNav(): DefaultTheme.NavItem[] {
+  return [
+    { text: "Guia", link: "/pt-PT/guide/quick-start" },
+    { text: "Transferências", link: releases },
+    { text: "Comunidade", link: discord },
+    { text: "GitHub", link: repo },
+  ];
+}
+
+// Portuguese Sidebar
+function buildPortugueseSidebar(prefix: string): DefaultTheme.SidebarItem[] {
+  return [
+    {
+      text: "Início Rápido",
+      items: [
+        { text: "Começar em 5 Minutos", link: `${prefix}quick-start` },
+        {
+          text: "Requisitos e Instalação",
+          link: `${prefix}requirements-installation`,
+        },
+        { text: "Primeiro Arranque", link: `${prefix}first-launch` },
+      ],
+    },
+    {
+      text: "Fluxos de Trabalho Principais",
+      items: [
+        { text: "Gestão de Versões", link: `${prefix}version-management` },
+        { text: "Transferências e Espelhos", link: `${prefix}downloads-mirrors` },
+        { text: "Gestão de Conteúdos", link: `${prefix}content-management` },
+      ],
+    },
+    {
+      text: "Funcionalidades Avançadas",
+      items: [
+        { text: "Mods e Integrações", link: `${prefix}mods-integrations` },
+        { text: "Ferramentas de Mundos", link: `${prefix}world-tools` },
+        {
+          text: "Definições e Personalização",
+          link: `${prefix}settings-personalization`,
+        },
+      ],
+    },
+    {
+      text: "Ajuda",
+      items: [
+        {
+          text: "Atualizações e Resolução de Problemas",
+          link: `${prefix}update-troubleshooting`,
+        },
+        {
+          text: "FAQ, Comunidade e Feedback",
+          link: `${prefix}faq-community-feedback`,
+        },
+      ],
+    },
+  ];
+}
+
+// Persian Navbar
+function buildPersianNav(): DefaultTheme.NavItem[] {
+  return [
+    { text: "راهنما", link: "/fa-IR/guide/quick-start" },
+    { text: "دانلودها", link: releases },
+    { text: "انجمن", link: discord },
+    { text: "GitHub", link: repo },
+  ];
+}
+
+// Persian Sidebar
+function buildPersianSidebar(prefix: string): DefaultTheme.SidebarItem[] {
+  return [
+    {
+      text: "شروع سریع",
+      items: [
+        { text: "شروع در ۵ دقیقه", link: `${prefix}quick-start` },
+        { text: "پیش‌نیازها و نصب", link: `${prefix}requirements-installation` },
+        { text: "اولین اجرا", link: `${prefix}first-launch` },
+      ],
+    },
+    {
+      text: "گردش‌کارهای اصلی",
+      items: [
+        { text: "مدیریت نسخه‌ها", link: `${prefix}version-management` },
+        { text: "دانلودها و میرورها", link: `${prefix}downloads-mirrors` },
+        { text: "مدیریت محتوا", link: `${prefix}content-management` },
+      ],
+    },
+    {
+      text: "قابلیت‌های پیشرفته",
+      items: [
+        { text: "مودها و یکپارچه‌سازی‌ها", link: `${prefix}mods-integrations` },
+        { text: "ابزارهای جهان", link: `${prefix}world-tools` },
+        { text: "تنظیمات و شخصی‌سازی", link: `${prefix}settings-personalization` },
+      ],
+    },
+    {
+      text: "راهنما",
+      items: [
+        { text: "به‌روزرسانی و عیب‌یابی", link: `${prefix}update-troubleshooting` },
+        {
+          text: "پرسش‌های متداول، انجمن و بازخورد",
+          link: `${prefix}faq-community-feedback`,
+        },
+      ],
+    },
+  ];
+}
+
 // --- Export Config ---
 
 export default defineConfig({
@@ -744,6 +912,73 @@ export default defineConfig({
         darkModeSwitchLabel: "Apparence",
         lightModeSwitchTitle: "Passer en thème clair",
         darkModeSwitchTitle: "Passer en thème sombre",
+      },
+    },
+    "it-IT": {
+      label: "Italiano",
+      lang: "it-IT",
+      link: "/it-IT/",
+      themeConfig: {
+        nav: buildItalianNav(),
+        sidebar: {
+          "/it-IT/guide/": buildItalianSidebar("/it-IT/guide/"),
+        },
+        outline: { level: [2, 3] },
+        docFooter: { prev: "Pagina precedente", next: "Pagina successiva" },
+        editLink: {
+          pattern: `${repo}/edit/main/docs/:path`,
+          text: "Modifica questa pagina su GitHub",
+        },
+        returnToTopLabel: "Torna su",
+        sidebarMenuLabel: "Menu",
+        darkModeSwitchLabel: "Aspetto",
+        lightModeSwitchTitle: "Passa al tema chiaro",
+        darkModeSwitchTitle: "Passa al tema scuro",
+      },
+    },
+    "pt-PT": {
+      label: "Português",
+      lang: "pt-PT",
+      link: "/pt-PT/",
+      themeConfig: {
+        nav: buildPortugueseNav(),
+        sidebar: {
+          "/pt-PT/guide/": buildPortugueseSidebar("/pt-PT/guide/"),
+        },
+        outline: { level: [2, 3] },
+        docFooter: { prev: "Página anterior", next: "Página seguinte" },
+        editLink: {
+          pattern: `${repo}/edit/main/docs/:path`,
+          text: "Editar esta página no GitHub",
+        },
+        returnToTopLabel: "Voltar ao topo",
+        sidebarMenuLabel: "Menu",
+        darkModeSwitchLabel: "Aparência",
+        lightModeSwitchTitle: "Mudar para o tema claro",
+        darkModeSwitchTitle: "Mudar para o tema escuro",
+      },
+    },
+    "fa-IR": {
+      label: "فارسی",
+      lang: "fa-IR",
+      dir: "rtl",
+      link: "/fa-IR/",
+      themeConfig: {
+        nav: buildPersianNav(),
+        sidebar: {
+          "/fa-IR/guide/": buildPersianSidebar("/fa-IR/guide/"),
+        },
+        outline: { level: [2, 3] },
+        docFooter: { prev: "صفحهٔ قبلی", next: "صفحهٔ بعدی" },
+        editLink: {
+          pattern: `${repo}/edit/main/docs/:path`,
+          text: "ویرایش این صفحه در GitHub",
+        },
+        returnToTopLabel: "بازگشت به بالا",
+        sidebarMenuLabel: "منو",
+        darkModeSwitchLabel: "ظاهر",
+        lightModeSwitchTitle: "تغییر به تم روشن",
+        darkModeSwitchTitle: "تغییر به تم تیره",
       },
     },
   },
