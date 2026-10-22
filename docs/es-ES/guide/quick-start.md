@@ -4,7 +4,7 @@ Si solo quieres seguir el camino más corto desde la descarga hasta entrar al ju
 
 ## 1. Instalar Bedrock Nexus
 
-- Descarga el instalador de Bedrock Nexus desde la página de [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) o desde el [mirror en Lanzou](https://levimc.lanzoue.com/b016ke39hc). La contraseña de Lanzou es `levi`.
+- Descarga el instalador de Bedrock Nexus desde la página de [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases).
 - Ejecuta el programa de instalación en Windows.
 - Si el proceso de instalación indica que necesita WebView2 u otras dependencias, permite que continúe.
 

@@ -52,7 +52,6 @@ Esta documentación está escrita para **usuarios finales**, no para mantenedore
 ## Canales de descarga
 
 - **GitHub Releases (Descargas de Bedrock Nexus):** [Versiones de BedrockNexusLauncher/BedrockNexusLauncher](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)
-- **Mirror en Lanzou:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — contraseña: `levi`
 
 ## Comunidad y comentarios
 

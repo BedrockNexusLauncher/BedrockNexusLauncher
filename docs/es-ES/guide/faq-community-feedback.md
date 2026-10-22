@@ -35,7 +35,6 @@ Sí, pero se trata de un flujo de trabajo avanzado. Se recomienda empezar con un
 ## Enlaces de descarga
 
 - **GitHub Releases (Descargas de Bedrock Nexus):** [Versiones de BedrockNexusLauncher/BedrockNexusLauncher](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)
-- **Mirror en Lanzou:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — contraseña: `levi`
 
 ## Cómo informar de problemas y sugerencias de funciones
 
