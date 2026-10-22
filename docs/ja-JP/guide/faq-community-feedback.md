@@ -35,7 +35,6 @@
 ## ダウンロード
 
 - **GitHub Releases（Bedrock Nexus ダウンロード）：** <BedrockNexusLauncher/BedrockNexusLauncher Releases>
-- **LanZou Cloud ミラー：** <levimc.lanzoue.com/b016ke39hc> — パスワード：`levi`
 
 ## 問題や機能要望の報告方法
 

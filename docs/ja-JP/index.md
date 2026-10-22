@@ -52,7 +52,6 @@ Bedrock Nexusは**Windows上のMinecraft Bedrock Edition (GDK)** 向けであり
 ## ダウンロードチャンネル
 
 - **GitHub Releases (Bedrock Nexusダウンロード):** [BedrockNexusLauncher/BedrockNexusLauncher Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)
-- **LanZou Cloudミラーサイト:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — パスワード: `levi`
 
 ## コミュニティとフィードバック
 

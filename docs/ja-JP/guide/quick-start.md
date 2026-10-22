@@ -4,7 +4,7 @@
 
 ## 1. Bedrock Nexus のインストール
 
-- [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) ページまたは[藍奏雲ミラー](https://levimc.lanzoue.com/b016ke39hc)から Bedrock Nexus インストーラーをダウンロードします（藍奏雲のパスワードは `levi` です）。
+- [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) ページから Bedrock Nexus インストーラーをダウンロードします。
 - Windows でインストーラーを実行します。
 - インストール中に WebView2 またはその他の依存関係が必要と表示された場合は、続行を許可してください。
 

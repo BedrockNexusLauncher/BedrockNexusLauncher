@@ -31,21 +31,13 @@
 
 ## Bedrock Nexus 本体のインストール
 
-### 方針 A：GitHub Releases ページ
+### GitHub Releases ページ
 
 公式ダウンロードページから直接インストーラーを取得し、更新履歴も同時に確認したいユーザー向けです。
 
 1. Bedrock Nexus の [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) ページを開きます。
 2. インストーラーをダウンロードします。
 3. インストールウィザードを実行して完了します。
-
-### 方針 B：藍奏雲ミラー
-
-GitHub へのアクセス速度が遅い地域のユーザーには、こちらのエントリーポイントが便利です。
-
-1. [藍奏雲](https://levimc.lanzoue.com/b016ke39hc) を開きます。
-2. パスワード `levi` を入力します。
-3. ローカルでインストーラーを実行します。
 
 ## 最初のホストバージョンのインストール
 
