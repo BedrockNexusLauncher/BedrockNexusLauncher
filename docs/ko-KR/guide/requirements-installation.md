@@ -31,21 +31,13 @@
 
 ## Bedrock Nexus 본체 설치
 
-### 방법 A: GitHub 릴리스 페이지
+### GitHub 릴리스 페이지
 
 Bedrock Nexus 공식 다운로드 페이지에서 설치 패키지를 직접 가져오고, 동시에 업데이트 기록을 확인하고 싶은 사용자에게 적합합니다.
 
 1. Bedrock Nexus의 [GitHub 릴리스](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) 페이지를 엽니다.
 2. 설치 프로그램을 다운로드합니다.
 3. 실행하여 설치 마법사를 완료합니다.
-
-### 방법 B: 란조우(Lanzou) 클라우드 미러
-
-귀하의 지역에서 GitHub 접속 속도가 느릴 경우, 이 진입점이 일반적으로 더 편리합니다.
-
-1. [란조우(Lanzou)](https://levimc.lanzoue.com/b016ke39hc)를 엽니다.
-2. 비밀번호 `levi`를 입력합니다.
-3. 다운로드 후 로컬에서 설치 프로그램을 실행합니다.
 
 ## 첫 번째 호스팅 버전 설치
 

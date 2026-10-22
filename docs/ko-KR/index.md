@@ -52,7 +52,6 @@ Bedrock Nexus는 **Windows의 Minecraft Bedrock Edition (GDK)** 용으로 설계
 ## 다운로드 채널
 
 - **GitHub 릴리스(Bedrock Nexus 다운로드):** [BedrockNexusLauncher/BedrockNexusLauncher Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)
-- **란조우(Lanzou) 클라우드 미러:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — 비밀번호: `levi`
 
 ## 커뮤니티 및 피드백
 

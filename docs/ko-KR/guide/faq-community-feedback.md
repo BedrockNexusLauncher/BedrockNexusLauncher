@@ -35,7 +35,6 @@
 ## 다운로드 진입점
 
 - **GitHub 릴리스(Bedrock Nexus 다운로드):** [BedrockNexusLauncher/BedrockNexusLauncher Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)
-- **란조우(Lanzou) 클라우드 미러:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — 비밀번호: `levi`
 
 ## 문제 및 기능 요청을 피드백하는 방법
 

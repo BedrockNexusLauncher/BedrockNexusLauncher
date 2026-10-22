@@ -4,7 +4,7 @@
 
 ## 1. Bedrock Nexus 설치
 
-- [GitHub 릴리스](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) 페이지 또는 [란조우(Lanzou) 클라우드 미러](https://levimc.lanzoue.com/b016ke39hc)에서 Bedrock Nexus 설치 패키지를 다운로드하세요. 란조우 비밀번호는 `levi`입니다.
+- [GitHub 릴리스](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) 페이지에서 Bedrock Nexus 설치 패키지를 다운로드하세요.
 - Windows에서 설치 프로그램을 실행합니다.
 - 설치 과정에서 WebView2 또는 기타 종속성이 필요하다는 메시지가 표시되면 계속 설치하도록 허용하세요.
 
