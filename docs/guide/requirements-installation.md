@@ -31,21 +31,13 @@ Complete this checklist first:
 
 ## Installing Bedrock Nexus itself
 
-### Option A: GitHub Releases page
+### GitHub Releases page
 
 Use this if you want the official Bedrock Nexus download page together with release notes and changelog context.
 
 1. Open the [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) page for Bedrock Nexus.
 2. Download the installer.
 3. Run it and finish the setup wizard.
-
-### Option B: Lanzou mirror
-
-Use this if GitHub download speed is poor in your region.
-
-1. Open [Lanzou Cloud](https://levimc.lanzoue.com/b016ke39hc).
-2. Use password `levi`.
-3. Download the installer and run it locally.
 
 ## Installing your first managed version
 

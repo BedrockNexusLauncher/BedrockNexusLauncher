@@ -52,7 +52,6 @@ This documentation is written for **players and end users**, not maintainers.
 ## Download channels
 
 - **GitHub Releases (Bedrock Nexus downloads):** [BedrockNexusLauncher/BedrockNexusLauncher Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)
-- **Lanzou mirror:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — password: `levi`
 
 ## Community and feedback
 

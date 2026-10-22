@@ -35,7 +35,6 @@ Yes, but mod workflows are an advanced area. Start with a clean isolated version
 ## Download links
 
 - **GitHub Releases (Bedrock Nexus downloads):** [BedrockNexusLauncher/BedrockNexusLauncher Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)
-- **Lanzou mirror:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — password: `levi`
 
 ## Reporting issues and feature requests
 

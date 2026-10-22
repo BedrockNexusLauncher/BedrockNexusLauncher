@@ -4,7 +4,7 @@ If you only want the shortest path from download to play, follow this page first
 
 ## 1. Install Bedrock Nexus
 
-- Download the Bedrock Nexus installer from [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) or the [Lanzou mirror](https://levimc.lanzoue.com/b016ke39hc) using password `levi`.
+- Download the Bedrock Nexus installer from [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases).
 - Run the installer on Windows.
 - If Windows or the installer asks for WebView2 or other required components, allow the process to continue.
 
