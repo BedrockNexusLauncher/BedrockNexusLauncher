@@ -35,7 +35,6 @@ Oui, mais cela relève d'un workflow avancé. Il est conseillé de commencer ave
 ## Liens de téléchargement
 
 - **GitHub Releases (Téléchargements de Bedrock Nexus) :** [BedrockNexusLauncher/BedrockNexusLauncher Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)
-- **Miroir Lanzou Cloud :** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — Mot de passe : `levi`
 
 ## Comment signaler un problème ou suggérer une fonctionnalité ?
 

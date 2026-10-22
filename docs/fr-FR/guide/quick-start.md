@@ -4,7 +4,7 @@ Si vous souhaitez simplement passer du téléchargement au jeu le plus rapidemen
 
 ## 1. Installer Bedrock Nexus
 
-- Téléchargez le programme d'installation de Bedrock Nexus depuis la page [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) ou le [miroir Lanzou Cloud](https://levimc.lanzoue.com/b016ke39hc). Le mot de passe pour Lanzou Cloud est `levi`.
+- Téléchargez le programme d'installation de Bedrock Nexus depuis la page [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases).
 - Exécutez le programme d'installation sous Windows.
 - Si l'installation vous demande WebView2 ou d'autres dépendances, autorisez-la à continuer.
 

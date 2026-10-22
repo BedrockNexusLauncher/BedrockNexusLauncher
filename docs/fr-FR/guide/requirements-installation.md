@@ -31,21 +31,13 @@ Veuillez compléter cette liste de vérification :
 
 ## Installer Bedrock Nexus lui-même
 
-### Option A : Page GitHub Releases
+### Page GitHub Releases
 
 Convient aux utilisateurs souhaitant télécharger directement depuis la page officielle de Bedrock Nexus et consulter l'historique des mises à jour.
 
 1. Ouvrez la page [GitHub Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) de Bedrock Nexus.
 2. Téléchargez le programme d'installation.
 3. Exécutez-le et suivez l'assistant d'installation.
-
-### Option B : Miroir Lanzou Cloud
-
-Si vous avez une connexion lente à GitHub depuis votre région, ce lien est généralement plus pratique.
-
-1. Ouvrez [Lanzou Cloud](https://levimc.lanzoue.com/b016ke39hc).
-2. Saisissez le mot de passe `levi`.
-3. Téléchargez le fichier et exécutez le programme d'installation localement.
 
 ## Installer une première version gérée
 
