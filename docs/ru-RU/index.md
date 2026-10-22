@@ -52,7 +52,6 @@ Bedrock Nexus создан для **Minecraft Bedrock Edition (GDK) на Windows
 ## Каналы загрузки
 
 - **Релизы GitHub (загрузка Bedrock Nexus):** [BedrockNexusLauncher/BedrockNexusLauncher Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)
-- **Зеркало Lanzou:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — пароль: `levi`
 
 ## Сообщество и обратная связь
 

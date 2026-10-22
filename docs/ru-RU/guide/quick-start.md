@@ -4,7 +4,7 @@
 
 ## 1. Установка Bedrock Nexus
 
-- Загрузите установщик Bedrock Nexus со страницы [Релизы GitHub](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases) или с [зеркала Lanzou](https://levimc.lanzoue.com/b016ke39hc), используя пароль `levi`.
+- Загрузите установщик Bedrock Nexus со страницы [Релизы GitHub](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases).
 - Запустите установщик в Windows.
 - Если Windows или установщик запросит WebView2 или другие необходимые компоненты, разрешите процессу продолжиться.
 

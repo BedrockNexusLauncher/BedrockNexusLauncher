@@ -35,7 +35,6 @@
 ## Ссылки для загрузки
 
 - **Релизы GitHub (загрузки Bedrock Nexus):** [BedrockNexusLauncher/BedrockNexusLauncher Releases](https://github.com/BedrockNexusLauncher/BedrockNexusLauncher/releases)
-- **Зеркало Lanzou:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — пароль: `levi`
 
 ## Сообщение об ошибках и запросы функций
 
