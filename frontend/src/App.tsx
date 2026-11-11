@@ -35,6 +35,10 @@ import { useAppModals } from "@/hooks/useAppModals";
 import { ROUTES } from "@/constants/routes";
 import { markStartupVisualReady } from "@/utils/startupState";
 import { OfflineBanner } from "@/components/OfflineBanner";
+import { CharacterParticles } from "@/components/CharacterParticles";
+import { CharacterEmblem } from "@/components/CharacterEmblem";
+import { useCharacterTheme } from "@/hooks/useCharacterTheme";
+import { characterPalette } from "@/constants/characterThemes";
 
 // Lazy load pages
 const LauncherPage = lazy(() =>
@@ -121,6 +125,11 @@ function App() {
   const { disableAnimations } = useAnimations();
   useThemedStrokes();
   const { themeColorsReady } = useThemeColors(resolvedTheme);
+  const { characterTheme } = useCharacterTheme();
+  const characterPaletteResolved = characterPalette(
+    characterTheme,
+    resolvedTheme === "dark",
+  );
   const {
     bgData,
     backgroundReady,
@@ -334,6 +343,26 @@ function App() {
                             opacity: backgroundOpacity / 100,
                           }}
                         />
+                      )}
+
+                      {/* Minecraft character theme: emblem watermark +
+                          particle layer (Novelfa model). Both are
+                          pointer-events-none and sit under the content
+                          (z-10); particles are skipped entirely when
+                          animations are disabled. */}
+                      {characterTheme && characterPaletteResolved && (
+                        <>
+                          <CharacterEmblem
+                            theme={characterTheme}
+                            disabled={disableAnimations}
+                          />
+                          <CharacterParticles
+                            particle={characterTheme.particle}
+                            palette={characterPaletteResolved}
+                            light={resolvedTheme !== "dark"}
+                            disabled={disableAnimations}
+                          />
+                        </>
                       )}
 
                       <div
