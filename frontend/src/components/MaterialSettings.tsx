@@ -25,6 +25,7 @@ import {
   type MaterialPreset,
 } from "@/utils/backgroundAppearance";
 import { BackgroundLayers } from "./BackgroundLayers";
+import { CharacterThemePicker } from "./CharacterThemePicker";
 import { COMPONENT_STYLES } from "@/constants/componentStyles";
 
 const PRESETS: MaterialPreset[] = ["balanced", "clear", "solid"];
@@ -60,7 +61,9 @@ export const MaterialSettings: React.FC = () => {
   const copy = (key: string) => t(`settings.appearance.material.${key}`);
 
   return (
-    <div className="flex flex-col gap-4 p-5 mt-6 rounded-3xl bg-default-200/10 border border-default-200/50">
+    <>
+      <CharacterThemePicker />
+      <div className="flex flex-col gap-4 p-5 mt-6 rounded-3xl bg-default-200/10 border border-default-200/50">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <LuLayers className="text-primary-500" size={18} />
@@ -248,5 +251,6 @@ export const MaterialSettings: React.FC = () => {
       </div>
 
     </div>
+    </>
   );
 };
