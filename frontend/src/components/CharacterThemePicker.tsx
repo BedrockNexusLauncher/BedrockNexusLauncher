@@ -18,6 +18,7 @@ const PARTICLE_FA: Record<CharacterParticleKind, string> = {
   bubbles: "حباب",
   snow: "برف",
   echo: "پژواک",
+  hex: "شش‌ضلعی",
 };
 
 const PARTICLE_EN: Record<CharacterParticleKind, string> = {
@@ -27,6 +28,7 @@ const PARTICLE_EN: Record<CharacterParticleKind, string> = {
   bubbles: "Bubbles",
   snow: "Snow",
   echo: "Echo",
+  hex: "Hexagons",
 };
 
 /**
@@ -43,7 +45,13 @@ export const CharacterThemePicker: React.FC = () => {
   const { i18n } = useTranslation();
   const { resolvedTheme } = useTheme();
   const { characterThemeId, setCharacterTheme } = useCharacterTheme();
-  const isEnglish = (i18n.language || "en").toLowerCase().startsWith("en");
+  // Persian strings only for Persian; every other language gets
+  // English (not Persian) — the previous version showed fa labels
+  // to e.g. German users.
+  const isPersian = (i18n.language || "en")
+    .toLowerCase()
+    .startsWith("fa");
+  const isEnglish = !isPersian;
   const isDark = resolvedTheme === "dark";
 
   const card = (theme: CharacterTheme | null) => {
@@ -132,8 +140,8 @@ export const CharacterThemePicker: React.FC = () => {
       </div>
       <p className="text-tiny text-default-500">
         {isEnglish
-          ? "A Minecraft character tints the whole launcher — accent, particles and emblem — in the style of Novelfa's character themes. All six are open from the start."
-          : "یک کاراکتر ماینکرفت کل لانچر را رنگ می‌کند — اکسنت، ذره‌ها و نماد — به سبک تم‌های شخصیتی ناول‌فا. هر شش تم از اول باز هستند."}
+          ? "A Minecraft character tints the whole launcher — accent, particles and emblem — in the style of Novelfa's character themes. All seven are open from the start."
+          : "یک کاراکتر ماینکرفت کل لانچر را رنگ می‌کند — اکسنت، ذره‌ها و نماد — به سبک تم‌های شخصیتی ناول‌فا. هر هفت تم از اول باز هستند."}
       </p>
       <div
         className="grid grid-cols-2 gap-3 sm:grid-cols-3"

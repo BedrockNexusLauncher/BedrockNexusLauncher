@@ -25,7 +25,7 @@ interface KindParams {
   rising: boolean;
   swayAmp: number;
   rotates: boolean;
-  shape: "dot" | "square" | "spark" | "bubble" | "flake" | "shard";
+  shape: "dot" | "square" | "spark" | "bubble" | "flake" | "shard" | "hex";
 }
 
 const paramsFor = (type: CharacterParticleKind): KindParams => {
@@ -42,6 +42,8 @@ const paramsFor = (type: CharacterParticleKind): KindParams => {
       return { count: 18, sizeMin: 5, sizeMax: 11, durMin: 12, durMax: 24, peak: 0.85, rising: false, swayAmp: 28, rotates: true, shape: "flake" };
     case "echo":
       return { count: 16, sizeMin: 4, sizeMax: 9, durMin: 14, durMax: 26, peak: 0.6, rising: false, swayAmp: 22, rotates: true, shape: "shard" };
+    case "hex":
+      return { count: 12, sizeMin: 6, sizeMax: 12, durMin: 14, durMax: 24, peak: 0.7, rising: false, swayAmp: 24, rotates: true, shape: "hex" };
   }
 };
 
@@ -237,6 +239,21 @@ export const CharacterParticles: React.FC<{
             ctx.closePath();
             ctx.fill();
             break;
+          case "hex": {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            for (let k = 0; k < 6; k++) {
+              const a = (k * Math.PI) / 3 - Math.PI / 2;
+              const px = Math.cos(a) * size * 0.6;
+              const py = Math.sin(a) * size * 0.6;
+              if (k === 0) ctx.moveTo(px, py);
+              else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.stroke();
+            break;
+          }
         }
         ctx.restore();
       }
