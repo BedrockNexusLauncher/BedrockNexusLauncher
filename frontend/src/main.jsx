@@ -329,7 +329,7 @@ const bootstrapApp = async () => {
         <HeroUILocalizedRoot>
           <NextThemesProvider
             attribute="class"
-            defaultTheme="light"
+            defaultTheme="dark"
             enableSystem
           >
             <I18nextProvider i18n={i18n}>
