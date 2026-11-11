@@ -13,11 +13,14 @@ export interface SunTimes {
 export const useThemeManager = () => {
   const { theme, setTheme, resolvedTheme } = useTheme();
 
+  // Default theme mode is dark: a fresh install (no saved
+  // app.themeMode) starts dark. A saved user choice always wins —
+  // this only changes the fallback, never an existing setting.
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
     try {
-      return (localStorage.getItem("app.themeMode") as ThemeMode) || "light";
+      return (localStorage.getItem("app.themeMode") as ThemeMode) || "dark";
     } catch {
-      return "light";
+      return "dark";
     }
   });
 
@@ -93,7 +96,8 @@ export const useThemeManager = () => {
   const checkTheme = useCallback(() => {
     if (isThemeOverridden) return;
 
-    let targetTheme = "light";
+    // Default (unknown mode) is dark, matching the fresh-install default.
+    let targetTheme = "dark";
 
     if (themeMode === "schedule") {
       const now = new Date();
@@ -157,7 +161,7 @@ export const useThemeManager = () => {
     const handler = () => {
       try {
         const mode =
-          (localStorage.getItem("app.themeMode") as ThemeMode) || "light";
+          (localStorage.getItem("app.themeMode") as ThemeMode) || "dark";
         setThemeMode(mode);
         setScheduleStart(localStorage.getItem("app.scheduleStart") || "20:00");
         setScheduleEnd(localStorage.getItem("app.scheduleEnd") || "07:00");
