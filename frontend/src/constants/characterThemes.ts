@@ -10,11 +10,13 @@
  *
  * What is deliberately NOT ported in v1:
  * - Novelfa's rank / XP unlock gates and secret-code unlocks
- *   (BEAKO / EMT / ...). All six themes are open from the start;
+ *   (BEAKO / EMT / ...). All seven themes are open from the start;
  *   an unlock-by-playtime gate is a later decision, not a hidden one.
  * - Novelfa's WPF emblem Geometry. The emblems here are original,
  *   simple geometric silhouettes drawn in a 100x100 box (pixel-face
- *   style), not Mojang artwork.
+ *   style), not Mojang artwork. The Nexus emblem is the launcher's
+ *   own hexagon badge (logo: vivid violet #773FF9 on dark navy
+ *   #151723, `frontend/src/assets/images/ic_nexus_logo.png`).
  *
  * How a theme is applied: the resolved palette's `accent` feeds the
  * existing `generateTheme()` scale in `useThemeColors`, so the whole
@@ -31,7 +33,8 @@ export type CharacterParticleKind =
   | "ender"
   | "bubbles"
   | "snow"
-  | "echo";
+  | "echo"
+  | "hex";
 
 export interface CharacterPalette {
   bg: string;
@@ -111,6 +114,26 @@ const parsePalette = (spaced: string): CharacterPalette => {
 };
 
 export const CHARACTER_THEMES: CharacterTheme[] = [
+  {
+    // The launcher's own brand theme, first in the list. Shares the
+    // violet family with Enderman by brand (logo #773FF9), told apart
+    // by its darker navy base, hexagon emblem and hex particles.
+    id: "nexus",
+    nameFa: "بدراک نکسوس",
+    taglineFa: "نشان شش‌ضلعی، بنفشِ خودِ نکسوس",
+    nameEn: "Bedrock Nexus",
+    taglineEn: "The hexagon badge, Nexus violet itself",
+    particle: "hex",
+    dark: parsePalette(
+      "#0C0A16 #110D22 #191233 #EFE9FF #9A8FC4 #241B47 #2E2458 #2A2150 #221A45 #140E2C #8B5CF6 #7C3AED #A78BFA #4C1D95 #8B5CF6 #C4B5FD",
+    ),
+    light: parsePalette(
+      "#F5F3FF #FFFFFF #FFFFFF #1D1445 #6C63A6 #EDE9FE #DDD6FE #E6E0FF #EFEAFF #E0D8FF #6D28D9 #5B21B6 #7C3AED #4C1D95 #8B5CF6 #C4B5FD",
+    ),
+    emblemData:
+      "M50 4 L92 27 V73 L50 96 L8 73 V27 Z M34 36h12v10H34z M54 36h12v10H54z M44 52h12v6H44z M47 58h6v10H47z",
+    emblemEvenOdd: true,
+  },
   {
     id: "steve",
     nameFa: "استیو",
