@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { THEMES, hexToRgb, hexToHsl, generateTheme } from "@/constants/themes";
+import { characterPalette } from "@/constants/characterThemes";
+import { useCharacterTheme } from "@/hooks/useCharacterTheme";
 
 /** Default accent palette (Windows purple, circled in settings). */
 export const DEFAULT_THEME_COLOR = "win_purple";
@@ -66,6 +68,8 @@ export const useThemeColors = (resolvedTheme: string | undefined) => {
     () => readCustomThemeColorPref("dark"),
   );
 
+  const { characterTheme } = useCharacterTheme();
+
   useEffect(() => {
     const handler = () => {
       setLightThemeColor(readThemeColorPref("light"));
@@ -92,6 +96,28 @@ export const useThemeColors = (resolvedTheme: string | undefined) => {
 
     const root = document.documentElement;
 
+    // Character theme (if any) overrides the saved color theme: its
+    // accent feeds the same generated scale, like Novelfa's plain
+    // palette is tinted from one accent. The saved color is kept
+    // untouched, so clearing the character restores it exactly.
+    const charPal = characterPalette(characterTheme, isDark);
+    if (charPal) {
+      theme = generateTheme(charPal.accent);
+      root.style.setProperty("--char-grad-1", charPal.grad1);
+      root.style.setProperty("--char-grad-2", charPal.grad2);
+      root.style.setProperty("--char-aura-1", charPal.aura1);
+      root.style.setProperty("--char-aura-2", charPal.aura2);
+      root.style.setProperty("--char-accent", charPal.accent);
+      root.style.setProperty("--char-accent-dark", charPal.accentDark);
+    } else {
+      root.style.removeProperty("--char-grad-1");
+      root.style.removeProperty("--char-grad-2");
+      root.style.removeProperty("--char-aura-1");
+      root.style.removeProperty("--char-aura-2");
+      root.style.removeProperty("--char-accent");
+      root.style.removeProperty("--char-accent-dark");
+    }
+
     Object.keys(theme).forEach((key) => {
       const k = Number(key);
       root.style.setProperty(`--theme-${k}`, hexToRgb(theme[k]));
@@ -109,6 +135,7 @@ export const useThemeColors = (resolvedTheme: string | undefined) => {
     lightCustomThemeColor,
     darkThemeColor,
     darkCustomThemeColor,
+    characterTheme,
   ]);
 
   return { themeColorsReady };
